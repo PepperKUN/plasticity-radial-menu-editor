@@ -1,0 +1,23 @@
+/* src/components/RadialMenu/RadialMenu.css */
+.radial-menu {
+  cursor: pointer;
+  transition: transform 0.3s ease;
+  outline: none;
+
+  .sector {
+    //transition: all 0.2s ease;
+    &:hover {
+      filter: brightness(1.15);
+      stroke-width: 3px !important;
+    }
+  }
+
+  .menu-label {
+    font-size: 14px;
+    fill: white;
+    font-weight: 500;
+    pointer-events: none;
+    user-select: none;
+    transition: font-size 0.2s ease;
+  }
+}
