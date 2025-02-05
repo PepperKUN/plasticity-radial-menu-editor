@@ -1,5 +1,5 @@
 import { useState } from 'react'
-import RadialMenu from "@/components/RadialMenu/radialMenu.tsx";
+import OperaPanel from '@/components/operatedPanel';
 import {RadialMenuItem} from "@/types/type";
 import {useMenuItemStore} from "@/stores/store.ts";
 import './App.css'
@@ -14,9 +14,11 @@ function App() {
 
     const handleItemAdd = () => {
         const newMenuItems = [...menuItems, {
+            id: menuItems.length + 1,
             label: `Item ${menuItems.length + 1}`,
             color: `#${Math.floor(Math.random() * 16777215).toString(16)}`,
-            value: `item-${menuItems.length + 1}`
+            icon: `item-${menuItems.length + 1}`,
+            command: ` `,
         }];
         console.log(newMenuItems)
         setMenuItems(newMenuItems)
@@ -34,12 +36,7 @@ function App() {
               <h1>Dynamic Radial Menu</h1>
 
               {/* 环形菜单 */}
-              <RadialMenu
-                  items={menuItems}
-                  radius={155}
-                  onItemClick={handleItemClick}
-                  style={{margin: '20px auto'}}
-              />
+              <OperaPanel/>
 
               {/* 动态控制示例 */}
               <div className="controls">

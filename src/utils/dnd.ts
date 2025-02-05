@@ -33,11 +33,11 @@ const isPointInSector = (
     let end = (sector.endAngle+360) % 360;
     // if (end < start) end += 360; // 处理跨360°的情况
 
-    console.table(convertedObj2Table({
-        angle: angle,
-        start: start,
-        end: end
-    }))
+    // console.table(convertedObj2Table({
+    //     angle: angle,
+    //     start: start,
+    //     end: end
+    // }))
 
     // 判断逻辑
     return (
@@ -75,8 +75,14 @@ export const sectorCollisionDetection: CollisionDetection = ({
                 sector
             );
         })
-    console.log('targetContainer:', targetContainer)
+    // console.log('targetContainer:', targetContainer, active)
 
-    return targetContainer.map((container) => ({ id: container.id }));
+    if(targetContainer.length>0) {
+        console.log(targetContainer.map((container) => ({ id: container.id })))
+        return targetContainer.map((container) => ({ id: container.id }));
+    } else {
+        console.log([{ id: active.id }])
+        return [{ id: active.id }]
+    }
 };
 

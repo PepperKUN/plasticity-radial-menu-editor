@@ -5,11 +5,14 @@
   outline: none;
 
   .sector {
-    //transition: all 0.2s ease;
+    transition: d 0.2s ease-out;
     &:hover {
       filter: brightness(1.15);
       stroke-width: 3px !important;
     }
+  }
+  .sector_arc {
+    // transition: d 0.3s ease;
   }
 
   .menu-label {

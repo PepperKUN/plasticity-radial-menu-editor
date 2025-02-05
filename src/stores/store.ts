@@ -3,7 +3,9 @@ import {RadialMenuItem} from "@/types/type";
 
 interface MenuItemState {
     menuItems: RadialMenuItem[];
-    setMenuItems: (newMenuItems:RadialMenuItem[])=>void;
+    setMenuItems: (
+      updater: RadialMenuItem[] | ((prev: RadialMenuItem[]) => RadialMenuItem[])
+    ) => void;
 }
 
 interface ContainerState {
@@ -13,11 +15,14 @@ interface ContainerState {
 
 const useMenuItemStore = create<MenuItemState>((set) => ({
     menuItems: [
-        { label: 'Home', color: '#4ECDC4', value: 'home' },
-        { label: 'Settings', color: '#45B7D1', value: 'settings' },
-        { label: 'Profile', color: '#FF6B6B', value: 'profile' },
+        { id: 1, label: 'Home', color: '#4ECDC4', icon: 'home', command: '' },
+        { id: 2, label: 'Settings', color: '#45B7D1', icon: 'settings', command: ''},
+        { id: 3, label: 'Profile', color: '#FF6B6B', icon: 'profile', command: ''},
     ],
-    setMenuItems: (newMenuItems:RadialMenuItem[]) => set(()=>({menuItems: newMenuItems})),
+    setMenuItems: (updater: RadialMenuItem[] | ((prev: RadialMenuItem[]) => RadialMenuItem[])) =>
+        set((state) => ({
+          menuItems: typeof updater === 'function' ? updater(state.menuItems) : updater,
+    })),
 }))
 
 const useContainerStore = create<ContainerState>((set) => ({

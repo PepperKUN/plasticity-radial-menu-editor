@@ -1,7 +1,9 @@
 interface RadialMenuItem {
+    id: number;
     label: string;
     color: string;
-    value: string | number;
+    icon: string;
+    command: string;
 }
 
 export {RadialMenuItem}

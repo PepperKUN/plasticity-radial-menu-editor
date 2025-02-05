@@ -1,13 +1,14 @@
 // src/components/RadialMenu/RadialMenu.tsx
-import React, { CSSProperties, useRef, useEffect } from "react";
+import React, { CSSProperties, useRef, useEffect, useState } from "react";
 import {
     DndContext,
-    closestCenter,
     KeyboardSensor,
     PointerSensor,
     useSensor,
     useSensors,
     DragEndEvent,
+    DragOverlay,
+    Active,
 } from "@dnd-kit/core";
 
 import {
@@ -26,7 +27,7 @@ import './RadialMenu.scss'
 // 类型定义
 
 interface RadialMenuProps {
-    items: RadialMenuItem[];
+    items?: RadialMenuItem[];
     radius?: number;
     onItemClick?: (item: RadialMenuItem) => void;
     onItemsChange?: (items: RadialMenuItem[]) => void;
@@ -114,23 +115,24 @@ const SortableSector: React.FC<{
     onItemClick?: (item: RadialMenuItem) => void;
 }> = ({ item, radius, startAngle, endAngle, outerWidth, onItemClick }) => {
     const center = radius;
-    const pathD = describeSector(center, center, radius - outerWidth, startAngle, endAngle);
-    const pathL = describeLine(center, center, radius - outerWidth, startAngle, endAngle);
-    const pathA = describleArc(center, center, radius - outerWidth/2, startAngle, endAngle);
-    const pathA2 = describleArc(center, center, radius - outerWidth + 2, startAngle, endAngle);
-    const labelAngle = startAngle + (endAngle - startAngle) / 2;
-    const textPos = polarToCartesian(center, center, radius * 0.7, labelAngle);
-
+    
     const {
+        active,
+        index,
+        items,
         attributes,
         listeners,
         setNodeRef,
-        transform,
         transition,
-        isDragging
+        isDragging,
+        isSorting,
+        isOver,
+        newIndex,
     } = useSortable({
-        id: item.value,
+        transition: null,
+        id: item.id,
         data: {
+            // from: 'internal',
             sector: {
                 cx: center,        // 圆心 X
                 cy: center,        // 圆心 Y
@@ -141,8 +143,27 @@ const SortableSector: React.FC<{
         }
     });
 
+    
+
+    const angleDrag = 360 / (items.length);
+    const startAngleDrag = -angleDrag/2  + (isSorting?newIndex:index) * angleDrag;
+    const endAngleDrag = startAngleDrag + angleDrag;
+
+
+
+    const startA = isSorting?startAngleDrag:startAngle
+    const endA = isSorting?endAngleDrag:endAngle
+
+    const pathD = describeSector(center, center, radius - outerWidth, startA, endA);
+    const pathL = describeLine(center, center, radius - outerWidth, startA, endA);
+    const pathA = describleArc(center, center, radius - outerWidth/2, startA, endA);
+    const pathA2 = describleArc(center, center, radius - outerWidth + 2, startA, endA);
+    const labelAngle = startA + (endA - startA) / 2;
+    const textPos = polarToCartesian(center, center, radius * 0.7, labelAngle);
+
+
     const style = {
-        transform: CSS.Transform.toString(transform),
+        // transform: CSS.Transform.toString(transform),
         transition,
         opacity: isDragging ? 0.5 : 1,
         outline: "none",
@@ -153,7 +174,7 @@ const SortableSector: React.FC<{
             <path
                 d={pathA}
                 strokeWidth={outerWidth}
-                stroke="#ffffff"
+                stroke={isSorting?"#ff0000":"#ffffff"}
                 fill="none"
                 className="sector_arc"
             />
@@ -191,15 +212,14 @@ const SortableSector: React.FC<{
 };
 
 
+
 const RadialMenu: React.FC<RadialMenuProps> = ({
-                                                   radius = 200,
-                                                   onItemClick,
-                                                   onItemsChange,
+                                                   radius = 155,
                                                    className,
-                                                   style
+                                                   style,
                                                }) => {
-    const { menuItems, setMenuItems } = useMenuItemStore();
-    const containerRef = useRef<SVGAElement>(null);
+    const { menuItems } = useMenuItemStore();
+    const containerRef = useRef<SVGSVGElement>(null);
     const setRect = useContainerStore((state) => state.setRect);
 
     useEffect(() => {
@@ -230,72 +250,35 @@ const RadialMenu: React.FC<RadialMenuProps> = ({
     }, [setRect]);
 
 
-    const sensors = useSensors(
-        useSensor(PointerSensor),
-        useSensor(KeyboardSensor, {
-            coordinateGetter: sortableKeyboardCoordinates
-        })
-    );
-
-    const handleDragEnd = (event: DragEndEvent) => {
-        const { active, over } = event;
-        if (active.id !== over?.id) {
-            const oldIndex = menuItems.findIndex((item) => item.value === active.id);
-            const newIndex = menuItems.findIndex((item) => item.value === over?.id);
-
-
-            // 直接交换元素位置
-            const newItems = [...menuItems];
-            [newItems[oldIndex], newItems[newIndex]] =
-                [newItems[newIndex], newItems[oldIndex]];
-
-            // // 列表变动
-            // const newItems = arrayMove(menuItems, oldIndex, newIndex);
-
-
-            setMenuItems(newItems);
-            onItemsChange?.(newItems);
-        }
-    };
-
     return (
-        <DndContext
-            sensors={sensors}
-            collisionDetection={sectorCollisionDetection}
-            onDragEnd={handleDragEnd}
+        <svg
+            ref={containerRef}
+            className={`radial-menu ${className?className:''}`}
+            style={{
+                width: radius * 2,
+                height: radius * 2,
+                ...style
+            }}
+            viewBox={`0 0 ${radius * 2} ${radius * 2}`}
         >
-            <SortableContext items={menuItems}>
-                <svg
-                    ref={containerRef}
-                    className={`radial-menu ${className?className:''}`}
-                    style={{
-                        width: radius * 2,
-                        height: radius * 2,
-                        ...style
-                    }}
-                    viewBox={`0 0 ${radius * 2} ${radius * 2}`}
-                >
-                    {menuItems.map((item, index) => {
-                        const angle = 360 / menuItems.length;
-                        const startAngle = -angle/2  + index * angle;
-                        const endAngle = startAngle + angle;
+            {menuItems.map((item, index) => {
+                const angle = 360 / menuItems.length;
+                const startAngle = -angle/2  + index * angle;
+                const endAngle = startAngle + angle;
 
-                        return (
-                            <SortableSector
-                                key={item.value}
-                                item={item}
-                                radius={radius}
-                                startAngle={startAngle}
-                                endAngle={endAngle}
-                                outerWidth={12}
-                                onItemClick={onItemClick}
-                            />
-                        );
-                    })}
-                    <circle cx={radius} cy={radius} r="68" />
-                </svg>
-            </SortableContext>
-        </DndContext>
+                return (
+                    <SortableSector
+                        key={item.id}
+                        item={item}
+                        radius={radius}
+                        startAngle={startAngle}
+                        endAngle={endAngle}
+                        outerWidth={12}
+                    />
+                );
+            })}
+            <circle cx={radius} cy={radius} r="68" />
+        </svg>
     );
 };
 
