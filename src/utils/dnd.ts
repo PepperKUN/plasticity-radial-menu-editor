@@ -1,6 +1,6 @@
 import { CollisionDetection } from '@dnd-kit/core';
 import {useContainerStore} from "@/stores/store.ts";
-import {convertedObj2Table} from "@/utils/util.ts";
+// import {convertedObj2Table} from "@/utils/util.ts";
 
 interface Sector {
     cx: number;
@@ -30,7 +30,7 @@ const isPointInSector = (
 
     // 标准化角度范围
     const start = (sector.startAngle+360) % 360;
-    let end = (sector.endAngle+360) % 360;
+    const end = (sector.endAngle+360) % 360;
     // if (end < start) end += 360; // 处理跨360°的情况
 
     // console.table(convertedObj2Table({
@@ -63,7 +63,6 @@ export const sectorCollisionDetection: CollisionDetection = ({
     const relativeY = pointerCoordinates.y - rect.top;
 
 
-
     const targetContainer = droppableContainers
         .filter((container) => {
             const sector = container.data.current?.sector as Sector | undefined;
@@ -75,13 +74,13 @@ export const sectorCollisionDetection: CollisionDetection = ({
                 sector
             );
         })
-    // console.log('targetContainer:', targetContainer, active)
+    // console.log('targetContainer:', targetContainer, {relativeX,relativeY}, containerSectorAngles);
 
     if(targetContainer.length>0) {
-        console.log(targetContainer.map((container) => ({ id: container.id })))
+        // console.log(targetContainer.map((container) => ({ id: container.id })))
         return targetContainer.map((container) => ({ id: container.id }));
     } else {
-        console.log([{ id: active.id }])
+        // console.log(1)
         return [{ id: active.id }]
     }
 };

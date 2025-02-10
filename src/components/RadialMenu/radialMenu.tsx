@@ -1,26 +1,8 @@
 // src/components/RadialMenu/RadialMenu.tsx
-import React, { CSSProperties, useRef, useEffect, useState } from "react";
-import {
-    DndContext,
-    KeyboardSensor,
-    PointerSensor,
-    useSensor,
-    useSensors,
-    DragEndEvent,
-    DragOverlay,
-    Active,
-} from "@dnd-kit/core";
-
-import {
-    arrayMove,
-    SortableContext,
-    sortableKeyboardCoordinates,
-} from "@dnd-kit/sortable";
+import React, { CSSProperties, useRef, useEffect } from "react";
 import { useSortable } from "@dnd-kit/sortable";
-import { CSS } from "@dnd-kit/utilities";
 import { useMenuItemStore, useContainerStore } from "@/stores/store.ts";
 import { RadialMenuItem } from "@/types/type";
-import { sectorCollisionDetection } from "@/utils/dnd.ts";
 import { throttle } from 'lodash-es';
 import './RadialMenu.scss'
 
@@ -117,7 +99,6 @@ const SortableSector: React.FC<{
     const center = radius;
     
     const {
-        active,
         index,
         items,
         attributes,
@@ -126,7 +107,6 @@ const SortableSector: React.FC<{
         transition,
         isDragging,
         isSorting,
-        isOver,
         newIndex,
     } = useSortable({
         transition: null,

@@ -1,20 +1,17 @@
-import React, { CSSProperties, useRef, useEffect, useState } from "react";
+import React from "react";
 import {
     DndContext,
-    KeyboardSensor,
     PointerSensor,
     useSensor,
     useSensors,
     DragEndEvent,
-    Active,
 } from "@dnd-kit/core";
 
 import {
     arrayMove,
     SortableContext,
-    sortableKeyboardCoordinates,
 } from "@dnd-kit/sortable";
-import { useMenuItemStore, useContainerStore } from "@/stores/store.ts";
+import { useMenuItemStore } from "@/stores/store.ts";
 import { sectorCollisionDetection } from "@/utils/dnd.ts";
 import RadialMenu from "@/components/RadialMenu/radialMenu";
 import CommandList from "@/components/commandList";
@@ -25,16 +22,13 @@ const OperaPanel: React.FC= () => {
     const { menuItems, setMenuItems } = useMenuItemStore();
 
     const listItems:RadialMenuItem[] = [
-        { id: 11, label: 'Home1', color: '#7d4ecd', icon: 'home1', command: '' },
-        { id: 21, label: 'Settings1', color: '#ff385d', icon: 'settings1', command: ''},
-        { id: 31, label: 'Profile1', color: '#ebff6b', icon: 'profile1', command: ''},
+        { id: 6, label: 'Home1', color: '#7d4ecd', icon: 'home1', command: '' },
+        { id: 7, label: 'Settings1', color: '#ff385d', icon: 'settings1', command: ''},
+        { id: 8, label: 'Profile1', color: '#ebff6b', icon: 'profile1', command: ''},
     ]
 
     const sensors = useSensors(
-        useSensor(PointerSensor),
-        // useSensor(KeyboardSensor, {
-        //     coordinateGetter: sortableKeyboardCoordinates
-        // })
+        useSensor(PointerSensor)
     );
 
     const handleDragOver = (event: DragEndEvent) => {
@@ -42,9 +36,10 @@ const OperaPanel: React.FC= () => {
         console.log(
             listItems.some((item)=>item.id === active.id),
             over?.id,
-            over);
+            over,
+            menuItems);
         
-        if(listItems.some((item)=>item.id === active.id)
+        if(!menuItems.some((item)=>item.id === active.id)
             &&over?.id
         ) {
             const draggedItem = listItems.find((item) => item.id === active.id);
@@ -71,24 +66,22 @@ const OperaPanel: React.FC= () => {
     }
 
     const handleDragEnd = (event: DragEndEvent) => {
-        const { active, over } = event;
-        // if (active.id !== over?.id) {
-        //     const oldIndex = menuItems.findIndex((item) => item.id === active.id);
-        //     const newIndex = menuItems.findIndex((item) => item.id === over?.id);
-        //
-        //     // 列表变动
-        //     const newItems = arrayMove(menuItems, oldIndex, newIndex);
-        //
-        //
-        //     setMenuItems(newItems);
-        // }
+        const { active, over, collisions, delta } = event;
+        if (active.id !== over?.id) {
+            const oldIndex = menuItems.findIndex((item) => item.id === active.id);
+            const newIndex = menuItems.findIndex((item) => item.id === over?.id);
+
+            console.log(oldIndex, newIndex, menuItems, active, over, collisions, delta);
+            let newItems = menuItems;
+            // 列表变动
+            if(newIndex>-1&&oldIndex>-1) {
+                newItems = arrayMove(menuItems, oldIndex, newIndex);
+            }
+
+
+            setMenuItems(newItems);
+        }
     };
-    const handleCommandDragOver = (event: DragEndEvent) => {
-        console.log('handleCommandDragOver')
-    }
-    const handleCommandDragEnd = (event: DragEndEvent) => {
-        console.log('handleCommandDragEnd')
-    }
 
     return (
         <>
@@ -102,19 +95,7 @@ const OperaPanel: React.FC= () => {
                     <RadialMenu/>
                     <CommandList items={listItems}/>
                 </SortableContext>
-                {/*<SortableContext items={listItems}>*/}
-                {/*</SortableContext>*/}
-                {/* <DragOverlay> {activeItem?<div>{activeItem.id}</div>: null}</DragOverlay> */}
             </DndContext>
-            {/*<DndContext*/}
-            {/*    sensors={sensors}*/}
-            {/*    onDragOver={handleCommandDragOver}  // 单独处理 CommandList 的拖拽*/}
-            {/*    onDragEnd={handleCommandDragEnd}*/}
-            {/*>*/}
-            {/*    <SortableContext items={listItems}>*/}
-            {/*        <CommandList items={listItems}/>*/}
-            {/*    </SortableContext>*/}
-            {/*</DndContext>*/}
         </>
     );
 };
