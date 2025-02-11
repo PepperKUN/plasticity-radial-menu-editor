@@ -15,9 +15,9 @@ interface ContainerState {
 
 const useMenuItemStore = create<MenuItemState>((set) => ({
     menuItems: [
-        { id: 1, label: 'Home', color: '#4ECDC4', icon: 'home', command: '' },
-        { id: 2, label: 'Settings', color: '#45B7D1', icon: 'settings', command: ''},
-        { id: 3, label: 'Profile', color: '#FF6B6B', icon: 'profile', command: ''},
+        { id: 'radMenu-1', label: 'Home', color: '#4ECDC4', icon: 'home', command: '' },
+        { id: 'radMenu-2', label: 'Settings', color: '#45B7D1', icon: 'settings', command: ''},
+        { id: 'radMenu-3', label: 'Profile', color: '#FF6B6B', icon: 'profile', command: ''},
     ],
     setMenuItems: (updater: RadialMenuItem[] | ((prev: RadialMenuItem[]) => RadialMenuItem[])) =>
         set((state) => ({

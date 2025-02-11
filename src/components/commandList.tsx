@@ -1,4 +1,4 @@
-import React, {useState} from "react";
+import React, {useState, CSSProperties} from "react";
 import { useDraggable } from "@dnd-kit/core";
 import { RadialMenuItem } from "@/types/type";
 
@@ -12,7 +12,6 @@ const DraggableItem = ( {id, children} ) => {
         </div>
     )
 }
-
 const CommandList:React.FC<{
     items: RadialMenuItem[]
 }> =  ({items}) => {
@@ -20,7 +19,7 @@ const CommandList:React.FC<{
         <div style={{ display: "flex", flexDirection: 'column', padding: 16}}>
             {items.map((item) => (
                 <DraggableItem key={item.id} id={item.id}>
-                    <div>{item.label}</div>
+                    <div style={{userSelect: 'none'}}>{item.label}</div>
                 </DraggableItem>
             ))}
         </div>

@@ -1,5 +1,5 @@
 interface RadialMenuItem {
-    id: number;
+    id: number | string;
     label: string;
     color: string;
     icon: string;
