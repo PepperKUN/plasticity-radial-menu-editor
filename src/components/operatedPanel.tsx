@@ -67,21 +67,26 @@ const OperaPanel: React.FC= () => {
 
     const handleDragEnd = (event: DragEndEvent) => {
         const { active, over, collisions, delta } = event;
-        if (active.id !== over?.id) {
-            const oldIndex = menuItems.findIndex((item) => item.id === active.id);
-            const newIndex = menuItems.findIndex((item) => item.id === over?.id);
+        if(over?.id !== 'trashBin') {
+            if (active.id !== over?.id) {
+                const oldIndex = menuItems.findIndex((item) => item.id === active.id);
+                const newIndex = menuItems.findIndex((item) => item.id === over?.id);
 
-            console.log(oldIndex, newIndex, menuItems, active, over, collisions, delta);
-            let newItems = menuItems;
-            // 列表变动
-            if(newIndex>-1&&oldIndex>-1) {
-                newItems = arrayMove(menuItems, oldIndex, newIndex);
+                console.log(oldIndex, newIndex, menuItems, active, over, collisions, delta);
+                let newItems = menuItems;
+                // 列表变动
+                if(newIndex>-1&&oldIndex>-1) {
+                    newItems = arrayMove(menuItems, oldIndex, newIndex);
+                }
+
+
+                setMenuItems(newItems);
             }
-
-
-            setMenuItems(newItems);
+        } else {
+            setMenuItems(prev => prev.filter(item => item.id !== active.id));
         }
     };
+    
 
     return (
         <>

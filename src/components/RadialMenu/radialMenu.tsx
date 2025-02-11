@@ -5,6 +5,7 @@ import { useMenuItemStore, useContainerStore } from "@/stores/store.ts";
 import { RadialMenuItem } from "@/types/type";
 import { throttle } from 'lodash-es';
 import './RadialMenu.scss'
+import {useDroppable} from "@dnd-kit/core";
 
 // 类型定义
 
@@ -202,6 +203,10 @@ const RadialMenu: React.FC<RadialMenuProps> = ({
     const containerRef = useRef<SVGSVGElement>(null);
     const setRect = useContainerStore((state) => state.setRect);
 
+    const { setNodeRef, isOver } = useDroppable({
+        id: 'trashBin',
+    })
+
     useEffect(() => {
         const container = containerRef.current;
         if (!container) return;
@@ -257,7 +262,7 @@ const RadialMenu: React.FC<RadialMenuProps> = ({
                     />
                 );
             })}
-            <circle cx={radius} cy={radius} r="68" />
+            <circle ref={setNodeRef} cx={radius} cy={radius} r="68" fill={isOver?'#ff0000':'#000000'} />
         </svg>
     );
 };

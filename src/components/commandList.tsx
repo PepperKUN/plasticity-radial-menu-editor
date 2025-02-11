@@ -2,12 +2,9 @@ import React, {useState} from "react";
 import { useDraggable } from "@dnd-kit/core";
 import { RadialMenuItem } from "@/types/type";
 
-const DraggableItem = ({ id, children }) => {
-    const { attributes, listeners, setNodeRef, transform } = useDraggable({
+const DraggableItem = ( {id, children} ) => {
+    const { attributes, listeners, setNodeRef } = useDraggable({
         id:id,
-        data: {
-            // from: 'external'
-        }
     })
     return (
         <div ref={setNodeRef} {...listeners} {...attributes}>
