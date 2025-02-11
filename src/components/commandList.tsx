@@ -1,8 +1,8 @@
-import React, {useState, CSSProperties} from "react";
+import React from "react";
 import { useDraggable } from "@dnd-kit/core";
 import { RadialMenuItem } from "@/types/type";
 
-const DraggableItem = ( {id, children} ) => {
+const DraggableItem = ( {id, children}: {id:number|string, children: React.ReactNode} ) => {
     const { attributes, listeners, setNodeRef } = useDraggable({
         id:id,
     })
