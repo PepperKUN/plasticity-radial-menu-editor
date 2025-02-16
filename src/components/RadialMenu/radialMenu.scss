@@ -1,30 +1,43 @@
 /* src/components/RadialMenu/RadialMenu.css */
 .radial-menu {
   cursor: pointer;
-  transition: transform 0.3s ease;
+  transition: transform 200ms cubic-bezier(0.4, 0, 1, 1);
   outline: none;
+  filter: drop-shadow( 0px 10px 15px rgba(0, 0, 0, .2));
 
   .sector_group {
-    transition: transform 0.3s ease;
-  }
+    transition: transform 200ms cubic-bezier(0.4, 0, 1, 1);
 
-  .sector {
-    transition: d 0.2s ease-out;
-    &:hover {
-      filter: brightness(1.15);
-      stroke-width: 3px !important;
+    .sector {
+      transition: d 200ms cubic-bezier(0.4, 0, 1, 1);
+
     }
-  }
-  .sector_arc {
-    // transition: d 0.3s ease;
+    .sector_arc {
+       transition: d 200ms cubic-bezier(0.4, 0, 1, 1);
+    }
+
+    &:hover {
+      .sector {
+        fill: #323235
+      }
+      .sector_arc {
+        stroke: #323235;
+      }
+    }
+
+    .sector_line {
+      transition: d 200ms cubic-bezier(0.4, 0, 1, 1);
+    }
+
+    .menu-label {
+      font-size: 14px;
+      fill: white;
+      font-weight: 500;
+      pointer-events: none;
+      user-select: none;
+      transition: transform 200ms cubic-bezier(0.4, 0, 1, 1);
+    }
+
   }
 
-  .menu-label {
-    font-size: 14px;
-    fill: white;
-    font-weight: 500;
-    pointer-events: none;
-    user-select: none;
-    transition: font-size 0.2s ease;
-  }
 }

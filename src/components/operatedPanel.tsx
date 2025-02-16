@@ -35,7 +35,7 @@ const OperaPanel: React.FC= () => {
         const { active, over } = event;
         console.log(
             "handleDragOver:",
-            listItems.some((item)=>item.id === active.id),
+            // listItems.some((item)=>item.id === active.id),
             over?.id,
             over,
             menuItems);
@@ -48,6 +48,7 @@ const OperaPanel: React.FC= () => {
 
             if (!draggedItem) return;
             const addItem = {...draggedItem, id:`radMenu-${draggedItem.id}` };
+            console.log(addItem)
 
             // 创建去重后的新数组（移除可能存在的重复项）
             const filteredItems = menuItems.filter(item => item.id !== draggedItem.id);
@@ -69,7 +70,7 @@ const OperaPanel: React.FC= () => {
 
     const handleDragEnd = (event: DragEndEvent) => {
         const { active, over } = event;
-        console.log("handleDragEnd:", over)
+        console.log("handleDragEnd:", active, over);
         if(over?.id !== 'trashBin') {
             if (active.id !== over?.id) {
                 const oldIndex = menuItems.findIndex((item) => item.id === active.id);
@@ -85,8 +86,9 @@ const OperaPanel: React.FC= () => {
                 setMenuItems(newItems);
             }
         } else {
-
-            setMenuItems(prev => prev.filter(item => item.id !== active.id));
+            if(menuItems.length>2) {
+                setMenuItems(prev => prev.filter(item => item.id !== active.id));
+            }
             console.log(listItems);
         }
     };

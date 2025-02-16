@@ -1,5 +1,5 @@
 // src/components/RadialMenu/RadialMenu.tsx
-import React, { CSSProperties, useRef, useEffect } from "react";
+import React, { CSSProperties, useRef, useEffect, MutableRefObject } from "react";
 import { useSortable } from "@dnd-kit/sortable";
 import { useMenuItemStore, useContainerStore } from "@/stores/store.ts";
 import { RadialMenuItem } from "@/types/type";
@@ -106,7 +106,7 @@ const SortableSector: React.FC<{
 
     const {
         index,
-        items,
+        // items,
         attributes,
         listeners,
         setNodeRef,
@@ -129,62 +129,56 @@ const SortableSector: React.FC<{
         }
     });
 
+    const nodeRef = useRef<SVGGElement>(null);
 
-    // const angleDrag = 360 / (items.length);
-    // const startAngleDrag = -angleDrag/2  + (isSorting?newIndex:index) * angleDrag;
-    // const endAngleDrag = startAngleDrag + angleDrag;
-    //
-    //
-    //
-    // const startA = isSorting?startAngleDrag:startAngle
-    // const endA = isSorting?endAngleDrag:endAngle
-    //
-    // const pathD = describeSector(center, center, radius - outerWidth, startA, endA);
-    // const pathL = describeLine(center, center, radius - outerWidth, startA, endA);
-    // const pathA = describleArc(center, center, radius - outerWidth/2, startA, endA);
-    // const pathA2 = describleArc(center, center, radius - outerWidth + 2, startA, endA);
-    // const labelAngle = startA + (endA - startA) / 2;
-    // const textPos = polarToCartesian(center, center, radius * 0.7, labelAngle);
 
 
     const rotateAngle = (isSorting?newIndex:index)*angle
+    const angleOffest = (newIndex - index)*angle
 
     const pathD = describeSector(center, center, radius - outerWidth, -angle/2, angle/2);
     const pathL = describeLine(center, center, radius - outerWidth, -angle/2, angle/2);
     const pathA = describleArc(center, center, radius - outerWidth/2, -angle/2, angle/2);
-    const pathA2 = describleArc(center, center, radius - outerWidth + 2, -angle/2, angle/2);
+    // const pathA2 = describleArc(center, center, radius - outerWidth + 2, -angle/2, angle/2);
     const labelAngle = -(isSorting?newIndex:index)*angle;
     const textPos = polarToCartesian(center, center, radius * 0.7, 0);
 
+    const finalSectorAngle = Math.abs(angleOffest)<=180?rotateAngle:(angleOffest>0?rotateAngle-360:rotateAngle+360);
+    const finalLabelAngle = Math.abs(angleOffest)<=180?labelAngle:(angleOffest>0?labelAngle+360:labelAngle-360);
 
     const style = {
         // transform: CSS.Transform.toString(transform),
         transformOrigin: "center",
-        transform: `rotate(${rotateAngle}deg)`,
-        transition,
-        opacity: isDragging ? 0.5 : 1,
+        transform: `rotate(${finalSectorAngle}deg)`,
+        transition: isSorting?transition:'none',
         outline: "none",
     };
 
+    const childrenStyle = {
+        transition: isSorting?transition:'none',
+    }
+
+    const arcStyle = {
+        stroke: `${isSorting&&isDragging?"#8b5cf6":"none"}`
+    }
+
+
     return (
-        <g className="sector_group" ref={setNodeRef} style={style} {...attributes} {...listeners}>
+        <g className="sector_group" ref={(el) => {
+            setNodeRef(el);
+            (nodeRef as MutableRefObject<SVGGElement | null>).current = el;
+        }} style={style} {...attributes} {...listeners}>
             <path
                 d={pathA}
                 strokeWidth={outerWidth}
-                stroke={isSorting?"#ff0000":"#ffffff"}
-                fill="none"
-                className="sector_arc"
-            />
-            <path
-                d={pathA2}
-                strokeWidth={6}
-                stroke="#000000"
+                style={arcStyle}
+                // stroke={isSorting&&isDragging?"#8b5cf6":"#27272a"}
                 fill="none"
                 className="sector_arc"
             />
             <path
                 d={pathD}
-                fill={item.color}
+                fill={isSorting&&isDragging?"#323235":"#27272a"}
                 className="sector"
                 onClick={() => onItemClick?.(item)}
             />
@@ -192,12 +186,14 @@ const SortableSector: React.FC<{
                 d={pathL}
                 strokeWidth="1"
                 stroke="#ffffff"
+                strokeOpacity={0.1}
                 fill="none"
                 className="sector_line"
             />
             <text
-                transform={`rotate(${labelAngle})`}
+                transform={`rotate(${finalLabelAngle})`}
                 transform-origin={`${textPos.x} ${textPos.y}`}
+                style={childrenStyle}
                 x={textPos.x}
                 y={textPos.y}
                 textAnchor="middle"
@@ -264,6 +260,7 @@ const RadialMenu: React.FC<RadialMenuProps> = ({
             }}
             viewBox={`0 0 ${radius * 2} ${radius * 2}`}
         >
+            <circle cx={radius} cy={radius} r={radius - 6} fill="none" stroke="#27272a" strokeWidth={12}/>
             {menuItems.map((item, index) => {
                 const angle = 360 / menuItems.length;
                 // const startAngle = -angle/2  + index * angle;
@@ -280,7 +277,9 @@ const RadialMenu: React.FC<RadialMenuProps> = ({
                     />
                 );
             })}
-            <circle ref={setNodeRef} cx={radius} cy={radius} r="68" fill={isOver?'#ff0000':'#000000'} />
+            <circle cx={radius} cy={radius} r={radius - 10} fill="none" stroke="#000000" strokeWidth={6}/>
+            <circle cx={radius} cy={radius} r={75} fill="#171717" stroke="#ffffff" strokeWidth={1} strokeOpacity={0.1}/>
+            <circle ref={setNodeRef} cx={radius} cy={radius} r={70} fill={isOver?'#c62222':'#171717'} stroke="#ffffff" strokeWidth={1} strokeOpacity={0.1}/>
         </svg>
     );
 };
