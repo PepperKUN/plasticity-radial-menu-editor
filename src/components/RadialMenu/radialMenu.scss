@@ -4,6 +4,10 @@
   transition: transform 0.3s ease;
   outline: none;
 
+  .sector_group {
+    transition: transform 0.3s ease;
+  }
+
   .sector {
     transition: d 0.2s ease-out;
     &:hover {

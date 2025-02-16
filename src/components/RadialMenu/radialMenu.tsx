@@ -92,13 +92,18 @@ const describleArc = (
 const SortableSector: React.FC<{
     item: RadialMenuItem;
     radius: number;
-    startAngle: number;
-    endAngle: number;
+    order: number;
+    // startAngle: number;
+    angle: number;
+    // endAngle: number;
     outerWidth: number;
     onItemClick?: (item: RadialMenuItem) => void;
-}> = ({ item, radius, startAngle, endAngle, outerWidth, onItemClick }) => {
+}> = ({ item, radius, order, angle, outerWidth, onItemClick }) => {
     const center = radius;
-    
+
+    const startAngle = order*angle - angle/2
+    const endAngle = startAngle + angle
+
     const {
         index,
         items,
@@ -124,34 +129,45 @@ const SortableSector: React.FC<{
         }
     });
 
-    
 
-    const angleDrag = 360 / (items.length);
-    const startAngleDrag = -angleDrag/2  + (isSorting?newIndex:index) * angleDrag;
-    const endAngleDrag = startAngleDrag + angleDrag;
+    // const angleDrag = 360 / (items.length);
+    // const startAngleDrag = -angleDrag/2  + (isSorting?newIndex:index) * angleDrag;
+    // const endAngleDrag = startAngleDrag + angleDrag;
+    //
+    //
+    //
+    // const startA = isSorting?startAngleDrag:startAngle
+    // const endA = isSorting?endAngleDrag:endAngle
+    //
+    // const pathD = describeSector(center, center, radius - outerWidth, startA, endA);
+    // const pathL = describeLine(center, center, radius - outerWidth, startA, endA);
+    // const pathA = describleArc(center, center, radius - outerWidth/2, startA, endA);
+    // const pathA2 = describleArc(center, center, radius - outerWidth + 2, startA, endA);
+    // const labelAngle = startA + (endA - startA) / 2;
+    // const textPos = polarToCartesian(center, center, radius * 0.7, labelAngle);
 
 
+    const rotateAngle = (isSorting?newIndex:index)*angle
 
-    const startA = isSorting?startAngleDrag:startAngle
-    const endA = isSorting?endAngleDrag:endAngle
-
-    const pathD = describeSector(center, center, radius - outerWidth, startA, endA);
-    const pathL = describeLine(center, center, radius - outerWidth, startA, endA);
-    const pathA = describleArc(center, center, radius - outerWidth/2, startA, endA);
-    const pathA2 = describleArc(center, center, radius - outerWidth + 2, startA, endA);
-    const labelAngle = startA + (endA - startA) / 2;
-    const textPos = polarToCartesian(center, center, radius * 0.7, labelAngle);
+    const pathD = describeSector(center, center, radius - outerWidth, -angle/2, angle/2);
+    const pathL = describeLine(center, center, radius - outerWidth, -angle/2, angle/2);
+    const pathA = describleArc(center, center, radius - outerWidth/2, -angle/2, angle/2);
+    const pathA2 = describleArc(center, center, radius - outerWidth + 2, -angle/2, angle/2);
+    const labelAngle = -(isSorting?newIndex:index)*angle;
+    const textPos = polarToCartesian(center, center, radius * 0.7, 0);
 
 
     const style = {
         // transform: CSS.Transform.toString(transform),
+        transformOrigin: "center",
+        transform: `rotate(${rotateAngle}deg)`,
         transition,
         opacity: isDragging ? 0.5 : 1,
         outline: "none",
     };
 
     return (
-        <g ref={setNodeRef} style={style} {...attributes} {...listeners}>
+        <g className="sector_group" ref={setNodeRef} style={style} {...attributes} {...listeners}>
             <path
                 d={pathA}
                 strokeWidth={outerWidth}
@@ -180,6 +196,8 @@ const SortableSector: React.FC<{
                 className="sector_line"
             />
             <text
+                transform={`rotate(${labelAngle})`}
+                transform-origin={`${textPos.x} ${textPos.y}`}
                 x={textPos.x}
                 y={textPos.y}
                 textAnchor="middle"
@@ -248,16 +266,16 @@ const RadialMenu: React.FC<RadialMenuProps> = ({
         >
             {menuItems.map((item, index) => {
                 const angle = 360 / menuItems.length;
-                const startAngle = -angle/2  + index * angle;
-                const endAngle = startAngle + angle;
+                // const startAngle = -angle/2  + index * angle;
+                // const endAngle = startAngle + angle;
 
                 return (
                     <SortableSector
                         key={item.id}
                         item={item}
                         radius={radius}
-                        startAngle={startAngle}
-                        endAngle={endAngle}
+                        order={index}
+                        angle = {angle}
                         outerWidth={12}
                     />
                 );

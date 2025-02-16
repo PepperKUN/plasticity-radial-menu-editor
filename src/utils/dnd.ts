@@ -30,6 +30,7 @@ const isPointInSector = (
 
 
     // 标准化角度范围
+    // const offestAngle = (sector.endAngle - sector.startAngle)/2
     const start = (sector.startAngle + 360) % 360;
     const end = (sector.endAngle + 360) % 360;
 
