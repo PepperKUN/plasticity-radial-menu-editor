@@ -7,10 +7,10 @@ import './App.css'
 function App() {
     const {menuItems, setMenuItems} = useMenuItemStore()
 
-    const handleItemClick = (item: RadialMenuItem) => {
-        console.log('Selected:', item);
-        // 在此处添加点击处理逻辑
-    };
+    // const handleItemClick = (item: RadialMenuItem) => {
+    //     console.log('Selected:', item);
+    //     // 在此处添加点击处理逻辑
+    // };
 
     const handleItemAdd = () => {
         const newMenuItems = [...menuItems, {

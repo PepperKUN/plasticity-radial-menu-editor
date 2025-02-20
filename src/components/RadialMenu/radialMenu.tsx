@@ -1,11 +1,12 @@
 // src/components/RadialMenu/RadialMenu.tsx
-import React, { CSSProperties, useRef, useEffect, MutableRefObject } from "react";
+import React, { CSSProperties, useRef, useEffect, useMemo, MutableRefObject } from "react";
 import { useSortable } from "@dnd-kit/sortable";
 import { useMenuItemStore, useContainerStore } from "@/stores/store.ts";
 import { RadialMenuItem } from "@/types/type";
 import { throttle } from 'lodash-es';
 import './RadialMenu.scss'
 import {useDroppable} from "@dnd-kit/core";
+import SvgIcon from "@/components/RadialMenu/SvgIcon.tsx";
 
 // 类型定义
 
@@ -104,6 +105,8 @@ const SortableSector: React.FC<{
     const startAngle = order*angle - angle/2
     const endAngle = startAngle + angle
 
+    const iconSize = 20;
+
     const {
         index,
         // items,
@@ -164,8 +167,8 @@ const SortableSector: React.FC<{
 
 
     return (
-        <g className="sector_group" ref={(el) => {
-            setNodeRef(el);
+        <g className={`sector_group ${isSorting&&isDragging?'selected':''}`} ref={(el) => {
+            setNodeRef(el as unknown as HTMLElement);
             (nodeRef as MutableRefObject<SVGGElement | null>).current = el;
         }} style={style} {...attributes} {...listeners}>
             <path
@@ -190,18 +193,28 @@ const SortableSector: React.FC<{
                 fill="none"
                 className="sector_line"
             />
-            <text
-                transform={`rotate(${finalLabelAngle})`}
-                transform-origin={`${textPos.x} ${textPos.y}`}
-                style={childrenStyle}
+            {/*<text*/}
+            {/*    transform={`rotate(${finalLabelAngle})`}*/}
+            {/*    transform-origin={`${textPos.x} ${textPos.y}`}*/}
+            {/*    style={childrenStyle}*/}
+            {/*    x={textPos.x}*/}
+            {/*    y={textPos.y}*/}
+            {/*    textAnchor="middle"*/}
+            {/*    dominantBaseline="central"*/}
+            {/*    className="menu-label"*/}
+            {/*>*/}
+            {/*    {item.label}*/}
+            {/*</text>*/}
+            <SvgIcon
+                style={{
+                    transform: `rotate(${finalLabelAngle}deg) translate(-${iconSize/2}px, -${iconSize/2}px)`,
+                    transformOrigin: `${textPos.x}px ${textPos.y}px`,
+                }}
+                name="tuichu"
                 x={textPos.x}
                 y={textPos.y}
-                textAnchor="middle"
-                dominantBaseline="central"
-                className="menu-label"
-            >
-                {item.label}
-            </text>
+                size={iconSize}
+            />
         </g>
     );
 };
@@ -217,7 +230,7 @@ const RadialMenu: React.FC<RadialMenuProps> = ({
     const containerRef = useRef<SVGSVGElement>(null);
     const setRect = useContainerStore((state) => state.setRect);
 
-    const { setNodeRef, isOver } = useDroppable({
+    const { setNodeRef, isOver, active } = useDroppable({
         id: 'trashBin',
     })
 
@@ -248,11 +261,26 @@ const RadialMenu: React.FC<RadialMenuProps> = ({
         };
     }, [setRect]);
 
+    const sortedMenuItems = useMemo(() => {
+        const tempArray = menuItems.map((item, index) => ({...item, order: index}))
+        const activeItem = tempArray.find((item) => item.id === active?.id)
+        if(active&&activeItem) {
+            const result = [
+                ...tempArray.filter((item) => item.id !== active.id),
+                activeItem
+            ]
+            console.log(result)
+            return result
+        } else {
+            return tempArray
+        }
+    }, [menuItems, active]);
+
 
     return (
         <svg
             ref={containerRef}
-            className={`radial-menu ${className?className:''}`}
+            className={`radial-menu ${className ? className : ''}`}
             style={{
                 width: radius * 2,
                 height: radius * 2,
@@ -260,26 +288,25 @@ const RadialMenu: React.FC<RadialMenuProps> = ({
             }}
             viewBox={`0 0 ${radius * 2} ${radius * 2}`}
         >
-            <circle cx={radius} cy={radius} r={radius - 6} fill="none" stroke="#27272a" strokeWidth={12}/>
-            {menuItems.map((item, index) => {
+            <circle cx={radius} cy={radius} r={radius - 5 } stroke="#27272a" strokeWidth={10} fill="#171717"/>
+            {sortedMenuItems.map((item) => {
                 const angle = 360 / menuItems.length;
-                // const startAngle = -angle/2  + index * angle;
-                // const endAngle = startAngle + angle;
 
                 return (
                     <SortableSector
                         key={item.id}
                         item={item}
                         radius={radius}
-                        order={index}
-                        angle = {angle}
+                        order={item.order}
+                        angle={angle}
                         outerWidth={12}
                     />
                 );
             })}
             <circle cx={radius} cy={radius} r={radius - 10} fill="none" stroke="#000000" strokeWidth={6}/>
             <circle cx={radius} cy={radius} r={75} fill="#171717" stroke="#ffffff" strokeWidth={1} strokeOpacity={0.1}/>
-            <circle ref={setNodeRef} cx={radius} cy={radius} r={70} fill={isOver?'#c62222':'#171717'} stroke="#ffffff" strokeWidth={1} strokeOpacity={0.1}/>
+            <circle ref={(el) => setNodeRef(el as unknown as HTMLElement)} cx={radius} cy={radius} r={70}
+                    fill={isOver ? '#c62222' : '#171717'} stroke="#ffffff" strokeWidth={1} strokeOpacity={0.1}/>
         </svg>
     );
 };

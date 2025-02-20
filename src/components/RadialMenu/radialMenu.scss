@@ -8,6 +8,10 @@
   .sector_group {
     transition: transform 200ms cubic-bezier(0.4, 0, 1, 1);
 
+    &.selected {
+      filter: drop-shadow( 0px 10px 15px rgba(0, 0, 0, .4));
+    }
+
     .sector {
       transition: d 200ms cubic-bezier(0.4, 0, 1, 1);
 
@@ -36,6 +40,13 @@
       pointer-events: none;
       user-select: none;
       transition: transform 200ms cubic-bezier(0.4, 0, 1, 1);
+    }
+
+    .icon {
+      transition: transform 200ms cubic-bezier(0.4, 0, 1, 1);
+      //transform: translate( -25px, -25px);
+      fill: currentColor; // 继承父级颜色
+      overflow: hidden;
     }
 
   }
