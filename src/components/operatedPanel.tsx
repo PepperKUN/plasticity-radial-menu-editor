@@ -16,6 +16,7 @@ import { sectorCollisionDetection } from "@/utils/dnd.ts";
 import RadialMenu from "@/components/RadialMenu/radialMenu";
 import CommandList from "@/components/commandList";
 import { RadialMenuItem } from "@/types/type";
+import MenuLabel from "@/components/menuLabel.tsx";
 
 const OperaPanel: React.FC= () => {
 
@@ -103,7 +104,10 @@ const OperaPanel: React.FC= () => {
                 onDragEnd={handleDragEnd}
             >
                 <SortableContext items={menuItems}>
-                    <RadialMenu/>
+                    <div className="radial-wrap">
+                        <MenuLabel items={menuItems} center={{x: 250, y: 250}} />
+                        <RadialMenu/>
+                    </div>
                     <CommandList items={listItems}/>
                 </SortableContext>
             </DndContext>

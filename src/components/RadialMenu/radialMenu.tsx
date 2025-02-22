@@ -7,6 +7,7 @@ import { throttle } from 'lodash-es';
 import './RadialMenu.scss'
 import {useDroppable} from "@dnd-kit/core";
 import SvgIcon from "@/components/RadialMenu/SvgIcon.tsx";
+import {polarToCartesian} from "@/utils/util.ts";
 
 // 类型定义
 
@@ -18,20 +19,6 @@ interface RadialMenuProps {
     className?: string;
     style?: CSSProperties;
 }
-
-// 极坐标转笛卡尔坐标
-const polarToCartesian = (
-    cx: number,
-    cy: number,
-    r: number,
-    angle: number
-): { x: number; y: number } => {
-    const rad = ((angle - 90) * Math.PI) / 180;
-    return {
-        x: cx + r * Math.cos(rad),
-        y: cy + r * Math.sin(rad)
-    };
-};
 
 // 生成扇形路径描述
 const describeSector = (
@@ -210,7 +197,7 @@ const SortableSector: React.FC<{
                     transform: `rotate(${finalLabelAngle}deg) translate(-${iconSize/2}px, -${iconSize/2}px)`,
                     transformOrigin: `${textPos.x}px ${textPos.y}px`,
                 }}
-                name="tuichu"
+                name="test"
                 x={textPos.x}
                 y={textPos.y}
                 size={iconSize}
@@ -288,6 +275,10 @@ const RadialMenu: React.FC<RadialMenuProps> = ({
             }}
             viewBox={`0 0 ${radius * 2} ${radius * 2}`}
         >
+            <radialGradient id="trashBin" cx="50%" cy="50%" r="50%">
+                <stop offset="60%" stop-color="#171717"/>
+                <stop offset="100%" stop-color="#c62222"/>
+            </radialGradient>
             <circle cx={radius} cy={radius} r={radius - 5 } stroke="#27272a" strokeWidth={10} fill="#171717"/>
             {sortedMenuItems.map((item) => {
                 const angle = 360 / menuItems.length;
@@ -306,7 +297,7 @@ const RadialMenu: React.FC<RadialMenuProps> = ({
             <circle cx={radius} cy={radius} r={radius - 10} fill="none" stroke="#000000" strokeWidth={6}/>
             <circle cx={radius} cy={radius} r={75} fill="#171717" stroke="#ffffff" strokeWidth={1} strokeOpacity={0.1}/>
             <circle ref={(el) => setNodeRef(el as unknown as HTMLElement)} cx={radius} cy={radius} r={70}
-                    fill={isOver ? '#c62222' : '#171717'} stroke="#ffffff" strokeWidth={1} strokeOpacity={0.1}/>
+                    fill={isOver ? 'url(#trashBin)' : '#171717'} stroke="#ffffff" strokeWidth={1} strokeOpacity={0.1}/>
         </svg>
     );
 };

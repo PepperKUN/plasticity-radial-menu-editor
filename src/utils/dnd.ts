@@ -36,7 +36,7 @@ const isPointInSector = (
 
     //判断逻辑
     return (
-        distance>=68 && distance <= sector.r && (
+        distance>=68 && distance <= (sector.r+200) && (
             // 情况1：未跨越360°
             (start <= end && angle >= start && angle <= end) ||
             // 情况2：跨越360°（拆分为两段判断）

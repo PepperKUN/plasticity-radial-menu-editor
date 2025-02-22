@@ -40,3 +40,18 @@
 .read-the-docs {
   color: #888;
 }
+
+.radial-wrap {
+  width: 500px;
+  height: 500px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+  .radial-menu-labels {
+    position: absolute;
+    top: 0;
+    left: 0;
+
+  }
+}

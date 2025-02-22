@@ -14,13 +14,12 @@ function App() {
 
     const handleItemAdd = () => {
         const newMenuItems = [...menuItems, {
-            id: menuItems.length + 1,
+            id: `add_${menuItems.length + 1}`,
             label: `Item ${menuItems.length + 1}`,
             color: `#${Math.floor(Math.random() * 16777215).toString(16)}`,
             icon: `item-${menuItems.length + 1}`,
             command: ` `,
         }];
-        console.log(newMenuItems)
         setMenuItems(newMenuItems)
     }
 

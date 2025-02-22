@@ -15,7 +15,7 @@ const SvgIcon:React.FC<SvgIconProps> = ({ name, x, y, style, size }) =>{
         const scriptId = 'iconfont-symbol-script';
         if (!document.getElementById(scriptId)) {
             const script = document.createElement('script');
-            script.src = '//at.alicdn.com/t/font_8d5l8fzk5b87iudi.js';
+            script.src = '/static/iconfont/font.js';
             script.id = scriptId;
             document.body.appendChild(script);
         }
