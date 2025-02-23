@@ -32,6 +32,11 @@ const OperaPanel: React.FC= () => {
         useSensor(PointerSensor)
     );
 
+    const size = {
+        width: 600,
+        height: 600,
+    }
+
     const handleDragOver = (event: DragEndEvent) => {
         const { active, over } = event;
         // console.log(
@@ -104,8 +109,15 @@ const OperaPanel: React.FC= () => {
                 onDragEnd={handleDragEnd}
             >
                 <SortableContext items={menuItems}>
-                    <div className="radial-wrap">
-                        <MenuLabel items={menuItems} center={{x: 250, y: 250}} />
+                    <div className="radial-wrap" style={{ width: size.width , height: size.height }}>
+                        <MenuLabel
+                            items={menuItems}
+                            size={size}
+                            radius={180}
+                            sparsityRatio={0.2}
+                            spacing={20}
+                            extendLength={1000}
+                        />
                         <RadialMenu/>
                     </div>
                     <CommandList items={listItems}/>

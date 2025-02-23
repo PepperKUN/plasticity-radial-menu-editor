@@ -276,8 +276,8 @@ const RadialMenu: React.FC<RadialMenuProps> = ({
             viewBox={`0 0 ${radius * 2} ${radius * 2}`}
         >
             <radialGradient id="trashBin" cx="50%" cy="50%" r="50%">
-                <stop offset="60%" stop-color="#171717"/>
-                <stop offset="100%" stop-color="#c62222"/>
+                <stop offset="60%" stopColor="#171717"/>
+                <stop offset="100%" stopColor="#6a1c1e"/>
             </radialGradient>
             <circle cx={radius} cy={radius} r={radius - 5 } stroke="#27272a" strokeWidth={10} fill="#171717"/>
             {sortedMenuItems.map((item) => {
