@@ -1,4 +1,4 @@
-import React, {useMemo, useRef, useState} from "react";
+import React, {useEffect, useMemo, useRef, useState} from "react";
 import {polarToCartesian, convertedObj2Table} from "@/utils/util.ts";
 import {RadialMenuItem} from "@/types/type";
 import {DragEndEvent, DragStartEvent, useDndMonitor} from "@dnd-kit/core";
@@ -76,7 +76,7 @@ const MenuLabel:React.FC<menuLabelProps> = ({
             const labelRad = Math.PI/2 - i*sectorRadians
             const xOffest = labelRad===0?(radius+spacing):(size.height/2-uniFormPosY)/Math.tan(labelRad)
             const posY = xOffest>size.width/2?size.height/2-Math.tan(labelRad)*size.width/2:uniFormPosY
-            console.log(labelRad, xOffest)
+            // console.log(labelRad, xOffest)
 
             return {
                 x: Math.round(size.width/2 + Math.min(xOffest, size.width/2)),
@@ -112,7 +112,7 @@ const MenuLabel:React.FC<menuLabelProps> = ({
                 }
             }
             return {
-                key: items[i].id,
+                id: items[i].id,
                 mid: {
                     x: point.x,
                     y: Math.max(point.y, 0), //最上方中心点Y坐标clamp
@@ -124,22 +124,34 @@ const MenuLabel:React.FC<menuLabelProps> = ({
             }
         })
 
+        const sortedLinePoints = linePoints.sort((a, b) => {
+            if (a.id > b.id) {
+                return 1;
+            } else if (a.id < b.id) {
+                return  -1;
+            } else {
+                return 0
+            }
+        });
+
         console.table(
             convertedObj2Table({
                 // labelsCenterRatio,
-                gapsArrayMin,
-                gapsArray,
+                items,
+                // gapsArrayMin,
+                // gapsArray,
                 // maxGap,
-                labelsYPosition,
+                // labelsYPosition,
                 // midPointsLeft,
-                midPoints,
+                // midPoints,
                 linePoints
             })
 
         )
 
-        return linePoints
+        return sortedLinePoints
     }, [items])
+
 
 
 
@@ -159,7 +171,8 @@ const MenuLabel:React.FC<menuLabelProps> = ({
             {linePointsPosition.map((point, i) => {
                 return (
                     <path
-                        key={point.key}
+                        data-key={point.id}
+                        key={point.id}
                         stroke="url(#radialStroke)"
                         strokeWidth={1}
                         fill="none"
