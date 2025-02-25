@@ -34,7 +34,7 @@ const OperaPanel: React.FC= () => {
 
     const size = {
         width: 600,
-        height: 600,
+        height: 480,
     }
 
     const handleDragOver = (event: DragEndEvent) => {

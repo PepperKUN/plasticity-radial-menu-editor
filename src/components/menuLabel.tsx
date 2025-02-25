@@ -1,7 +1,14 @@
-import React, {useEffect, useMemo, useRef, useState} from "react";
+import React, {useMemo, useRef, useState} from "react";
 import {polarToCartesian, convertedObj2Table} from "@/utils/util.ts";
 import {RadialMenuItem} from "@/types/type";
 import {DragEndEvent, DragStartEvent, useDndMonitor} from "@dnd-kit/core";
+
+enum Direction {
+    Up,    // 0
+    Down,  // 1
+    Left,  // 2
+    Right  // 3
+}
 
 interface menuLabelProps {
     items: RadialMenuItem[];
@@ -36,7 +43,7 @@ const MenuLabel:React.FC<menuLabelProps> = ({
 
         }
     })
-    const linePointsPosition = useMemo(() => {
+    const menuLabels = useMemo(() => {
         const sectorAngle = 360/items.length;
         const isOdd = items.length%2 > 0;
         setIsOdd(isOdd);
@@ -100,9 +107,11 @@ const MenuLabel:React.FC<menuLabelProps> = ({
             if(isTop||isBottom) {
                 posX = size.width/2;
                 if(isTop) {
-                    posY = Math.max(point.y - extendLength*0, 0)
+                    // posY = Math.max(point.y - extendLength*0, 0)
+                    posY = 0
                 } else {
-                    posY = Math.min(point.y + extendLength*0, size.height)
+                    // posY = Math.min(point.y + extendLength*0, size.height)
+                    posY = size.height
                 }
             } else {
                 if (isLeft) {
@@ -113,6 +122,9 @@ const MenuLabel:React.FC<menuLabelProps> = ({
             }
             return {
                 id: items[i].id,
+                label: items[i].label,
+                command: items[i].command,
+                icon: items[i].icon,
                 mid: {
                     x: point.x,
                     y: Math.max(point.y, 0), //最上方中心点Y坐标clamp
@@ -134,54 +146,65 @@ const MenuLabel:React.FC<menuLabelProps> = ({
             }
         });
 
-        console.table(
-            convertedObj2Table({
-                // labelsCenterRatio,
-                items,
-                // gapsArrayMin,
-                // gapsArray,
-                // maxGap,
-                // labelsYPosition,
-                // midPointsLeft,
-                // midPoints,
-                linePoints
-            })
-
-        )
+        // console.table(
+        //     convertedObj2Table({
+        //         // labelsCenterRatio,
+        //         items,
+        //         // gapsArrayMin,
+        //         // gapsArray,
+        //         // maxGap,
+        //         // labelsYPosition,
+        //         // midPointsLeft,
+        //         // midPoints,
+        //         linePoints
+        //     })
+        //
+        // )
 
         return sortedLinePoints
     }, [items])
 
 
 
-
     return (
-        <svg
-            className="radial-menu-labels"
-            ref={containerRef}
-            viewBox={`0 0 ${size.width} ${size.height}`}
-        >
-            <defs>
-                <radialGradient id="radialStroke" cx="50%" cy="50%" r="50%" gradientUnits="userSpaceOnUse">
-                    <stop offset={`${200/Math.min(size.width, size.height)*100}%`} stopColor='transparent'/>
-                    <stop offset="100%" stopColor="#ffffff"/>
-                </radialGradient>
+        <>
+            <svg
+                className="radial-menu-label-lines"
+                ref={containerRef}
+                viewBox={`0 0 ${size.width} ${size.height}`}
+            >
+                <defs>
+                    <radialGradient id="radialStroke" cx="50%" cy="50%" r="50%" gradientUnits="userSpaceOnUse">
+                        <stop offset={`${200/Math.min(size.width, size.height)*100}%`} stopColor='transparent'/>
+                        <stop offset="100%" stopColor="#ffffff"/>
+                    </radialGradient>
 
-            </defs>
-            {linePointsPosition.map((point, i) => {
-                return (
-                    <path
-                        data-key={point.id}
-                        key={point.id}
-                        stroke="url(#radialStroke)"
-                        strokeWidth={1}
-                        fill="none"
-                        d={`M ${center.x} ${center.y} L ${point.mid.x} ${point.mid.y} L ${point.end.x} ${point.end.y}`}
-                    />
-                )
-            })}
+                </defs>
+                {menuLabels.map((label, i) => {
+                    return (
+                        <path
+                            key={label.id}
+                            stroke="url(#radialStroke)"
+                            strokeWidth={1}
+                            fill="none"
+                            d={`M ${center.x} ${center.y} L ${label.mid.x} ${label.mid.y} L ${label.end.x} ${label.end.y}`}
+                        />
+                    )
+                })}
+            </svg>
+            <ul className="radial-menu-labels">
+                {menuLabels.map((label) => {
+                    return (
+                        <li className="menu-label">
+                            <h4>{label.label}</h4>
+                            <span>{label.command}</span>
+                            <span>{label.icon}</span>
+                        </li>
+                    )
+                })}
 
-        </svg>
+            </ul>
+        </>
     )
 }
 
