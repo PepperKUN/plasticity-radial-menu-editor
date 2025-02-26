@@ -121,6 +121,7 @@ const SortableSector: React.FC<{
     const nodeRef = useRef<SVGGElement>(null);
     const [currentIndex, setCurrentIndex] = useState(index);
     const [tempIndex, setTempIndex] = useState(index);
+    const [isTransitionEnabled, setIsTransitionEnabled] = useState(true);
 
     useEffect(()=>{
         setCurrentIndex(prev=>{
@@ -159,7 +160,7 @@ const SortableSector: React.FC<{
         // transform: CSS.Transform.toString(transform),
         // transformOrigin: "center",
         transform: `rotate(${finalSectorAngle}deg)`,
-        // transition: isSorting?transition:'none',
+        transition: isTransitionEnabled?'':'none',
         // outline: "none",
     };
     // if(item.id == "radMenu-1") {
@@ -175,12 +176,21 @@ const SortableSector: React.FC<{
         stroke: `${isSorting&&isDragging?"#8b5cf6":"none"}`
     }
 
-    const handleTransitionEnd = () => {
-        if(nodeRef.current) {
-            // nodeRef.current.style.transition = "none";
-            setTempIndex(newIndex);
-        }
+    const handleTransitionEnd = (e:React.TransitionEvent) => {
+        if(e.propertyName !== 'transform') return;
+
+        setIsTransitionEnabled(false);
+        setTempIndex(newIndex);
     }
+
+    useEffect(() => {
+        if (!isTransitionEnabled) {
+            const timer = setTimeout(() => {
+                setIsTransitionEnabled(true); // 下一个事件循环恢复过渡
+            }, 20);
+            return () => clearTimeout(timer);
+        }
+    }, [isTransitionEnabled]);
 
 
     return (
