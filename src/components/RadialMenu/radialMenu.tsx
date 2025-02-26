@@ -1,5 +1,5 @@
 // src/components/RadialMenu/RadialMenu.tsx
-import React, { CSSProperties, useRef, useEffect, useMemo, MutableRefObject } from "react";
+import React, {CSSProperties, useRef, useEffect, useMemo, MutableRefObject, useState} from "react";
 import { useSortable } from "@dnd-kit/sortable";
 import { useMenuItemStore, useContainerStore } from "@/stores/store.ts";
 import { RadialMenuItem } from "@/types/type";
@@ -7,7 +7,7 @@ import { throttle } from 'lodash-es';
 import './RadialMenu.scss'
 import {useDroppable} from "@dnd-kit/core";
 import SvgIcon from "@/components/RadialMenu/SvgIcon.tsx";
-import {polarToCartesian} from "@/utils/util.ts";
+import {polarToCartesian, convertedObj2Table} from "@/utils/util.ts";
 
 // 类型定义
 
@@ -96,7 +96,7 @@ const SortableSector: React.FC<{
 
     const {
         index,
-        // items,
+        items,
         attributes,
         listeners,
         setNodeRef,
@@ -108,7 +108,6 @@ const SortableSector: React.FC<{
         transition: null,
         id: item.id,
         data: {
-            // from: 'internal',
             sector: {
                 cx: center,        // 圆心 X
                 cy: center,        // 圆心 Y
@@ -120,10 +119,29 @@ const SortableSector: React.FC<{
     });
 
     const nodeRef = useRef<SVGGElement>(null);
+    const [currentIndex, setCurrentIndex] = useState(index);
+    const [tempIndex, setTempIndex] = useState(index);
+
+    useEffect(()=>{
+        setCurrentIndex(prev=>{
+            const indexOffest = newIndex - prev;
+            const isReversed = Math.abs(indexOffest) > items.length/2;
+            const realIndex = isReversed?prev+((indexOffest>0?-1:1)*(items.length-Math.abs(indexOffest))):newIndex
+            setTempIndex(realIndex)
+            // if(item.id == "radMenu-1") console.table(
+            //     // convertedObj2Table({prev, newIndex}),
+            //     indexOffest,
+            //     isReversed,
+            //     realIndex
+            // )
+
+            return newIndex;
+        })
+    }, [newIndex])
 
 
 
-    const rotateAngle = (isSorting?newIndex:index)*angle
+    const rotateAngle = (isSorting?tempIndex:index)*angle
     const angleOffest = (newIndex - index)*angle
 
     const pathD = describeSector(center, center, radius - outerWidth, -angle/2, angle/2);
@@ -133,16 +151,21 @@ const SortableSector: React.FC<{
     const labelAngle = -(isSorting?newIndex:index)*angle;
     const textPos = polarToCartesian(center, center, radius * 0.7, 0);
 
-    const finalSectorAngle = Math.abs(angleOffest)<=180?rotateAngle:(angleOffest>0?rotateAngle-360:rotateAngle+360);
+    // const finalSectorAngle = Math.abs(angleOffest)<=180?rotateAngle:(angleOffest>0?rotateAngle-360:rotateAngle+360);
+    const finalSectorAngle = rotateAngle
     const finalLabelAngle = Math.abs(angleOffest)<=180?labelAngle:(angleOffest>0?labelAngle+360:labelAngle-360);
 
     const style = {
         // transform: CSS.Transform.toString(transform),
-        transformOrigin: "center",
+        // transformOrigin: "center",
         transform: `rotate(${finalSectorAngle}deg)`,
-        transition: isSorting?transition:'none',
-        outline: "none",
+        // transition: isSorting?transition:'none',
+        // outline: "none",
     };
+    // if(item.id == "radMenu-1") {
+    //     console.log('finalSectorAngle:', finalSectorAngle, newIndex, index);
+    //
+    // }
 
     const childrenStyle = {
         transition: isSorting?transition:'none',
@@ -152,12 +175,19 @@ const SortableSector: React.FC<{
         stroke: `${isSorting&&isDragging?"#8b5cf6":"none"}`
     }
 
+    const handleTransitionEnd = () => {
+        if(nodeRef.current) {
+            // nodeRef.current.style.transition = "none";
+            setTempIndex(newIndex);
+        }
+    }
+
 
     return (
         <g className={`sector_group ${isSorting&&isDragging?'selected':''}`} ref={(el) => {
             setNodeRef(el as unknown as HTMLElement);
             (nodeRef as MutableRefObject<SVGGElement | null>).current = el;
-        }} style={style} {...attributes} {...listeners}>
+        }} style={style} {...attributes} {...listeners} onTransitionEnd={handleTransitionEnd}>
             <path
                 d={pathA}
                 strokeWidth={outerWidth}

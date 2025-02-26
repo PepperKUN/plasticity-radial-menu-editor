@@ -6,4 +6,9 @@ interface RadialMenuItem {
     command: string;
 }
 
-export {RadialMenuItem}
+interface point {
+    x: number;
+    y: number;
+}
+
+export {RadialMenuItem, point}

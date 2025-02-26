@@ -1,13 +1,13 @@
 import React, {useMemo, useRef, useState} from "react";
 import {polarToCartesian, convertedObj2Table} from "@/utils/util.ts";
-import {RadialMenuItem} from "@/types/type";
+import {point, RadialMenuItem} from "@/types/type";
 import {DragEndEvent, DragStartEvent, useDndMonitor} from "@dnd-kit/core";
 
 enum Direction {
-    Up,    // 0
-    Down,  // 1
-    Left,  // 2
-    Right  // 3
+    Up = "Top",
+    Down = "Bottom",
+    Left = "Left",
+    Right = "Right"
 }
 
 interface menuLabelProps {
@@ -17,6 +17,16 @@ interface menuLabelProps {
     sparsityRatio?: number;
     size?: {width: number, height: number};
     extendLength?:number;
+}
+
+interface menuLabelItem {
+    id: string|number,
+    label: string,
+    command: string,
+    icon: string,
+    direction: Direction,
+    mid: point,
+    end: point
 }
 
 const MenuLabel:React.FC<menuLabelProps> = ({
@@ -43,7 +53,8 @@ const MenuLabel:React.FC<menuLabelProps> = ({
 
         }
     })
-    const menuLabels = useMemo(() => {
+
+    const menuLabels = useMemo<menuLabelItem[]>(() => {
         const sectorAngle = 360/items.length;
         const isOdd = items.length%2 > 0;
         setIsOdd(isOdd);
@@ -51,7 +62,7 @@ const MenuLabel:React.FC<menuLabelProps> = ({
         const halfIndex = Math.floor(items.length/2)
         const rightItems = items.slice(0, halfIndex+1)
 
-        const gapsArrayMin = rightItems.map((item, i) => {
+        const gapsArrayMin = rightItems.map((_, i) => {
             const currentPoint = polarToCartesian(center.x, center.y, radius, i*sectorAngle);
             const prevPoint = polarToCartesian(center.x, center.y, radius, (i-1)*sectorAngle);
             return i==0?0:Math.abs(currentPoint.y - prevPoint.y);
@@ -95,56 +106,40 @@ const MenuLabel:React.FC<menuLabelProps> = ({
 
         const midPoints = midPointsRight.slice(0, isOdd?undefined:midPointsRight.length-1).concat(midPointsLeft)
 
-        const linePoints = midPoints.map((point, i) => {
-            const isLeft = i>items.length/2
+        const linePoints:menuLabelItem[] = midPoints.map((point, i) => {
+            let direction = Direction.Right
+            direction = i>items.length/2?Direction.Left:direction
             // const isRight = i>0&&i<items.length/2
-            const isTop = i===0
-            const isBottom = i===items.length/2
+            direction = i===0?Direction.Up:direction
+            direction = i===items.length/2?Direction.Down:direction
 
-            let posX = point.x
-            let posY = point.y
+            const getEndPos = () => {
+                switch(direction) {
+                    case Direction.Left:
+                        return {x: Math.max(point.x - extendLength, 0), y: point.y};
+                    case Direction.Right:
+                        return {x: Math.min(point.x + extendLength, size.width), y: point.y};
+                    case Direction.Up:
+                        return {x: size.width/2, y: 0};
+                    case Direction.Down:
+                        return {x: size.width/2, y: size.height};
+                }
 
-            if(isTop||isBottom) {
-                posX = size.width/2;
-                if(isTop) {
-                    // posY = Math.max(point.y - extendLength*0, 0)
-                    posY = 0
-                } else {
-                    // posY = Math.min(point.y + extendLength*0, size.height)
-                    posY = size.height
-                }
-            } else {
-                if (isLeft) {
-                    posX = Math.max(point.x - extendLength, 0)
-                } else {
-                    posX = Math.min(point.x + extendLength, size.width)
-                }
             }
+
             return {
                 id: items[i].id,
                 label: items[i].label,
                 command: items[i].command,
                 icon: items[i].icon,
+                direction,
                 mid: {
                     x: point.x,
                     y: Math.max(point.y, 0), //最上方中心点Y坐标clamp
                 },
-                end: {
-                    x: posX,
-                    y: posY,
-                }
+                end: getEndPos()
             }
         })
-
-        const sortedLinePoints = linePoints.sort((a, b) => {
-            if (a.id > b.id) {
-                return 1;
-            } else if (a.id < b.id) {
-                return  -1;
-            } else {
-                return 0
-            }
-        });
 
         // console.table(
         //     convertedObj2Table({
@@ -161,10 +156,50 @@ const MenuLabel:React.FC<menuLabelProps> = ({
         //
         // )
 
-        return sortedLinePoints
+        return linePoints.sort((a, b) => {
+            if (a.id > b.id) {
+                return 1;
+            } else if (a.id < b.id) {
+                return  -1;
+            } else {
+                return 0
+            }
+        });
     }, [items])
 
+    const getLabelStyle = (item:menuLabelItem) => {
+        const position = {
+            top: item.end.y+'px',
+            left: item.end.x+'px',
 
+        }
+        switch (item.direction) {
+            case Direction.Left:
+                return {
+                    ...position,
+                    transform: `translate(-100%, -50%)`,
+                    borderRightWidth: 1,
+                }
+            case Direction.Right:
+                return {
+                    ...position,
+                    transform: `translate(0%, -50%)`,
+                    borderLeftWidth: 1,
+                }
+            case Direction.Up:
+                return {
+                    ...position,
+                    transform: `translate(-50%, -100%)`,
+                    borderBottomWidth: 1,
+                }
+            case Direction.Down:
+                return {
+                    ...position,
+                    transform: `translate(-50%, 0%)`,
+                    borderTopWidth: 1,
+                }
+        }
+    }
 
     return (
         <>
@@ -180,7 +215,7 @@ const MenuLabel:React.FC<menuLabelProps> = ({
                     </radialGradient>
 
                 </defs>
-                {menuLabels.map((label, i) => {
+                {menuLabels.map((label) => {
                     return (
                         <path
                             key={label.id}
@@ -195,7 +230,7 @@ const MenuLabel:React.FC<menuLabelProps> = ({
             <ul className="radial-menu-labels">
                 {menuLabels.map((label) => {
                     return (
-                        <li className="menu-label">
+                        <li key={label.id} className="menu-label" style={getLabelStyle(label)}>
                             <h4>{label.label}</h4>
                             <span>{label.command}</span>
                             <span>{label.icon}</span>
