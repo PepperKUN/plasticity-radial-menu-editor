@@ -5,14 +5,16 @@ import {
     useSensor,
     useSensors,
     DragEndEvent,
+    DragOverlay,
 } from "@dnd-kit/core";
 
 import {
     arrayMove,
     SortableContext,
 } from "@dnd-kit/sortable";
-import { useMenuItemStore } from "@/stores/store.ts";
-import { sectorCollisionDetection } from "@/utils/dnd.ts";
+
+import { useMenuItemStore } from "@/stores/store";
+import {sectorCollisionDetection, rotateAround} from "@/utils/util"
 import RadialMenu from "@/components/RadialMenu/radialMenu";
 import CommandList from "@/components/commandList";
 import { RadialMenuItem } from "@/types/type";
@@ -105,6 +107,7 @@ const OperaPanel: React.FC= () => {
             <DndContext
                 sensors={sensors}
                 collisionDetection={sectorCollisionDetection}
+                modifiers={[rotateAround]}
                 onDragOver={handleDragOver}
                 onDragEnd={handleDragEnd}
             >
@@ -119,6 +122,9 @@ const OperaPanel: React.FC= () => {
                             extendLength={1000}
                         />
                         <RadialMenu/>
+                        <DragOverlay>
+                            <div>1111</div>
+                        </DragOverlay>
                     </div>
                     <CommandList items={listItems}/>
                 </SortableContext>
