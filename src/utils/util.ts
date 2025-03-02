@@ -1,4 +1,4 @@
-import { CollisionDetection, Modifier } from '@dnd-kit/core';
+import {CollisionDetection, Modifier, DropAnimation, DropAnimationFunction} from '@dnd-kit/core';
 import {useContainerStore} from "@/stores/store.ts";
 
 
@@ -114,19 +114,48 @@ const sectorCollisionDetection: CollisionDetection = ({
     }
 };
 
+const radiusConstraint = ({x, y, cx, cy, radius}:{x: number, y: number, cx: number, cy: number, radius: number}) => {
+    // 约束坐标到圆形区域
+    const dx = x - cx;
+    const dy = y - cy;
+    const distance = Math.sqrt(dx ** 2 + dy ** 2);
+
+    if (distance > radius) {
+        const angle = Math.atan2(dy, dx);
+        x = Math.round(cx + radius * Math.cos(angle));
+        y = Math.round(cy + radius * Math.sin(angle));
+    }
+    // console.log({
+    //     x: x,
+    //     y: y,
+    // })
+    return {
+        x: x,
+        y: y,
+    }
+}
+
 
 const rotateAround:Modifier = ({
                                    transform,
+                                   windowRect,
+
                                }) => {
-    console.log(transform)
+    // console.log(windowRect)
 
     return {
         ...transform,
+        // x: 0,
+        // y: 0
     }
 
+}
+
+const customDropAnimation: DropAnimationFunction = (args) => {
+    console.log('args:', args);
 }
 
 
 
 
-export { convertedObj2Table, polarToCartesian, sectorCollisionDetection, rotateAround };
+export { convertedObj2Table, polarToCartesian, sectorCollisionDetection, rotateAround, customDropAnimation, radiusConstraint };

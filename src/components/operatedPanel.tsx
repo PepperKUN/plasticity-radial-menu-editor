@@ -1,9 +1,6 @@
-import React from "react";
+import React, { useState, useRef } from "react";
 import {
     DndContext,
-    PointerSensor,
-    useSensor,
-    useSensors,
     DragEndEvent,
     DragOverlay,
 } from "@dnd-kit/core";
@@ -13,30 +10,44 @@ import {
     SortableContext,
 } from "@dnd-kit/sortable";
 
-import { useMenuItemStore } from "@/stores/store";
-import {sectorCollisionDetection, rotateAround} from "@/utils/util"
+import { useMenuItemStore, useListItemStore } from "@/stores/store";
+import {sectorCollisionDetection, rotateAround, customDropAnimation, radiusConstraint} from "@/utils/util"
 import RadialMenu from "@/components/RadialMenu/radialMenu";
 import CommandList from "@/components/commandList";
 import { RadialMenuItem } from "@/types/type";
 import MenuLabel from "@/components/menuLabel.tsx";
+import {DragMoveEvent} from "@dnd-kit/core/dist/types/events";
 
 const OperaPanel: React.FC= () => {
 
     const { menuItems, setMenuItems } = useMenuItemStore();
+    const { listItems, setListItems } = useListItemStore();
 
-    const listItems:RadialMenuItem[] = [
-        { id: 6, label: 'Home1', color: '#7d4ecd', icon: 'home1', command: '' },
-        { id: 7, label: 'Settings1', color: '#ff385d', icon: 'settings1', command: ''},
-        { id: 8, label: 'Profile1', color: '#ebff6b', icon: 'profile1', command: ''},
-    ]
+    const [position, setPosition] = useState<{ x: number; y: number }>({ x: 0, y: 0 });
+    const nodeRef = useRef<HTMLDivElement>(null);
 
-    const sensors = useSensors(
-        useSensor(PointerSensor)
-    );
 
+    // console.log('sensors:', sensors)
     const size = {
         width: 600,
         height: 480,
+    }
+
+    const handleDragMove = (e: DragMoveEvent) => {
+        // console.log("handleDragMove", e.activatorEvent, nodeRef.current?.getBoundingClientRect());
+        const rect = nodeRef.current?.getBoundingClientRect()
+        const moveEvent = e.activatorEvent as MouseEvent
+        if(rect) {
+            const pos = radiusConstraint({
+                x: moveEvent.clientX - rect.x +e.delta.x,
+                y: moveEvent.clientY - rect.y + e.delta.y,
+                cx: size.width/2,
+                cy: size.height/2,
+                radius: 180
+            })
+            setPosition(pos)
+
+        }
     }
 
     const handleDragOver = (event: DragEndEvent) => {
@@ -105,14 +116,13 @@ const OperaPanel: React.FC= () => {
     return (
         <>
             <DndContext
-                sensors={sensors}
                 collisionDetection={sectorCollisionDetection}
-                modifiers={[rotateAround]}
+                onDragMove={handleDragMove}
                 onDragOver={handleDragOver}
                 onDragEnd={handleDragEnd}
             >
                 <SortableContext items={menuItems}>
-                    <div className="radial-wrap" style={{ width: size.width , height: size.height }}>
+                    <div className="radial-wrap" ref={nodeRef} style={{ width: size.width , height: size.height }}>
                         <MenuLabel
                             items={menuItems}
                             size={size}
@@ -122,9 +132,15 @@ const OperaPanel: React.FC= () => {
                             extendLength={1000}
                         />
                         <RadialMenu/>
-                        <DragOverlay>
-                            <div>1111</div>
-                        </DragOverlay>
+                        {/*<DragOverlay*/}
+                        {/*    style={{position: 'absolute', top: `${position.y}px`, width: 0, height: 0, left: `${position.x}px`, transform: `translate3d(0px, 0px, 0px)`}}*/}
+                        {/*    dropAnimation={customDropAnimation}*/}
+                        {/*    modifiers={[rotateAround]}*/}
+                        {/*>*/}
+                        {/*    <div>*/}
+                        {/*        111*/}
+                        {/*    </div>*/}
+                        {/*</DragOverlay>*/}
                     </div>
                     <CommandList items={listItems}/>
                 </SortableContext>

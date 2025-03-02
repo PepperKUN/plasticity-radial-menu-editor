@@ -163,6 +163,12 @@ const SortableSector: React.FC<{
         transition: isTransitionEnabled?'':'none',
         // outline: "none",
     };
+
+    const iconStyle = {
+        transform: `rotate(${-finalSectorAngle}deg) translate(-${iconSize/2}px, -${iconSize/2}px)`,
+        transformOrigin: `${textPos.x}px ${textPos.y}px`,
+        transition: isTransitionEnabled?'':'none',
+    }
     // if(item.id == "radMenu-1") {
     //     console.log('finalSectorAngle:', finalSectorAngle, newIndex, index);
     //
@@ -233,10 +239,7 @@ const SortableSector: React.FC<{
             {/*    {item.label}*/}
             {/*</text>*/}
             <SvgIcon
-                style={{
-                    transform: `rotate(${finalLabelAngle}deg) translate(-${iconSize/2}px, -${iconSize/2}px)`,
-                    transformOrigin: `${textPos.x}px ${textPos.y}px`,
-                }}
+                style={iconStyle}
                 name="test"
                 x={textPos.x}
                 y={textPos.y}
@@ -296,7 +299,7 @@ const RadialMenu: React.FC<RadialMenuProps> = ({
                 ...tempArray.filter((item) => item.id !== active.id),
                 activeItem
             ]
-            console.log(result)
+            // console.log(result)
             return result
         } else {
             return tempArray
