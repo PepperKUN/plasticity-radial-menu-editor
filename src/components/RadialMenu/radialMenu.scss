@@ -11,7 +11,7 @@
     outline: none;
 
     &.selected {
-      filter: drop-shadow( 0px 10px 15px rgba(0, 0, 0, .4));
+      filter: drop-shadow( 0px 10px 15px rgba(0, 0, 0, .8));
     }
 
     .sector {
@@ -24,10 +24,10 @@
 
     &:hover {
       .sector {
-        fill: #323235
+        fill: #202020
       }
       .sector_arc {
-        stroke: #18181b;
+        stroke: #444444;
       }
     }
 

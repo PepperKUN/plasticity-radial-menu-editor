@@ -179,7 +179,7 @@ const SortableSector: React.FC<{
     }
 
     const arcStyle = {
-        stroke: `${isSorting&&isDragging?"#8b5cf6":"none"}`
+        stroke: `${isSorting?(isDragging?"#8b5cf6":"none"):""}`
     }
 
     const handleTransitionEnd = (e:React.TransitionEvent) => {
@@ -214,7 +214,7 @@ const SortableSector: React.FC<{
             />
             <path
                 d={pathD}
-                fill={isSorting&&isDragging?"#323235":"#27272a"}
+                fill={isSorting&&isDragging?"#202020":"#141414"}
                 className="sector"
                 onClick={() => onItemClick?.(item)}
             />
@@ -319,10 +319,10 @@ const RadialMenu: React.FC<RadialMenuProps> = ({
             viewBox={`0 0 ${radius * 2} ${radius * 2}`}
         >
             <radialGradient id="trashBin" cx="50%" cy="50%" r="50%">
-                <stop offset="60%" stopColor="#171717"/>
+                <stop offset="60%" stopColor="#000000"/>
                 <stop offset="100%" stopColor="#6a1c1e"/>
             </radialGradient>
-            <circle cx={radius} cy={radius} r={radius - 5 } stroke="#27272a" strokeWidth={10} fill="#171717"/>
+            <circle cx={radius} cy={radius} r={radius - 5 } stroke="#141414" strokeWidth={10} fill="#000000"/>
             {sortedMenuItems.map((item) => {
                 const angle = 360 / menuItems.length;
 
@@ -338,9 +338,9 @@ const RadialMenu: React.FC<RadialMenuProps> = ({
                 );
             })}
             <circle cx={radius} cy={radius} r={radius - 10} fill="none" stroke="#000000" strokeWidth={6}/>
-            <circle cx={radius} cy={radius} r={75} fill="#171717" stroke="#ffffff" strokeWidth={1} strokeOpacity={0.1}/>
+            <circle cx={radius} cy={radius} r={75} fill="#000000" stroke="#ffffff" strokeWidth={1} strokeOpacity={0.1}/>
             <circle ref={(el) => setNodeRef(el as unknown as HTMLElement)} cx={radius} cy={radius} r={70}
-                    fill={isOver ? 'url(#trashBin)' : '#171717'} stroke="#ffffff" strokeWidth={1} strokeOpacity={0.1}/>
+                    fill={isOver ? 'url(#trashBin)' : '#000000'} stroke="#ffffff" strokeWidth={1} strokeOpacity={0.1}/>
         </svg>
     );
 };

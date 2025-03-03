@@ -122,25 +122,28 @@ const OperaPanel: React.FC= () => {
                 onDragEnd={handleDragEnd}
             >
                 <SortableContext items={menuItems}>
-                    <div className="radial-wrap" ref={nodeRef} style={{ width: size.width , height: size.height }}>
-                        <MenuLabel
-                            items={menuItems}
-                            size={size}
-                            radius={180}
-                            sparsityRatio={0.2}
-                            spacing={20}
-                            extendLength={1000}
-                        />
-                        <RadialMenu/>
-                        {/*<DragOverlay*/}
-                        {/*    style={{position: 'absolute', top: `${position.y}px`, width: 0, height: 0, left: `${position.x}px`, transform: `translate3d(0px, 0px, 0px)`}}*/}
-                        {/*    dropAnimation={customDropAnimation}*/}
-                        {/*    modifiers={[rotateAround]}*/}
-                        {/*>*/}
-                        {/*    <div>*/}
-                        {/*        111*/}
-                        {/*    </div>*/}
-                        {/*</DragOverlay>*/}
+                    <div className="flex h-full flex-1 flex-col justify-center items-center">
+                        <div className="radial-wrap m-10" ref={nodeRef} style={{ width: size.width , height: size.height }}>
+                            <MenuLabel
+                                items={menuItems}
+                                size={size}
+                                radius={180}
+                                sparsityRatio={0.2}
+                                spacing={20}
+                                extendLength={1000}
+                            />
+                            <RadialMenu/>
+                            {/*<DragOverlay*/}
+                            {/*    style={{position: 'absolute', top: `${position.y}px`, width: 0, height: 0, left: `${position.x}px`, transform: `translate3d(0px, 0px, 0px)`}}*/}
+                            {/*    dropAnimation={customDropAnimation}*/}
+                            {/*    modifiers={[rotateAround]}*/}
+                            {/*>*/}
+                            {/*    <div>*/}
+                            {/*        111*/}
+                            {/*    </div>*/}
+                            {/*</DragOverlay>*/}
+                        </div>
+
                     </div>
                     <CommandList items={listItems}/>
                 </SortableContext>

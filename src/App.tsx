@@ -31,38 +31,27 @@ function App() {
 
   return (
       <>
-          <div className="app-container">
-              <h1>Dynamic Radial Menu</h1>
-
+          <div className="app-container flex w-screen h-screen box-border p-6 flex justify-between items-center">
               {/* 环形菜单 */}
               <OperaPanel/>
 
-              {/* 动态控制示例 */}
-              <div className="controls">
-                  <button
-                      onClick={handleItemAdd}
-                      disabled={menuItems.length >= 12}
-                  >
-                      Add Item
-                  </button>
+              {/*/!* 动态控制示例 *!/*/}
+              {/*<div className="controls">*/}
+              {/*    <button*/}
+              {/*        onClick={handleItemAdd}*/}
+              {/*        disabled={menuItems.length >= 12}*/}
+              {/*    >*/}
+              {/*        Add Item*/}
+              {/*    </button>*/}
 
-                  <button
-                      onClick={handleItemRemove}
-                      disabled={menuItems.length <= 2}
-                  >
-                      Remove Item
-                  </button>
-              </div>
+              {/*    <button*/}
+              {/*        onClick={handleItemRemove}*/}
+              {/*        disabled={menuItems.length <= 2}*/}
+              {/*    >*/}
+              {/*        Remove Item*/}
+              {/*    </button>*/}
+              {/*</div>*/}
           </div>
-          <h1>Vite + React</h1>
-          <div className="card">
-              <p>
-                  Edit <code>src/App.tsx</code> and save to test HMR
-              </p>
-          </div>
-          <p className="read-the-docs">
-              Click on the Vite and React logos to learn more
-          </p>
       </>
   )
 }
