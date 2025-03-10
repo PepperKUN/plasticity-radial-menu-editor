@@ -230,7 +230,7 @@ const MenuLabel:React.FC<menuLabelProps> = ({
             <ul className="radial-menu-labels">
                 {menuLabels.map((label) => {
                     return (
-                        <li key={label.id} className="menu-label" style={getLabelStyle(label)}>
+                        <li key={label.id} className="menu-label px-2 py-1" style={getLabelStyle(label)}>
                             <h4>{label.label}</h4>
                             <span>{label.command}</span>
                             <span>{label.icon}</span>
