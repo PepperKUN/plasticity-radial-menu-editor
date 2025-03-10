@@ -1,10 +1,5 @@
 import { create } from 'zustand'
-import {RadialMenuItem} from "@/types/type";
-
-interface listItem {
-    commandType: string,
-    items: RadialMenuItem[]
-}
+import {RadialMenuItem ,listItem} from "@/types/type";
 
 interface MenuItemState {
     menuItems: RadialMenuItem[];
@@ -218,7 +213,39 @@ const useListItemStore = create<ListItemState>((set) => ({
         commandType: 'Selection',
         items: [
             { id: 143, label: 'Selection mode: set all', icon: 'selection-mode-set-all', command: 'selection:mode:set:all', isAdd: false},
-            { id: 144, label: 'Selection mode: set control-point', icon: 'selection-mode-set-all', command: 'selection:mode:set:all', isAdd: false},
+            { id: 144, label: 'Selection mode: set control-point', icon: 'selection-mode-control-point', command: 'selection:mode:set:control-point', isAdd: false},
+            { id: 145, label: 'Selection mode: set edge', icon: 'selection-mode-set-edge', command: 'selection:mode:set:edge', isAdd: false},
+            { id: 146, label: 'Selection mode: set face', icon: 'selection-mode-set-face', command: 'selection:mode:set:face', isAdd: false},
+            { id: 147, label: 'Selection mode: set solid', icon: 'selection-mode-set-solid', command: 'selection:mode:set:solid', isAdd: false},
+            { id: 148, label: 'Selection: convert to control-points', icon: 'selection-convert-control-point', command: 'selection:convert:control-point', isAdd: false},
+            { id: 149, label: 'Selection: convert to edges', icon: 'selection-convert-edge', command: 'selection:convert:edge', isAdd: false},
+            { id: 150, label: 'Selection: convert to faces', icon: 'selection-convert-face', command: 'selection:convert:face', isAdd: false},
+            { id: 151, label: 'Selection: convert to groups', icon: 'selection-convert-group-children', command: 'selection:convert:group-children', isAdd: false},
+            { id: 152, label: 'Selection: convert to solids', icon: 'selection-convert-solid', command: 'selection:convert:solid', isAdd: false},
+            { id: 153, label: 'Selection: toggle control-point', icon: 'selection-toggle-control-point', command: 'selection:toggle:control-point', isAdd: false},
+            { id: 154, label: 'Selection: toggle edge', icon: 'selection-toggle-edge', command: 'selection:toggle:edge', isAdd: false},
+            { id: 155, label: 'Selection: toggle face', icon: 'selection-toggle-face', command: 'selection:toggle:face', isAdd: false},
+            { id: 155, label: 'Selection: toggle solid', icon: 'selection-toggle-solid', command: 'selection:toggle:solid', isAdd: false},
+        ]
+    },{
+        commandType: 'Viewport',
+        items: [
+            { id: 156, label: 'Viewport: focus', icon: 'viewport-focus', command: 'viewport:focus', isAdd: false},
+            { id: 157, label: 'Viewport: navigate to back', icon: 'viewport-navigate-back', command: 'viewport:navigate:back', isAdd: false},
+            { id: 158, label: 'Viewport: navigate to bottom', icon: 'viewport-navigate-bottom', command: 'viewport:navigate:bottom', isAdd: false},
+            { id: 159, label: 'Viewport: navigate to front', icon: 'viewport-navigate-front', command: 'viewport:navigate:front', isAdd: false},
+            { id: 160, label: 'Viewport: navigate to left', icon: 'viewport-navigate-left', command: 'viewport:navigate:left', isAdd: false},
+            { id: 161, label: 'Viewport: navigate to right', icon: 'viewport-navigate-right', command: 'viewport:navigate:right', isAdd: false},
+            { id: 162, label: 'Viewport: navigate to selection', icon: 'viewport-navigate-selection', command: 'viewport:navigate:selection', isAdd: false},
+            { id: 163, label: 'Viewport: navigate to top', icon: 'viewport-navigate-top', command: 'viewport:navigate:top', isAdd: false},
+            { id: 164, label: 'Viewport: navigate to top', icon: 'viewport-navigate-top', command: 'viewport:navigate:top', isAdd: false},
+            { id: 165, label: 'Viewport: toggle curves', icon: 'viewport-toggle-curves', command: 'viewport:toggle-curves', isAdd: false},
+            { id: 166, label: 'Viewport: toggle edges', icon: 'viewport-toggle-edges', command: 'viewport:toggle-edges', isAdd: false},
+            { id: 167, label: 'Viewport: toggle faces', icon: 'viewport-toggle-faces', command: 'viewport:toggle-faces', isAdd: false},
+            { id: 168, label: 'Viewport: toggle orthographic camera', icon: 'viewport-toggle-orthographic', command: 'viewport:toggle-orthographic', isAdd: false},
+            { id: 169, label: 'Viewport: toggle overlays', icon: 'viewport-toggle-overlays', command: 'viewport:toggle-overlays', isAdd: false},
+            { id: 170, label: 'Viewport: toggle render mode', icon: 'viewport-toggle-render-mode', command: 'viewport:toggle-render-mode', isAdd: false},
+            { id: 171, label: 'Viewport: toggle x ray', icon: 'viewport-toggle-x-ray', command: 'viewport:toggle-x-ray', isAdd: false},
         ]
     }],
     setListItems: (updater: listItem[] | ((prev: listItem[]) => listItem[])) =>

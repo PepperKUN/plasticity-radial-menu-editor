@@ -12,4 +12,9 @@ interface point {
     y: number;
 }
 
-export {RadialMenuItem, point}
+interface listItem {
+    commandType: string,
+    items: RadialMenuItem[]
+}
+
+export {RadialMenuItem, point, listItem}

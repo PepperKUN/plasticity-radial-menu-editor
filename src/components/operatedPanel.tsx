@@ -1,4 +1,4 @@
-import React, { useState, useRef } from "react";
+import React, { useState, useRef, useMemo } from "react";
 import {
     DndContext,
     DragEndEvent,
@@ -25,6 +25,11 @@ const OperaPanel: React.FC= () => {
 
     const [position, setPosition] = useState<{ x: number; y: number }>({ x: 0, y: 0 });
     const nodeRef = useRef<HTMLDivElement>(null);
+
+
+    const flatListItems= useMemo<>(() => {
+
+    })
 
 
     // console.log('sensors:', sensors)
