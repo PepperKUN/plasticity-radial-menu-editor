@@ -27,15 +27,13 @@ const OperaPanel: React.FC= () => {
     const nodeRef = useRef<HTMLDivElement>(null);
 
 
-    const flatListItems= useMemo<>(() => {
-
-    })
+    const flatListItems= useMemo(() => listItems.flatMap((item) => item.items), [listItems])
 
 
     // console.log('sensors:', sensors)
     const size = {
-        width: 600,
-        height: 480,
+        width: 500,
+        height: 400,
     }
 
     const handleDragMove = (e: DragMoveEvent) => {
@@ -67,7 +65,7 @@ const OperaPanel: React.FC= () => {
         if(!menuItems.some((item)=>item.id === `radMenu-${active.id}`)
             &&over?.id
         ) {
-            const draggedItem = listItems.find((item) => item.id === active.id);
+            const draggedItem = flatListItems.find((item) => item.id === active.id);
             const overIndex = menuItems.findIndex((item) => item.id === over.id);
 
             if (!draggedItem) return;

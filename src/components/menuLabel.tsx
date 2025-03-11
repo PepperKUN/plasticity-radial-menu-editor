@@ -179,24 +179,32 @@ const MenuLabel:React.FC<menuLabelProps> = ({
                     ...position,
                     transform: `translate(-100%, -50%)`,
                     borderRightWidth: 1,
+                    paddingInline: 'calc(var(--spacing)* 2)',
+                    paddingBlock: 0,
                 }
             case Direction.Right:
                 return {
                     ...position,
                     transform: `translate(0%, -50%)`,
                     borderLeftWidth: 1,
+                    paddingInline: 'calc(var(--spacing)* 2)',
+                    paddingBlock: 0,
                 }
             case Direction.Up:
                 return {
                     ...position,
                     transform: `translate(-50%, -100%)`,
                     borderBottomWidth: 1,
+                    paddingBlock: 'calc(var(--spacing)* 2)',
+                    paddingInline: 0,
                 }
             case Direction.Down:
                 return {
                     ...position,
                     transform: `translate(-50%, 0%)`,
                     borderTopWidth: 1,
+                    paddingBlock: 'calc(var(--spacing)* 2)',
+                    paddingInline: 0,
                 }
         }
     }
@@ -230,10 +238,12 @@ const MenuLabel:React.FC<menuLabelProps> = ({
             <ul className="radial-menu-labels">
                 {menuLabels.map((label) => {
                     return (
-                        <li key={label.id} className="menu-label px-2 py-1" style={getLabelStyle(label)}>
-                            <h4>{label.label}</h4>
-                            <span>{label.command}</span>
-                            <span>{label.icon}</span>
+                        <li key={label.id} className="menu-label text-xs flex flex-col gap-0.5" style={getLabelStyle(label)}>
+                            <h4 className='text-lg font-sans font-bold '>{label.label}</h4>
+                            <div className="icon_wrap flex gap-1 items-center">
+                                <span className='font-mono bg-violet-900 px-1 py-0.5 rounded-sm'>icon</span>
+                                <span>{label.icon}</span>
+                            </div>
                         </li>
                     )
                 })}
