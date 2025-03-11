@@ -2,6 +2,7 @@ import { useState } from 'react'
 import OperaPanel from '@/components/operatedPanel';
 import {RadialMenuItem} from "@/types/type";
 import {useMenuItemStore} from "@/stores/store.ts";
+import {ConfigProvider, theme} from 'antd';
 import './App.css'
 
 function App() {
@@ -30,8 +31,15 @@ function App() {
     }
 
   return (
-      <>
-          <div className="app-container flex w-screen h-screen box-border p-6 flex justify-between items-center">
+      <ConfigProvider
+        theme={{
+            // token: {
+            //     colorPrimary: '#7A3DE8',
+            // },
+            algorithm: theme.darkAlgorithm,
+        }}
+      >
+          <div className="app-container bg-neutral-800 flex w-screen h-screen box-border p-6 flex justify-between items-center">
               {/* 环形菜单 */}
               <OperaPanel/>
 
@@ -52,7 +60,7 @@ function App() {
               {/*    </button>*/}
               {/*</div>*/}
           </div>
-      </>
+      </ConfigProvider>
   )
 }
 

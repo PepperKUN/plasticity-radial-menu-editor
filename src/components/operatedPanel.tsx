@@ -126,12 +126,12 @@ const OperaPanel: React.FC= () => {
             >
                 <SortableContext items={menuItems}>
                     <div className="flex h-full flex-1 flex-col justify-center items-center">
-                        <div className="radial-wrap m-10" ref={nodeRef} style={{ width: size.width , height: size.height }}>
+                        <div className="radial-wrap" ref={nodeRef} style={{ width: size.width , height: size.height }}>
                             <MenuLabel
                                 items={menuItems}
                                 size={size}
                                 radius={180}
-                                sparsityRatio={0.2}
+                                sparsityRatio={0.1}
                                 spacing={20}
                                 extendLength={1000}
                             />

@@ -45,6 +45,8 @@ const MenuLabel:React.FC<menuLabelProps> = ({
     const [showLabel, setShowLabel] = useState(true);
     const [isOdd, setIsOdd] = useState(false);
 
+    const paddingY = 10;
+
     useDndMonitor({
         onDragStart(event: DragStartEvent) {
 
@@ -86,9 +88,9 @@ const MenuLabel:React.FC<menuLabelProps> = ({
             let uniFormPosY = value
 
             if(value<0) {
-                uniFormPosY = 0
+                uniFormPosY = 0 + paddingY
             } else if(value>size.height) {
-                uniFormPosY = size.height
+                uniFormPosY = size.height - paddingY
             }
 
             const labelRad = Math.PI/2 - i*sectorRadians
@@ -238,11 +240,11 @@ const MenuLabel:React.FC<menuLabelProps> = ({
             <ul className="radial-menu-labels">
                 {menuLabels.map((label) => {
                     return (
-                        <li key={label.id} className="menu-label text-xs flex flex-col gap-0.5" style={getLabelStyle(label)}>
+                        <li key={label.id} className="menu-label flex flex-col gap-0.5 text-neutral-300" style={getLabelStyle(label)}>
                             <h4 className='text-lg font-sans font-bold '>{label.label}</h4>
                             <div className="icon_wrap flex gap-1 items-center">
-                                <span className='font-mono bg-violet-900 px-1 py-0.5 rounded-sm'>icon</span>
-                                <span>{label.icon}</span>
+                                <span className='font-mono bg-neutral-700 px-1 py-0.5 rounded-sm text-xs'>icon</span>
+                                <span className='text-sm'>{label.icon}</span>
                             </div>
                         </li>
                     )
