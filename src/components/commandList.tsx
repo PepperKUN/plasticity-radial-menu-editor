@@ -13,13 +13,16 @@ interface flatListItem extends RadialMenuItem {
 
 
 
-const DraggableItem = ( {id, children}: {id:number|string, children: React.ReactNode} ) => {
+const DraggableItem = ( {id, label, children}: {id:number|string, label: string, children: React.ReactNode} ) => {
     const { attributes, listeners, setNodeRef } = useDraggable({
         id:id,
+        data: {
+            label: label
+        }
     })
     return (
         <div ref={setNodeRef} {...listeners} {...attributes}
-             className='px-2 py-1  cursor-grab rounded-sm text-neutral-400 hover:bg-neutral-300/20 hover:text-white'
+             className='p-2 flex justify-between gap-2 cursor-grab rounded-sm text-neutral-400 hover:bg-neutral-300/10 hover:text-white'
         >
             {children}
         </div>
@@ -41,7 +44,7 @@ const CommandList:React.FC<{
     ),[items])
 
     const listItemsWithAdd: listItem[] = useMemo(() => items.map((category) => ({commandType: category.commandType, items: category.items.map((item) => ({...item, isAdd: menuCommands.has(item.command)}))})
-    ),[items])
+    ),[items, menuItems])
 
     const onSearch = (event:ChangeEvent) => {
         console.log('onSearch', event)
@@ -78,8 +81,9 @@ const CommandList:React.FC<{
                     <React.Fragment key={category.commandType}>
                         {category.items.length>0&&<span className='p-2 text-xs bg-neutral-950 text-neutral-500' key={category.commandType}>{category.commandType}</span>}
                         { category.items.map((item) => (
-                        <DraggableItem key={item.id} id={item.id}>
+                        <DraggableItem key={item.id} id={item.id} label={item.label}>
                             <span className='select-none text-sm'>{item.label}</span>
+                            {item.isAdd&&<span className='px-1 py-0.5 font-mono text-xs bg-violet-700 rounded-sm text-white'>Added</span>}
                         </DraggableItem>
                         ))}
                     </React.Fragment>

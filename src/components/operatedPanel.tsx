@@ -16,7 +16,7 @@ import RadialMenu from "@/components/RadialMenu/radialMenu";
 import CommandList from "@/components/commandList";
 import { RadialMenuItem } from "@/types/type";
 import MenuLabel from "@/components/menuLabel.tsx";
-import {DragMoveEvent} from "@dnd-kit/core/dist/types/events";
+import {DragMoveEvent, DragStartEvent} from "@dnd-kit/core/dist/types/events";
 
 const OperaPanel: React.FC= () => {
 
@@ -26,6 +26,9 @@ const OperaPanel: React.FC= () => {
     const [position, setPosition] = useState<{ x: number; y: number }>({ x: 0, y: 0 });
     const nodeRef = useRef<HTMLDivElement>(null);
 
+    const [showOverlay, setShowOverlay] = useState<boolean>(false);
+    const [overlayText, setOverlayText] = useState("Curve");
+
 
     const flatListItems= useMemo(() => listItems.flatMap((item) => item.items), [listItems])
 
@@ -33,7 +36,7 @@ const OperaPanel: React.FC= () => {
     // console.log('sensors:', sensors)
     const size = {
         width: 500,
-        height: 400,
+        height: 500,
     }
 
     const handleDragMove = (e: DragMoveEvent) => {
@@ -50,6 +53,19 @@ const OperaPanel: React.FC= () => {
             })
             setPosition(pos)
 
+        }
+    }
+
+
+
+    const handleDragStart = (event: DragStartEvent) => {
+        const {active, activatorEvent} = event;
+        console.log("active", active, activatorEvent);
+        if(active.data.current?.label) {
+            setShowOverlay(true)
+            setOverlayText(active.data.current.label)
+        } else {
+            setShowOverlay(false)
         }
     }
 
@@ -120,7 +136,8 @@ const OperaPanel: React.FC= () => {
         <>
             <DndContext
                 collisionDetection={sectorCollisionDetection}
-                onDragMove={handleDragMove}
+                onDragStart={handleDragStart}
+                // onDragMove={handleDragMove}
                 onDragOver={handleDragOver}
                 onDragEnd={handleDragEnd}
             >
@@ -136,15 +153,14 @@ const OperaPanel: React.FC= () => {
                                 extendLength={1000}
                             />
                             <RadialMenu/>
-                            {/*<DragOverlay*/}
-                            {/*    style={{position: 'absolute', top: `${position.y}px`, width: 0, height: 0, left: `${position.x}px`, transform: `translate3d(0px, 0px, 0px)`}}*/}
-                            {/*    dropAnimation={customDropAnimation}*/}
-                            {/*    modifiers={[rotateAround]}*/}
-                            {/*>*/}
-                            {/*    <div>*/}
-                            {/*        111*/}
-                            {/*    </div>*/}
-                            {/*</DragOverlay>*/}
+                            {showOverlay&&<DragOverlay
+                                dropAnimation={customDropAnimation}
+                                // modifiers={[rotateAround]}
+                            >
+                                <div className='p-2 text-sm bg-violet-700'>
+                                    {overlayText}
+                                </div>
+                            </DragOverlay>}
                         </div>
 
                     </div>

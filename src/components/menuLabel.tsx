@@ -244,7 +244,7 @@ const MenuLabel:React.FC<menuLabelProps> = ({
                             <h4 className='text-lg font-sans font-bold '>{label.label}</h4>
                             <div className="icon_wrap flex gap-1 items-center">
                                 <span className='font-mono bg-neutral-700 px-1 py-0.5 rounded-sm text-xs'>icon</span>
-                                <span className='text-sm'>{label.icon}</span>
+                                <span className='font-mono text-sm'>{label.icon}</span>
                             </div>
                         </li>
                     )

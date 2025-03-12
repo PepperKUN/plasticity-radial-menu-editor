@@ -98,7 +98,7 @@ const sectorCollisionDetection: CollisionDetection = ({
                 relativeX,
                 relativeY,
                 sector,
-                active.data.current?200:0 //sortables时中心距离补偿
+                active.data.current?.sortable?200:0 //sortables时中心距离补偿
             );
         })
     // console.log('targetContainer:', targetContainer, {relativeX,relativeY}, distance);
