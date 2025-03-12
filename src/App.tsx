@@ -33,9 +33,9 @@ function App() {
   return (
       <ConfigProvider
         theme={{
-            // token: {
-            //     colorPrimary: '#7A3DE8',
-            // },
+            token: {
+                colorPrimary: '#7A3DE8',
+            },
             algorithm: theme.darkAlgorithm,
         }}
       >
