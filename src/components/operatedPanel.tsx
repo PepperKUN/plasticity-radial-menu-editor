@@ -99,6 +99,7 @@ const OperaPanel: React.FC= () => {
             ];
 
             setMenuItems(newItems);
+            setShowOverlay(false)
         } else {
             // console.log("filter");
             

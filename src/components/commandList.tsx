@@ -79,10 +79,10 @@ const CommandList:React.FC<{
             >
                 { listItemsWithAdd.map((category) => (
                     <React.Fragment key={category.commandType}>
-                        {category.items.length>0&&<span className='p-2 text-xs bg-neutral-950 text-neutral-500' key={category.commandType}>{category.commandType}</span>}
+                        {category.items.length>0&&<span className='p-2 pl-1 text-xs bg-neutral-900 text-neutral-500 sticky top-0 font-mono' key={category.commandType}>{category.commandType}</span>}
                         { category.items.map((item) => (
                         <DraggableItem key={item.id} id={item.id} label={item.label}>
-                            <span className='select-none text-sm'>{item.label}</span>
+                            <span className='select-none text-sm font-bold'>{item.label}</span>
                             {item.isAdd&&<span className='px-1 py-0.5 font-mono text-xs bg-violet-700 rounded-sm text-white'>Added</span>}
                         </DraggableItem>
                         ))}

@@ -39,7 +39,7 @@ function App() {
             algorithm: theme.darkAlgorithm,
         }}
       >
-          <div className="app-container bg-neutral-800 flex w-screen h-screen box-border p-6 flex justify-between items-center">
+          <div className="app-container bg-neutral-800 flex w-screen h-screen box-border p-6 flex justify-between items-center selection:bg-violet-900 selection:text-neutral-200">
               {/* 环形菜单 */}
               <OperaPanel/>
 
