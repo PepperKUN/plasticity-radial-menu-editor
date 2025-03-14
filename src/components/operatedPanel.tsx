@@ -158,7 +158,7 @@ const OperaPanel: React.FC= () => {
                                 dropAnimation={customDropAnimation}
                                 // modifiers={[rotateAround]}
                             >
-                                <div className='p-2 text-sm bg-violet-700'>
+                                <div className='p-2 text-sm bg-violet-700 cursor-grabbing'>
                                     {overlayText}
                                 </div>
                             </DragOverlay>}

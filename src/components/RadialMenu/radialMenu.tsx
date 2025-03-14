@@ -200,7 +200,7 @@ const SortableSector: React.FC<{
 
 
     return (
-        <g className={`sector_group text-neutral-300 hover:text-white ${isSorting&&isDragging?'selected':''}`} ref={(el) => {
+        <g className={`sector_group text-neutral-300 hover:text-white ${isSorting?'cursor-grabbing':'cursor-grab'} ${isDragging?'cursor-grabbing':''}} ${isSorting&&isDragging?'selected':''}`} ref={(el) => {
             setNodeRef(el as unknown as HTMLElement);
             (nodeRef as MutableRefObject<SVGGElement | null>).current = el;
         }} style={style} {...attributes} {...listeners} onTransitionEnd={handleTransitionEnd}>
