@@ -1,4 +1,4 @@
-import {CollisionDetection, Modifier, DropAnimation, DropAnimationFunction} from '@dnd-kit/core';
+import {CollisionDetection, Modifier, DropAnimationFunction} from '@dnd-kit/core';
 import {useContainerStore} from "@/stores/store.ts";
 
 
@@ -87,8 +87,6 @@ const sectorCollisionDetection: CollisionDetection = ({
         distance = Math.sqrt(dx * dx + dy * dy);
     }
 
-
-
     const targetContainer = droppableContainers
         .filter((container) => {
             const sector = container.data.current?.sector as Sector | undefined;
@@ -101,7 +99,7 @@ const sectorCollisionDetection: CollisionDetection = ({
                 active.data.current?.sortable?200:0 //sortables时中心距离补偿
             );
         })
-    // console.log('targetContainer:', targetContainer, {relativeX,relativeY}, distance);
+    console.log('targetContainer:', targetContainer, {relativeX,relativeY}, distance);
 
     if(targetContainer.length>0) {
         // console.log(targetContainer.map((container) => ({ id: container.id })))
@@ -138,7 +136,7 @@ const radiusConstraint = ({x, y, cx, cy, radius}:{x: number, y: number, cx: numb
 
 const rotateAround:Modifier = ({
                                    transform,
-                                   windowRect,
+                                   // windowRect,
 
                                }) => {
     // console.log(windowRect)

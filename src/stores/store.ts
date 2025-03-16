@@ -1,11 +1,18 @@
 import { create } from 'zustand'
-import {RadialMenuItem ,listItem} from "@/types/type";
+import {RadialMenuItem, GlobalRadialMenuItem, listItem} from "@/types/type";
 
 interface MenuItemState {
     menuItems: RadialMenuItem[];
     setMenuItems: (
       updater: RadialMenuItem[] | ((prev: RadialMenuItem[]) => RadialMenuItem[])
     ) => void;
+}
+
+interface GlobalRadialMenuState {
+    globalMenuItems: GlobalRadialMenuItem[];
+    setGlobalMenuItems: (
+        updater: GlobalRadialMenuItem[] | ((prev: GlobalRadialMenuItem[]) => GlobalRadialMenuItem[])
+    ) => void
 }
 
 interface ListItemState {
@@ -26,10 +33,28 @@ const useMenuItemStore = create<MenuItemState>((set) => ({
         { id: 'radMenu-2', label: 'Settings', color: '#45B7D1', icon: 'settings', command: ''},
         { id: 'radMenu-3', label: 'Profile', color: '#FF6B6B', icon: 'profile', command: ''},
     ],
-    setMenuItems: (updater: RadialMenuItem[] | ((prev: RadialMenuItem[]) => RadialMenuItem[])) =>
+    setMenuItems: (updater) =>
         set((state) => ({
           menuItems: typeof updater === 'function' ? updater(state.menuItems) : updater,
     })),
+}))
+
+const useGlobalMenuItemStore = create<GlobalRadialMenuState>((set) => ({
+    globalMenuItems: [
+        {
+            name: 'Default Menu',
+            command: 'radial:default-menu',
+            items: [
+                { id: 'radMenu-152', label: 'Selection mode: set edge', icon: 'selection-mode-set-edge', command: 'selection:mode:set:edge' },
+                { id: 'radMenu-153', label: 'Selection mode: set face', icon: 'selection-mode-set-face', command: 'selection:mode:set:face' },
+                { id: 'radMenu-154', label: 'Selection mode: set solid', icon: 'selection-mode-set-solid', command: 'selection:mode:set:solid' },
+            ]
+        }
+    ],
+    setGlobalMenuItems: (updater)=>
+        set((state) => ({
+            globalMenuItems: typeof  updater === 'function' ? updater(state.globalMenuItems): updater
+        })),
 }))
 
 const useListItemStore = create<ListItemState>((set) => ({
@@ -259,4 +284,4 @@ const useContainerStore = create<ContainerState>((set) => ({
     setRect: (rect) => set({ rect }),
 }));
 
-export {useMenuItemStore, useContainerStore, useListItemStore}
+export {useMenuItemStore, useContainerStore, useListItemStore, useGlobalMenuItemStore}

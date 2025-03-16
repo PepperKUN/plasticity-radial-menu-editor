@@ -1,14 +1,32 @@
 import React, {useState, useMemo, ChangeEvent} from "react";
 import { useDraggable } from "@dnd-kit/core";
 import { RadialMenuItem, listItem } from "@/types/type";
-import { useMenuItemStore } from "@/stores/store";
 import { Input, Divider } from 'antd';
 import { SearchOutlined } from '@ant-design/icons'
 import Fuse from "fuse.js";
 import { Scrollbars } from 'react-custom-scrollbars-2';
+import {motion} from "motion/react";
 
 interface flatListItem extends RadialMenuItem {
     type: string;
+}
+
+const variants = {
+    enter: () => ({
+        transform: `translateY(10%)`,
+        // x: direction>0?-20:20,
+        opacity: 0,
+    }),
+    center: {
+        transform: "translateY(0%)",
+        // x: 0,
+        opacity: 1,
+    },
+    exit: () => ({
+        transform: `translateY(10%)`,
+        // x: direction>0?20:-20,
+        opacity: 0,
+    })
 }
 
 
@@ -31,10 +49,10 @@ const DraggableItem = ( {id, label, children}: {id:number|string, label: string,
 
 const CommandList:React.FC<{
     items: listItem[]
-}> =  ({items}) => {
+    refItems: RadialMenuItem[]
+}> =  ({items, refItems}) => {
 
-    const { menuItems } = useMenuItemStore();
-    const menuCommands = new Set(menuItems.map((item) => item.command))
+    const menuCommands = new Set(refItems.map((item) => item.command))
 
     const flatData: flatListItem[] = useMemo(() => items.flatMap((category) => category.items.map((item) => ({
         ...item,
@@ -44,7 +62,7 @@ const CommandList:React.FC<{
     ),[items])
 
     const listItemsWithAdd: listItem[] = useMemo(() => items.map((category) => ({commandType: category.commandType, items: category.items.map((item) => ({...item, isAdd: menuCommands.has(item.command)}))})
-    ),[items, menuItems])
+    ),[items, refItems])
 
     const onSearch = (event:ChangeEvent) => {
         console.log('onSearch', event)
@@ -69,8 +87,24 @@ const CommandList:React.FC<{
 
 
     return (
-        <div className='flex flex-col p-2 h-full bg-neutral-900 rounded-sm gap-2'>
-            <Input placeholder='Search Commands' prefix={<SearchOutlined />} onChange={onSearch} variant='underlined'/>
+        <div
+            className='h-full overflow-hidden'
+            style={{width: 390}}
+        >
+            <motion.div
+                className='flex flex-col p-2 h-full bg-neutral-900 rounded-sm gap-2 contain-content'
+                variants={variants}
+                initial='enter'
+                animate='center'
+                exit='exit'
+                transition={{
+                    // transform: { type: "spring", stiffness: 300, damping: 30 },
+                    duration: 0.15
+                }}
+            >
+
+
+            <Input size='large' placeholder='Search Commands' prefix={<SearchOutlined />} onChange={onSearch} variant='underlined'/>
             <Scrollbars
                 className='flex flex-col'
                 renderThumbVertical={ThumbVertical}
@@ -82,13 +116,14 @@ const CommandList:React.FC<{
                         {category.items.length>0&&<span className='p-2 pl-1 text-xs bg-neutral-900 text-neutral-500 sticky top-0 font-mono' key={category.commandType}>{category.commandType}</span>}
                         { category.items.map((item) => (
                         <DraggableItem key={item.id} id={item.id} label={item.label}>
-                            <span className='select-none text-sm font-bold'>{item.label}</span>
-                            {item.isAdd&&<span className='px-1 py-0.5 font-mono text-xs bg-violet-700 rounded-sm text-white'>Added</span>}
+                            <span className='select-none text-sm gabarito-regular '>{item.label}</span>
+                            {item.isAdd&&<span className='px-1 py-0.5 flex self-baseline font-mono text-xs bg-violet-700 rounded-sm text-white'>Added</span>}
                         </DraggableItem>
                         ))}
                     </React.Fragment>
                 ))}
             </Scrollbars>
+            </motion.div>
         </div>
     )
 }

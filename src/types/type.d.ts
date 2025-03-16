@@ -7,6 +7,12 @@ interface RadialMenuItem {
     isAdd?: boolean;
 }
 
+interface GlobalRadialMenuItem {
+    name: string;
+    command: string;
+    items: RadialMenuItem[]
+}
+
 interface point {
     x: number;
     y: number;
@@ -17,4 +23,4 @@ interface listItem {
     items: RadialMenuItem[]
 }
 
-export {RadialMenuItem, point, listItem}
+export {RadialMenuItem, GlobalRadialMenuItem, point, listItem}

@@ -1,7 +1,7 @@
 // src/components/RadialMenu/RadialMenu.tsx
 import React, {CSSProperties, useRef, useEffect, useMemo, MutableRefObject, useState} from "react";
 import { useSortable } from "@dnd-kit/sortable";
-import { useMenuItemStore, useContainerStore } from "@/stores/store.ts";
+import { useContainerStore } from "@/stores/store.ts";
 import { RadialMenuItem } from "@/types/type";
 import { throttle } from 'lodash-es';
 import './RadialMenu.scss'
@@ -12,7 +12,7 @@ import {polarToCartesian, convertedObj2Table} from "@/utils/util.ts";
 // 类型定义
 
 interface RadialMenuProps {
-    items?: RadialMenuItem[];
+    items: RadialMenuItem[];
     radius?: number;
     onItemClick?: (item: RadialMenuItem) => void;
     onItemsChange?: (items: RadialMenuItem[]) => void;
@@ -251,12 +251,12 @@ const SortableSector: React.FC<{
 
 
 
-const RadialMenu: React.FC<RadialMenuProps> = ({
-                                                   radius = 155,
-                                                   className,
-                                                   style,
+const RadialMenuPie: React.FC<RadialMenuProps> = ({
+                                                items,
+                                                radius = 155,
+                                                className,
+                                                style,
                                                }) => {
-    const { menuItems } = useMenuItemStore();
     const containerRef = useRef<SVGSVGElement>(null);
     const setRect = useContainerStore((state) => state.setRect);
 
@@ -266,13 +266,14 @@ const RadialMenu: React.FC<RadialMenuProps> = ({
 
     useEffect(() => {
         const container = containerRef.current;
+        // console.log('container:',container)
         if (!container) return;
 
-        // 节流更新函数
+        // 节流更新函数(注意时长需要大于motion切换环形菜单的动画时长)
         const updateRect = throttle(() => {
             const rect = container.getBoundingClientRect();
             setRect(rect);
-        }, 100);
+        }, 400);
 
         // 初始测量
         updateRect();
@@ -292,7 +293,7 @@ const RadialMenu: React.FC<RadialMenuProps> = ({
     }, [setRect]);
 
     const sortedMenuItems = useMemo(() => {
-        const tempArray = menuItems.map((item, index) => ({...item, order: index}))
+        const tempArray = items.map((item, index) => ({...item, order: index}))
         const activeItem = tempArray.find((item) => item.id === active?.id)
         if(active&&activeItem) {
             const result = [
@@ -304,7 +305,7 @@ const RadialMenu: React.FC<RadialMenuProps> = ({
         } else {
             return tempArray
         }
-    }, [menuItems, active]);
+    }, [items, active]);
 
 
     return (
@@ -312,9 +313,9 @@ const RadialMenu: React.FC<RadialMenuProps> = ({
             ref={containerRef}
             className={`radial-menu ${className ? className : ''}`}
             style={{
+                ...style,
                 width: radius * 2,
                 height: radius * 2,
-                ...style
             }}
             viewBox={`0 0 ${radius * 2} ${radius * 2}`}
         >
@@ -324,7 +325,7 @@ const RadialMenu: React.FC<RadialMenuProps> = ({
             </radialGradient>
             <circle cx={radius} cy={radius} r={radius - 5 } stroke="#141414" strokeWidth={10} fill="#000000"/>
             {sortedMenuItems.map((item) => {
-                const angle = 360 / menuItems.length;
+                const angle = 360 / items.length;
 
                 return (
                     <SortableSector
@@ -345,4 +346,4 @@ const RadialMenu: React.FC<RadialMenuProps> = ({
     );
 };
 
-export default RadialMenu;
+export default RadialMenuPie;

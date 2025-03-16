@@ -1,7 +1,27 @@
 @import "tailwindcss";
+@import url('https://fonts.googleapis.com/css2?family=Gabarito:wght@400..900&display=swap');
 
 #root {
   margin: 0 auto;
+}
+
+.gabarito-regular {
+  font-family: "Gabarito", sans-serif;
+  font-optical-sizing: auto;
+  font-weight: 400;
+  font-style: normal;
+}
+.gabarito-bold {
+  font-family: "Gabarito", sans-serif;
+  font-optical-sizing: auto;
+  font-weight: 700;
+  font-style: normal;
+}
+.gabarito-black {
+  font-family: "Gabarito", sans-serif;
+  font-optical-sizing: auto;
+  font-weight: 900;
+  font-style: normal;
 }
 
 .radial-wrap {
@@ -28,11 +48,7 @@
       border: 0px solid rgba(255, 255, 255, .4);
       transition: all 200ms cubic-bezier(0.4, 0, 1, 1);
       position: absolute;
-      width: max-content;
       text-align: left;
-        h4{
-          margin: 0;
-        }
     }
 
   }

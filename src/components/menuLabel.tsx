@@ -12,6 +12,7 @@ enum Direction {
 
 interface menuLabelProps {
     items: RadialMenuItem[];
+    labelMaxWidth?: number;
     radius?: number;
     spacing?: number;
     sparsityRatio?: number;
@@ -31,6 +32,7 @@ interface menuLabelItem {
 
 const MenuLabel:React.FC<menuLabelProps> = ({
                                                 items,
+                                                labelMaxWidth=400,
                                                 radius = 155,
                                                 spacing = 10,
                                                 sparsityRatio = 0,
@@ -183,6 +185,7 @@ const MenuLabel:React.FC<menuLabelProps> = ({
                     borderRightWidth: 1,
                     paddingInline: 'calc(var(--spacing)* 2)',
                     paddingBlock: 0,
+                    maxWidth: labelMaxWidth,
                 }
             case Direction.Right:
                 return {
@@ -191,6 +194,7 @@ const MenuLabel:React.FC<menuLabelProps> = ({
                     borderLeftWidth: 1,
                     paddingInline: 'calc(var(--spacing)* 2)',
                     paddingBlock: 0,
+                    maxWidth: labelMaxWidth,
                 }
             case Direction.Up:
                 return {
@@ -240,11 +244,11 @@ const MenuLabel:React.FC<menuLabelProps> = ({
             <ul className="radial-menu-labels">
                 {menuLabels.map((label) => {
                     return (
-                        <li key={label.id} className="menu-label flex flex-col gap-0.5 text-neutral-300" style={getLabelStyle(label)}>
-                            <h4 className='text-lg font-sans font-bold '>{label.label}</h4>
-                            <div className="icon_wrap flex gap-1 items-center">
-                                <span className='font-mono bg-neutral-700 px-1 py-0.5 rounded-sm text-xs'>icon</span>
-                                <span className='font-mono text-sm'>{label.icon}</span>
+                        <li key={label.id} className="menu-label inline-flex w-max flex-col items-start gap-1.5 text-neutral-400" style={getLabelStyle(label)}>
+                            <h4 className='text-lg/5 gabarito-bold font-bold w-fit text-neutral-200'>{label.label}</h4>
+                            <div className="inline-flex icon_wrap gap-1 items-baseline font-mono">
+                                <span className='flex items-start bg-neutral-700 px-1 py-0.5 rounded-sm text-xs'>icon</span>
+                                <span className='text-sm/4 text-neutral-500'>{label.icon}</span>
                             </div>
                         </li>
                     )
