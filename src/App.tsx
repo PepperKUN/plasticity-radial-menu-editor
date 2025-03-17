@@ -1,4 +1,4 @@
-import React, { useState, useMemo } from "react";
+import { useState, useMemo } from "react";
 
 import {
     DndContext,
@@ -18,10 +18,12 @@ import {DragMoveEvent, DragStartEvent} from "@dnd-kit/core/dist/types/events";
 import './App.css'
 import {RadialMenuItem} from "@/types/type";
 import OperatedPanel from "@/components/operatedPanel";
-import {PlusOutlined} from "@ant-design/icons";
+import RadialMenuName from "@/components/radialName";
+import {PlusOutlined, EditOutlined} from "@ant-design/icons";
 import { AnimatePresence } from 'motion/react'
 
 const itemTemplate: RadialMenuItem[] = [
+    { id: 'radMenu-151', label: 'Selection mode: set control-point', icon: 'selection-mode-set-control-point', command: 'selection:mode:set:control-point' },
     { id: 'radMenu-152', label: 'Selection mode: set edge', icon: 'selection-mode-set-edge', command: 'selection:mode:set:edge' },
     { id: 'radMenu-153', label: 'Selection mode: set face', icon: 'selection-mode-set-face', command: 'selection:mode:set:face' },
     { id: 'radMenu-154', label: 'Selection mode: set solid', icon: 'selection-mode-set-solid', command: 'selection:mode:set:solid' },
@@ -150,7 +152,7 @@ function App() {
             algorithm: theme.darkAlgorithm,
         }}
         >
-            <div className="app-container bg-neutral-800 flex w-screen h-screen box-border p-6 justify-between items-center selection:bg-violet-900 selection:text-neutral-200">
+            <div className="app-container bg-neutral-800 flex w-screen h-screen box-border p-6 justify-center items-center selection:bg-violet-900 selection:text-neutral-200 overflow-hidden">
               {/* 环形菜单 */}
               <DndContext
                   collisionDetection={sectorCollisionDetection}
@@ -161,12 +163,15 @@ function App() {
 
               >
                   <SortableContext items={items}>
+                      {/*<div className="flex flex-1 self-stretch max-w-8xl">*/}
                       <div className="flex h-full flex-1 flex-col justify-center items-center">
                           <div className="pt-8 flex justify-between items-center gap-4">
-                              <Segmented size="large" options={segmentOptions} onChange={handleSwitchMenu} className='select-none'/>
-                              <Button size="large" type="primary" onClick={handleAddNewMenu} icon={<PlusOutlined />}/>
+                              <Segmented size="large" options={segmentOptions} onChange={handleSwitchMenu}
+                                         className='select-none gabarito-regular'/>
+                              <Button size="large" type="primary" onClick={handleAddNewMenu} icon={<PlusOutlined/>}/>
                           </div>
-                          <div className="w-full h-full flex justify-center items-center self-stretch overflow-hidden">
+                          <div
+                              className="w-full h-full flex flex-col justify-center items-center self-stretch overflow-hidden">
                               <AnimatePresence
                                   custom={direction}
                                   mode="wait"
@@ -178,16 +183,22 @@ function App() {
                                   />
                               </AnimatePresence>
                           </div>
+                          <RadialMenuName index={activeIndex}/>
                       </div>
-                      <CommandList key={`commandList-${activeIndex}`} items={listItems} refItems={items}/>
-                      {showOverlay&&<DragOverlay
-                          dropAnimation={customDropAnimation}
-                          // modifiers={[rotateAround]}
+                      <AnimatePresence
+                          mode="wait"
                       >
-                          <div className='p-2 text-sm bg-violet-700 cursor-grabbing gabarito-bold text-white rounded-sm'>
-                              {overlayText}
-                          </div>
-                      </DragOverlay>}
+                          <CommandList key={`commandList-${activeIndex}`} items={listItems} refItems={items}/>
+                      </AnimatePresence>
+                      {showOverlay && <DragOverlay
+                          dropAnimation={customDropAnimation}
+                              // modifiers={[rotateAround]}
+                          >
+                              <div className='p-2 text-sm bg-violet-700 cursor-grabbing gabarito-bold text-white rounded-sm'>
+                                  {overlayText}
+                              </div>
+                          </DragOverlay>}
+                      {/*</div>*/}
                   </SortableContext>
               </DndContext>
             </div>

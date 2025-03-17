@@ -273,7 +273,7 @@ const RadialMenuPie: React.FC<RadialMenuProps> = ({
         const updateRect = throttle(() => {
             const rect = container.getBoundingClientRect();
             setRect(rect);
-        }, 400);
+        }, 600);
 
         // 初始测量
         updateRect();

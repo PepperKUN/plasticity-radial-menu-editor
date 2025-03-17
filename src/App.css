@@ -1,5 +1,5 @@
-@import "tailwindcss";
 @import url('https://fonts.googleapis.com/css2?family=Gabarito:wght@400..900&display=swap');
+@import "tailwindcss";
 
 #root {
   margin: 0 auto;
@@ -34,7 +34,7 @@
     top: 0;
     left: 0;
     path {
-      transition: d 200ms cubic-bezier(0.4, 0, 1, 1);
+      transition: d 400ms cubic-bezier(0.22, 1, 0.36, 1);
     }
   }
   .radial-menu-labels {
@@ -46,7 +46,9 @@
     padding: 0;
     .menu-label {
       border: 0px solid rgba(255, 255, 255, .4);
-      transition: all 200ms cubic-bezier(0.4, 0, 1, 1);
+      transform-property: width, height, top, left, transform, padding;
+      transition-duration: 0.4s;
+      transition-timing-function: cubic-bezier(0.22, 1, 0.36, 1);
       position: absolute;
       text-align: left;
     }

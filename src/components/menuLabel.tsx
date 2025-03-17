@@ -245,7 +245,7 @@ const MenuLabel:React.FC<menuLabelProps> = ({
                 {menuLabels.map((label) => {
                     return (
                         <li key={label.id} className="menu-label inline-flex w-max flex-col items-start gap-1.5 text-neutral-400" style={getLabelStyle(label)}>
-                            <h4 className='text-lg/5 gabarito-bold font-bold w-fit text-neutral-200'>{label.label}</h4>
+                            <h4 className='text-lg/5 gabarito-bold font-bold w-fit text-neutral-400'>{label.label}</h4>
                             <div className="inline-flex icon_wrap gap-1 items-baseline font-mono">
                                 <span className='flex items-start bg-neutral-700 px-1 py-0.5 rounded-sm text-xs'>icon</span>
                                 <span className='text-sm/4 text-neutral-500'>{label.icon}</span>

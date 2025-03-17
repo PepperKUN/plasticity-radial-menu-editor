@@ -68,6 +68,8 @@ const OperatedPanel: React.FC<IProps>= ({
 
     return (
         <motion.div
+            layout
+            // key={Math.random()*1000}
             className="radial-wrap"
             ref={nodeRef}
             style={{ width: size.width , height: size.height }}
@@ -75,9 +77,12 @@ const OperatedPanel: React.FC<IProps>= ({
             variants={variants}
             initial='enter'
             animate='center'
-            exit='exit'
+            // exit='exit'
             transition={{
-                // transform: { type: "spring", stiffness: 300, damping: 30 },
+                type: "spring",
+                mass: 0.5,
+                stiffness: 300,
+                damping: 15,
                 duration: 0.2
             }}
 

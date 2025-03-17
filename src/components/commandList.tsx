@@ -88,18 +88,23 @@ const CommandList:React.FC<{
 
     return (
         <div
-            className='h-full overflow-hidden'
+            className='self-stretch flex'
             style={{width: 390}}
         >
             <motion.div
-                className='flex flex-col p-2 h-full bg-neutral-900 rounded-sm gap-2 contain-content'
+                layout
+                // key={Math.random()*1000}
+                className=' flex-1 flex flex-col p-2 mt-8 bg-neutral-900 rounded-sm gap-2 contain-content'
                 variants={variants}
                 initial='enter'
                 animate='center'
-                exit='exit'
+                // exit='exit'
                 transition={{
-                    // transform: { type: "spring", stiffness: 300, damping: 30 },
-                    duration: 0.15
+                    type: "spring",
+                    mass: 0.5,
+                    stiffness: 300,
+                    damping: 15,
+                    duration: 0.2
                 }}
             >
 
