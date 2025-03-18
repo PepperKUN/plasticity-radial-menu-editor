@@ -1,4 +1,4 @@
-import React, { useState, useMemo } from "react";
+import React, { useState, useMemo, useEffect } from "react";
 
 import {
     DndContext,
@@ -13,23 +13,16 @@ import {
 import { useListItemStore, useGlobalMenuItemStore } from "@/stores/store";
 import {customDropAnimation, sectorCollisionDetection} from "@/utils/util"
 import CommandList from "@/components/commandList";
-import {ConfigProvider, theme, Segmented, Button} from 'antd';
-import {DragMoveEvent, DragStartEvent} from "@dnd-kit/core/dist/types/events";
+import {ConfigProvider, theme} from 'antd';
+import {DragStartEvent} from "@dnd-kit/core/dist/types/events";
 import './App.css'
-import {RadialMenuItem} from "@/types/type";
+import {GlobalRadialMenuItem, RadialMenuItem} from "@/types/type";
 import OperatedPanel from "@/components/operatedPanel";
-import {PlusOutlined} from "@ant-design/icons";
 import { AnimatePresence } from 'motion/react'
-import EditableText from "@/components/editableText.tsx";
+import EditableText from "@/components/EditableText.tsx";
+import TabTitle from "@/components/TabTitle.tsx";
 
-const itemTemplate: RadialMenuItem[] = [
-    { id: 'radMenu-151', label: 'Selection mode: set control-point', icon: 'selection-mode-set-control-point', command: 'selection:mode:set:control-point' },
-    { id: 'radMenu-152', label: 'Selection mode: set edge', icon: 'selection-mode-set-edge', command: 'selection:mode:set:edge' },
-    { id: 'radMenu-153', label: 'Selection mode: set face', icon: 'selection-mode-set-face', command: 'selection:mode:set:face' },
-    { id: 'radMenu-154', label: 'Selection mode: set solid', icon: 'selection-mode-set-solid', command: 'selection:mode:set:solid' },
-]
-
-function App() {
+const App:React.FC = () => {
 
     const { listItems, setListItems } = useListItemStore();
     const { globalMenuItems, setGlobalMenuItems } = useGlobalMenuItemStore();
@@ -39,7 +32,13 @@ function App() {
     const [activeIndex, setActiveIndex] = useState(0);
     const [direction, setDirection] = useState<1 | -1>(1)
 
+    useEffect(()=> {
+        if(globalMenuItems.length <= activeIndex) setActiveIndex(globalMenuItems.length-1)
+        console.log(activeIndex)
+    }, [globalMenuItems.length])
+
     const items = globalMenuItems[activeIndex].items
+
 
 
     const flatListItems= useMemo(() => listItems.flatMap((item) => item.items), [listItems])
@@ -50,11 +49,6 @@ function App() {
         width: 500,
         height: 500,
     }
-
-    const segmentOptions = useMemo(() => {
-        return globalMenuItems.map(item => item.name)
-    }, [globalMenuItems.length, globalMenuItems.map(item => item.name)])
-
 
 
     const handleDragStart = (event: DragStartEvent) => {
@@ -126,21 +120,15 @@ function App() {
         }
     };
 
-    const handleAddNewMenu = () => {
-        setGlobalMenuItems(prev => [...prev, {
-            name: `New Radial Menu-${prev.length}`,
-            command: `radial: menu-${prev.length}`,
-            items: itemTemplate
-        }])
+    const handleItemsChange = (items: GlobalRadialMenuItem[]) => {
+        setGlobalMenuItems(items)
     }
 
-    const handleSwitchMenu = (value: string) => {
-        const newIndex = segmentOptions.findIndex(el => el === value);
-        const newDirection = (newIndex - activeIndex)>0?-1:1;
-        setActiveIndex(newIndex)
+    const handleSwitch = (index: number) => {
+        const newDirection = (index - activeIndex)>0?-1:1;
+        setActiveIndex(index)
         setDirection(newDirection);
     }
-
 
 
     return (
@@ -148,6 +136,12 @@ function App() {
         theme={{
             token: {
                 colorPrimary: '#7A3DE8',
+            },
+            components: {
+                Segmented:{
+                    itemSelectedBg: 'rgba(255, 255, 255, 0.2)',
+                    itemHoverBg: 'rgba(255, 255, 255, 0.15)',
+                },
             },
             algorithm: theme.darkAlgorithm,
         }}
@@ -165,11 +159,11 @@ function App() {
                   <SortableContext items={items}>
                       {/*<div className="flex flex-1 self-stretch max-w-8xl">*/}
                       <div className="flex h-full flex-1 flex-col justify-center items-center">
-                          <div className="pt-8 flex justify-between items-center gap-4">
-                              <Segmented size="large" options={segmentOptions} onChange={handleSwitchMenu}
-                                         className='select-none gabarito-regular'/>
-                              <Button size="large" type="primary" onClick={handleAddNewMenu} icon={<PlusOutlined/>}/>
-                          </div>
+                          <TabTitle
+                              globalItems={globalMenuItems}
+                              onItemsChange={handleItemsChange}
+                              onSwitch={handleSwitch}
+                          />
                           <div
                               className="w-full h-full flex flex-col justify-center items-center self-stretch overflow-hidden">
                               <AnimatePresence

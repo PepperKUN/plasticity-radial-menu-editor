@@ -1,8 +1,7 @@
-import React, {useMemo, useRef, useState} from "react";
-import {polarToCartesian, convertedObj2Table} from "@/utils/util.ts";
-import {GlobalRadialMenuItem, point, RadialMenuItem} from "@/types/type";
-import {DragEndEvent, DragStartEvent, useDndMonitor} from "@dnd-kit/core";
-import EditableText from "@/components/editableText.tsx";
+import React, {useMemo, useRef} from "react";
+import {polarToCartesian} from "@/utils/util.ts";
+import {GlobalRadialMenuItem, point} from "@/types/type";
+import EditableText from "@/components/EditableText.tsx";
 import { useGlobalMenuItemStore } from "@/stores/store";
 
 enum Direction {
@@ -51,15 +50,12 @@ const MenuLabel:React.FC<menuLabelProps> = ({
 
     const center = {x: size.width / 2, y: size.height / 2};
 
-    const [isOdd, setIsOdd] = useState(false);
-
     const paddingY = 10;
 
 
     const menuLabels = useMemo<menuLabelItem[]>(() => {
         const sectorAngle = 360/items.length;
         const isOdd = items.length%2 > 0;
-        setIsOdd(isOdd);
         const sectorRadians = Math.PI*2/items.length;
         const halfIndex = Math.floor(items.length/2)
         const rightItems = items.slice(0, halfIndex+1)
@@ -265,4 +261,4 @@ const MenuLabel:React.FC<menuLabelProps> = ({
     )
 }
 
-export default MenuLabel
+export default MenuLabel;

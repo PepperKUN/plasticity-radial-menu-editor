@@ -1,7 +1,7 @@
 import React, { useRef, useEffect, useState } from "react";
 import RadialMenuPie from "@/components/RadialMenu/radialMenuPie";
-import MenuLabel from "@/components/menuLabel.tsx";
-import {GlobalRadialMenuItem, RadialMenuItem} from "@/types/type";
+import MenuLabel from "@/components/MenuLabel.tsx";
+import {GlobalRadialMenuItem} from "@/types/type";
 import {motion, usePresenceData} from "motion/react";
 
 
@@ -92,7 +92,7 @@ const OperatedPanel: React.FC<IProps>= ({
                 labelMaxWidth={maxWidth}
                 size={size}
                 radius={180}
-                sparsityRatio={0.1}
+                sparsityRatio={.5}
                 spacing={20}
                 extendLength={1000}
             />

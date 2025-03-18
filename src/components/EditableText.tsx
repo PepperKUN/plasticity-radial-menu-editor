@@ -13,7 +13,7 @@ interface updateParams {
     indexes: strictTuple;
     keyStr: keyNames;
 }
-const EditableText:React.FC<{
+export const EditableText:React.FC<{
     indexes: strictTuple;
     publicClassNames: string;
     editableClassNames: string;
@@ -30,7 +30,7 @@ const EditableText:React.FC<{
             // 处理 RadialMenuItem 的 label
             const [globalIndex, itemId] = indexes;
             const globalItem = globalItems[globalIndex];
-            console.log(indexes, globalItem)
+
             const radialItem = globalItem.items.find(item => item.id === itemId);
             if(!radialItem) throw new Error(`输入item的id错误`);
             if (keyStr === "label") {
@@ -139,7 +139,7 @@ const EditableText:React.FC<{
     const handleBlur = () => {
         setEditing(false);
         divRef.current?.blur()
-        console.log('保存内容:', divRef.current?.textContent);
+        // console.log('保存内容:', divRef.current?.textContent);
         updateGlobalItems(setGlobalMenuItems, {
             newValue: divRef.current?.textContent || "",
             indexes,
@@ -169,7 +169,8 @@ const EditableText:React.FC<{
                     {showText}
                 </div>
             </Tooltip>
-            <EditOutlined className='inline pl-1 opacity-0 group-hover:opacity-100 cursor-pointer' onClick={handleNameDbClick}/>
+            <EditOutlined className={`pl-1 opacity-0 cursor-pointer ${isEditing?'':'group-hover:opacity-100'}`}
+                          onClick={handleNameDbClick}/>
         </div>
     )
 }

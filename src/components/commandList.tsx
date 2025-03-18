@@ -1,7 +1,7 @@
 import React, {useState, useMemo, ChangeEvent} from "react";
 import { useDraggable } from "@dnd-kit/core";
 import { RadialMenuItem, listItem } from "@/types/type";
-import { Input, Divider } from 'antd';
+import { Input } from 'antd';
 import { SearchOutlined } from '@ant-design/icons'
 import Fuse from "fuse.js";
 import { Scrollbars } from 'react-custom-scrollbars-2';
