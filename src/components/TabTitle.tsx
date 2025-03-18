@@ -27,12 +27,13 @@ const Tabunit:React.FC<{
 }
 
 const TabTitle:React.FC< {
+    index: number;
     globalItems: GlobalRadialMenuItem[];
     onSwitch: (index:number) => void;
     onItemsChange: (newItems: GlobalRadialMenuItem[]) => void;
-}> = ({globalItems, onSwitch, onItemsChange}) => {
+}> = ({index, globalItems, onSwitch, onItemsChange}) => {
 
-    const [index, setIndex] = useState(0);
+    // const [index, setIndex] = useState(0);
 
     const handleMenuDelete = (index:number) => {
         onItemsChange(globalItems.filter((_, idx:number) => idx !== index));
@@ -59,7 +60,6 @@ const TabTitle:React.FC< {
 
     const handleMenuSwitch = (value: string) => {
         const index = segmentOptions.findIndex(option => option.value === value);
-        setIndex(index);
         onSwitch(index);
     }
 

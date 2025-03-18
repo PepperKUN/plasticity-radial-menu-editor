@@ -121,6 +121,10 @@ const App:React.FC = () => {
     };
 
     const handleItemsChange = (items: GlobalRadialMenuItem[]) => {
+        if(items.length <= activeIndex) {
+            setActiveIndex(items.length-1)
+            handleSwitch(items.length-1)
+        }
         setGlobalMenuItems(items)
     }
 
@@ -160,6 +164,7 @@ const App:React.FC = () => {
                       {/*<div className="flex flex-1 self-stretch max-w-8xl">*/}
                       <div className="flex h-full flex-1 flex-col justify-center items-center">
                           <TabTitle
+                              index={activeIndex}
                               globalItems={globalMenuItems}
                               onItemsChange={handleItemsChange}
                               onSwitch={handleSwitch}
