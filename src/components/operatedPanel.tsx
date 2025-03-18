@@ -1,12 +1,12 @@
 import React, { useRef, useEffect, useState } from "react";
 import RadialMenuPie from "@/components/RadialMenu/radialMenuPie";
 import MenuLabel from "@/components/menuLabel.tsx";
-import {RadialMenuItem} from "@/types/type";
+import {GlobalRadialMenuItem, RadialMenuItem} from "@/types/type";
 import {motion, usePresenceData} from "motion/react";
 
 
 interface IProps {
-    items: RadialMenuItem[],
+    menuItem: GlobalRadialMenuItem,
     size: {
         width: number,
         height: number,
@@ -33,7 +33,7 @@ const variants = {
 }
 
 const OperatedPanel: React.FC<IProps>= ({
-    items,
+    menuItem,
     size,
 }) => {
 
@@ -68,7 +68,7 @@ const OperatedPanel: React.FC<IProps>= ({
 
     return (
         <motion.div
-            layout
+            // layout
             // key={Math.random()*1000}
             className="radial-wrap"
             ref={nodeRef}
@@ -88,7 +88,7 @@ const OperatedPanel: React.FC<IProps>= ({
 
         >
             <MenuLabel
-                items={items}
+                menuItem={menuItem}
                 labelMaxWidth={maxWidth}
                 size={size}
                 radius={180}
@@ -96,7 +96,7 @@ const OperatedPanel: React.FC<IProps>= ({
                 spacing={20}
                 extendLength={1000}
             />
-            <RadialMenuPie items={items}/>
+            <RadialMenuPie items={menuItem.items}/>
             <h2></h2>
         </motion.div>
     );

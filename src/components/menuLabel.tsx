@@ -1,7 +1,9 @@
 import React, {useMemo, useRef, useState} from "react";
 import {polarToCartesian, convertedObj2Table} from "@/utils/util.ts";
-import {point, RadialMenuItem} from "@/types/type";
+import {GlobalRadialMenuItem, point, RadialMenuItem} from "@/types/type";
 import {DragEndEvent, DragStartEvent, useDndMonitor} from "@dnd-kit/core";
+import EditableText from "@/components/editableText.tsx";
+import { useGlobalMenuItemStore } from "@/stores/store";
 
 enum Direction {
     Up = "Top",
@@ -11,7 +13,7 @@ enum Direction {
 }
 
 interface menuLabelProps {
-    items: RadialMenuItem[];
+    menuItem: GlobalRadialMenuItem;
     labelMaxWidth?: number;
     radius?: number;
     spacing?: number;
@@ -31,7 +33,7 @@ interface menuLabelItem {
 }
 
 const MenuLabel:React.FC<menuLabelProps> = ({
-                                                items,
+                                                menuItem,
                                                 labelMaxWidth=400,
                                                 radius = 155,
                                                 spacing = 10,
@@ -39,24 +41,20 @@ const MenuLabel:React.FC<menuLabelProps> = ({
                                                 size = {width:500,height:500},
                                                 extendLength = 10,
                                             }) => {
-
+    const { globalMenuItems} = useGlobalMenuItemStore();
     const containerRef = useRef<SVGSVGElement>(null);
+
+    const items = useMemo(() => menuItem.items, [menuItem])
+    const parentIndex = useMemo(() => {
+        return globalMenuItems.findIndex((item) => item.command === menuItem.command)
+    },[menuItem.name, menuItem.command])
 
     const center = {x: size.width / 2, y: size.height / 2};
 
-    const [showLabel, setShowLabel] = useState(true);
     const [isOdd, setIsOdd] = useState(false);
 
     const paddingY = 10;
 
-    useDndMonitor({
-        onDragStart(event: DragStartEvent) {
-
-        },
-        onDragEnd(event: DragEndEvent) {
-
-        }
-    })
 
     const menuLabels = useMemo<menuLabelItem[]>(() => {
         const sectorAngle = 360/items.length;
@@ -245,7 +243,15 @@ const MenuLabel:React.FC<menuLabelProps> = ({
                 {menuLabels.map((label) => {
                     return (
                         <li key={label.id} className="menu-label inline-flex w-max flex-col items-start gap-1.5 text-neutral-400" style={getLabelStyle(label)}>
-                            <h4 className='text-lg/5 gabarito-bold font-bold w-fit text-neutral-400'>{label.label}</h4>
+                            <EditableText
+                                keyStr='label'
+                                indexes={[parentIndex, label.id]}
+                                publicClassNames='gabarito-bold text-neutral-400 text-lg/5 border-b-1 w-fit'
+                                editableClassNames='border-b-neutral-500 outline-0'
+                                normalClassNames='border-transparent'
+                                // tooltipPlacement='bottom'
+                            />
+                            {/*<h4 className='text-lg/5 gabarito-bold font-bold w-fit text-neutral-400'>{label.label}</h4>*/}
                             <div className="inline-flex icon_wrap gap-1 items-baseline font-mono">
                                 <span className='flex items-start bg-neutral-700 px-1 py-0.5 rounded-sm text-xs'>icon</span>
                                 <span className='text-sm/4 text-neutral-500'>{label.icon}</span>

@@ -23,4 +23,6 @@ interface listItem {
     items: RadialMenuItem[]
 }
 
-export {RadialMenuItem, GlobalRadialMenuItem, point, listItem}
+type strictTuple = [number, (number|string)?]
+
+export {RadialMenuItem, GlobalRadialMenuItem, point, listItem, strictTuple}

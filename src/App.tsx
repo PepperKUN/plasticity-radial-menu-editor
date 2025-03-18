@@ -1,4 +1,4 @@
-import { useState, useMemo } from "react";
+import React, { useState, useMemo } from "react";
 
 import {
     DndContext,
@@ -18,9 +18,9 @@ import {DragMoveEvent, DragStartEvent} from "@dnd-kit/core/dist/types/events";
 import './App.css'
 import {RadialMenuItem} from "@/types/type";
 import OperatedPanel from "@/components/operatedPanel";
-import RadialMenuName from "@/components/radialName";
-import {PlusOutlined, EditOutlined} from "@ant-design/icons";
+import {PlusOutlined} from "@ant-design/icons";
 import { AnimatePresence } from 'motion/react'
+import EditableText from "@/components/editableText.tsx";
 
 const itemTemplate: RadialMenuItem[] = [
     { id: 'radMenu-151', label: 'Selection mode: set control-point', icon: 'selection-mode-set-control-point', command: 'selection:mode:set:control-point' },
@@ -178,12 +178,28 @@ function App() {
                               >
                                   <OperatedPanel
                                       key={activeIndex}
-                                      items={items}
+                                      menuItem={globalMenuItems[activeIndex]}
                                       size={size}
                                   />
                               </AnimatePresence>
                           </div>
-                          <RadialMenuName index={activeIndex}/>
+                          <div className="flex flex-col pt-6 pb-12">
+                              <EditableText
+                                  keyStr='name'
+                                  indexes={[activeIndex]}
+                                  publicClassNames='text-4xl gabarito-bold border-b-1'
+                                  editableClassNames='border-b-neutral-500 outline-0'
+                                  normalClassNames='border-transparent'
+                              />
+                              <EditableText
+                                  keyStr='command'
+                                  indexes={[activeIndex]}
+                                  publicClassNames='gabarito-regular text-neutral-400 text-lg border-b-1'
+                                  editableClassNames='border-b-neutral-500 outline-0'
+                                  normalClassNames='border-transparent'
+                                  tooltipPlacement='bottom'
+                              />
+                          </div>
                       </div>
                       <AnimatePresence
                           mode="wait"
@@ -192,11 +208,12 @@ function App() {
                       </AnimatePresence>
                       {showOverlay && <DragOverlay
                           dropAnimation={customDropAnimation}
-                              // modifiers={[rotateAround]}
-                          >
-                              <div className='p-2 text-sm bg-violet-700 cursor-grabbing gabarito-bold text-white rounded-sm'>
-                                  {overlayText}
-                              </div>
+                          // modifiers={[rotateAround]}
+                      >
+                          <div
+                              className='p-2 text-sm bg-violet-700 cursor-grabbing gabarito-bold text-white rounded-sm'>
+                              {overlayText}
+                          </div>
                           </DragOverlay>}
                       {/*</div>*/}
                   </SortableContext>
