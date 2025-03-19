@@ -16,7 +16,7 @@ import CommandList from "@/components/commandList";
 import {ConfigProvider, theme} from 'antd';
 import {DragStartEvent} from "@dnd-kit/core/dist/types/events";
 import './App.css'
-import {GlobalRadialMenuItem, RadialMenuItem} from "@/types/type";
+import {GlobalRadialMenuItem} from "@/types/type";
 import OperatedPanel from "@/components/operatedPanel";
 import { AnimatePresence } from 'motion/react'
 import EditableText from "@/components/EditableText.tsx";
@@ -32,10 +32,6 @@ const App:React.FC = () => {
     const [activeIndex, setActiveIndex] = useState(0);
     const [direction, setDirection] = useState<1 | -1>(1)
 
-    useEffect(()=> {
-        if(globalMenuItems.length <= activeIndex) setActiveIndex(globalMenuItems.length-1)
-        console.log(activeIndex)
-    }, [globalMenuItems.length])
 
     const items = globalMenuItems[activeIndex].items
 
@@ -53,7 +49,7 @@ const App:React.FC = () => {
 
     const handleDragStart = (event: DragStartEvent) => {
         const {active, activatorEvent} = event;
-        console.log("active", active, activatorEvent);
+        // console.log("active", active, activatorEvent);
         if(active.data.current?.label) {
             setShowOverlay(true)
             setOverlayText(active.data.current.label)
@@ -124,6 +120,11 @@ const App:React.FC = () => {
         if(items.length <= activeIndex) {
             setActiveIndex(items.length-1)
             handleSwitch(items.length-1)
+        } else {
+            const currentCommand = globalMenuItems[activeIndex].command;
+            const newIndex = items.findIndex((item)=>item.command === currentCommand);
+            setActiveIndex(newIndex)
+            handleSwitch(newIndex)
         }
         setGlobalMenuItems(items)
     }
@@ -163,12 +164,25 @@ const App:React.FC = () => {
                   <SortableContext items={items}>
                       {/*<div className="flex flex-1 self-stretch max-w-8xl">*/}
                       <div className="flex h-full flex-1 flex-col justify-center items-center">
-                          <TabTitle
-                              index={activeIndex}
-                              globalItems={globalMenuItems}
-                              onItemsChange={handleItemsChange}
-                              onSwitch={handleSwitch}
-                          />
+                          <div className="flex flex-col pt-12 pb-6">
+                              <EditableText
+                                  keyStr='name'
+                                  indexes={[activeIndex]}
+                                  className='text-white'
+                                  publicClassNames='text-4xl gabarito-bold border-b-1'
+                                  editableClassNames='border-b-neutral-500 outline-0'
+                                  normalClassNames='border-transparent'
+                              />
+                              <EditableText
+                                  keyStr='command'
+                                  indexes={[activeIndex]}
+                                  className='text-neutral-400'
+                                  publicClassNames='gabarito-regular text-lg border-b-1'
+                                  editableClassNames='border-b-neutral-500 outline-0'
+                                  normalClassNames='border-transparent'
+                                  tooltipPlacement='bottom'
+                              />
+                          </div>
                           <div
                               className="w-full h-full flex flex-col justify-center items-center self-stretch overflow-hidden">
                               <AnimatePresence
@@ -182,23 +196,12 @@ const App:React.FC = () => {
                                   />
                               </AnimatePresence>
                           </div>
-                          <div className="flex flex-col pt-6 pb-12">
-                              <EditableText
-                                  keyStr='name'
-                                  indexes={[activeIndex]}
-                                  publicClassNames='text-4xl gabarito-bold border-b-1'
-                                  editableClassNames='border-b-neutral-500 outline-0'
-                                  normalClassNames='border-transparent'
-                              />
-                              <EditableText
-                                  keyStr='command'
-                                  indexes={[activeIndex]}
-                                  publicClassNames='gabarito-regular text-neutral-400 text-lg border-b-1'
-                                  editableClassNames='border-b-neutral-500 outline-0'
-                                  normalClassNames='border-transparent'
-                                  tooltipPlacement='bottom'
-                              />
-                          </div>
+                          <TabTitle
+                              index={activeIndex}
+                              globalItems={globalMenuItems}
+                              onItemsChange={handleItemsChange}
+                              onSwitch={handleSwitch}
+                          />
                       </div>
                       <AnimatePresence
                           mode="wait"
@@ -213,7 +216,7 @@ const App:React.FC = () => {
                               className='p-2 text-sm bg-violet-700 cursor-grabbing gabarito-bold text-white rounded-sm'>
                               {overlayText}
                           </div>
-                          </DragOverlay>}
+                      </DragOverlay>}
                       {/*</div>*/}
                   </SortableContext>
               </DndContext>

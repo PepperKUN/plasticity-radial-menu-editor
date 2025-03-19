@@ -7,7 +7,7 @@ import { throttle } from 'lodash-es';
 import './RadialMenu.scss'
 import {useDroppable} from "@dnd-kit/core";
 import SvgIcon from "@/components/RadialMenu/SvgIcon.tsx";
-import {polarToCartesian, convertedObj2Table} from "@/utils/util.ts";
+import {polarToCartesian} from "@/utils/util.ts";
 
 // 类型定义
 
@@ -200,7 +200,7 @@ const SortableSector: React.FC<{
 
 
     return (
-        <g className={`sector_group text-neutral-300 hover:text-white ${isSorting?'cursor-grabbing':'cursor-grab'} ${isDragging?'cursor-grabbing':''}} ${isSorting&&isDragging?'selected':''}`} ref={(el) => {
+        <g className={`sector_group text-neutral-400 hover:text-white ${isSorting?'cursor-grabbing':'cursor-grab'} ${isDragging?'cursor-grabbing':''}} ${isSorting&&isDragging?'selected':''}`} ref={(el) => {
             setNodeRef(el as unknown as HTMLElement);
             (nodeRef as MutableRefObject<SVGGElement | null>).current = el;
         }} style={style} {...attributes} {...listeners} onTransitionEnd={handleTransitionEnd}>
@@ -240,10 +240,11 @@ const SortableSector: React.FC<{
             {/*</text>*/}
             <SvgIcon
                 style={iconStyle}
-                name="test"
+                name={item.icon}
                 x={textPos.x}
                 y={textPos.y}
                 size={iconSize}
+                inSvg
             />
         </g>
     );

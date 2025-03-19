@@ -1,5 +1,6 @@
 import {CollisionDetection, Modifier, DropAnimationFunction} from '@dnd-kit/core';
 import {useContainerStore} from "@/stores/store.ts";
+import {flatListItem, listItem, RadialMenuItem} from "@/types/type";
 
 
 const convertedObj2Table = (originalData:object) => Object.entries(originalData).map(([key, value]) => ({
@@ -99,7 +100,7 @@ const sectorCollisionDetection: CollisionDetection = ({
                 active.data.current?.sortable?200:0 //sortables时中心距离补偿
             );
         })
-    console.log('targetContainer:', targetContainer, {relativeX,relativeY}, distance);
+    // console.log('targetContainer:', targetContainer, {relativeX,relativeY}, distance);
 
     if(targetContainer.length>0) {
         // console.log(targetContainer.map((container) => ({ id: container.id })))
@@ -153,7 +154,32 @@ const customDropAnimation: DropAnimationFunction = (args) => {
     console.log('args:', args);
 }
 
+const convertFlat2ListItems = (arr: flatListItem[]):listItem[] => {
+    const groupedMap = arr.reduce((acc, item) => {
+        const { type, ...rest } = item;
+        if (!acc.has(type)) {
+            acc.set(type, []);
+        }
+        acc.get(type)?.push(rest);
+        return acc;
+    }, new Map<string, RadialMenuItem[]>());
+
+    // 转换为目标格式数组
+    return Array.from(groupedMap, ([type, items]) => ({
+        commandType: type,
+        items
+    }));
+}
 
 
 
-export { convertedObj2Table, polarToCartesian, sectorCollisionDetection, rotateAround, customDropAnimation, radiusConstraint };
+
+export {
+    convertedObj2Table,
+    polarToCartesian,
+    sectorCollisionDetection,
+    rotateAround,
+    customDropAnimation,
+    radiusConstraint,
+    convertFlat2ListItems,
+};

@@ -7,6 +7,10 @@ interface RadialMenuItem {
     isAdd?: boolean;
 }
 
+interface flatListItem extends RadialMenuItem {
+    type: string;
+}
+
 interface GlobalRadialMenuItem {
     name: string;
     command: string;
@@ -25,4 +29,4 @@ interface listItem {
 
 type strictTuple = [number, (number|string)?]
 
-export {RadialMenuItem, GlobalRadialMenuItem, point, listItem, strictTuple}
+export {RadialMenuItem, GlobalRadialMenuItem, point, listItem, strictTuple, flatListItem}

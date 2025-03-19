@@ -17,17 +17,17 @@ interface IProps {
 const variants = {
     enter: (direction: number) => ({
         transform: `translateX(${direction>0?'-100':'100'}%)`,
-        // x: direction>0?-20:20,
+        // transform: `scale(${direction>0?'1.2':'0.8'})`,
         opacity: 0,
     }),
     center: {
         transform: "translateX(0%)",
-        // x: 0,
+        // transform: `scale(1)`,
         opacity: 1,
     },
     exit: (direction: number) => ({
         transform: `translateX(${direction>0?'100':'-100'}%)`,
-        // x: direction>0?20:-20,
+        // transform: `scale(${direction>0?'0.8':'1.2'})`,
         opacity: 0,
     })
 }

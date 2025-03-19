@@ -45,8 +45,9 @@ const MenuLabel:React.FC<menuLabelProps> = ({
 
     const items = useMemo(() => menuItem.items, [menuItem])
     const parentIndex = useMemo(() => {
-        return globalMenuItems.findIndex((item) => item.command === menuItem.command)
-    },[menuItem.name, menuItem.command])
+        const currentParentIndex = globalMenuItems.findIndex((item) => item.command === menuItem.command)
+        return currentParentIndex<0?globalMenuItems.length-1:currentParentIndex
+    },[menuItem.name, menuItem.command, globalMenuItems.length])
 
     const center = {x: size.width / 2, y: size.height / 2};
 
@@ -242,7 +243,7 @@ const MenuLabel:React.FC<menuLabelProps> = ({
                             <EditableText
                                 keyStr='label'
                                 indexes={[parentIndex, label.id]}
-                                publicClassNames='gabarito-bold text-neutral-400 text-lg/5 border-b-1 w-fit'
+                                publicClassNames='gabarito-bold text-lg/5 border-b-1 w-fit'
                                 editableClassNames='border-b-neutral-500 outline-0'
                                 normalClassNames='border-transparent'
                                 // tooltipPlacement='bottom'

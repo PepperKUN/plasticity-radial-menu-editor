@@ -19,8 +19,9 @@ export const EditableText:React.FC<{
     editableClassNames: string;
     normalClassNames: string;
     keyStr: keyNames;
+    className?: string;
     tooltipPlacement?: TooltipPlacement
-}> = ({indexes, publicClassNames, editableClassNames, normalClassNames, keyStr, tooltipPlacement}) => {
+}> = ({indexes, publicClassNames, editableClassNames, normalClassNames, keyStr, className, tooltipPlacement}) => {
 
     const divRef = useRef<HTMLDivElement>(null);
     const { globalMenuItems, setGlobalMenuItems } = useGlobalMenuItemStore();
@@ -155,7 +156,7 @@ export const EditableText:React.FC<{
     };
 
     return (
-        <div className='group gap-2 text-white items-baseline'>
+        <div className={`group gap-2 items-baseline ${className}`}>
             <Tooltip title={isEditing?null:"Double click for name editing"} placement={tooltipPlacement} color={'#4d179a'}>
                 <div
                     ref={divRef}

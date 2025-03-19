@@ -1,6 +1,6 @@
-import React, { useState, useMemo } from "react";
+import React, { useMemo } from "react";
 import {Segmented, Button, Popover} from 'antd';
-import {PlusOutlined} from "@ant-design/icons";
+import {PlusOutlined, DeleteFilled} from "@ant-design/icons";
 import {GlobalRadialMenuItem, RadialMenuItem} from "@/types/type";
 
 const itemTemplate: RadialMenuItem[] = [
@@ -20,8 +20,8 @@ const Tabunit:React.FC<{
 }> = ({selected, index, label, onDelete }) => {
 
     return (
-        <Popover content={(<Button onClick={()=>onDelete(index)} danger>Delete</Button>)} title={null} trigger='contextMenu'>
-            <span className={` ${selected?'font-bold':''}`}>{label}</span>
+        <Popover content={(<Button type='default' onClick={()=>onDelete(index)} danger icon={<DeleteFilled />}/>)} title={null} trigger='hover'>
+            <span className={`py-2`}>{label}</span>
         </Popover>
     )
 }
@@ -49,10 +49,6 @@ const TabTitle:React.FC< {
                     label={item.name}
                     onDelete={handleMenuDelete}
                 />
-                // <div className='inline-flex gap-1 group'>
-                //     <span className={idx==index?'font-bold':''}>{item.name}</span>
-                //     <CloseOutlined className='!hidden group-hover:!inline-flex hover:!text-red-400'/>
-                // </div>
             ),
         }))
     }, [globalItems.length, globalItems.map(item => item.name)])
@@ -73,7 +69,7 @@ const TabTitle:React.FC< {
     }
 
     return (
-        <div className="pt-8 flex justify-between items-center gap-4">
+        <div className="p-6 flex justify-between items-center gap-4">
             <Segmented
                 value={segmentOptions[index].value}
                 size="large"
