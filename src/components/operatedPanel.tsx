@@ -18,16 +18,19 @@ const variants = {
     enter: (direction: number) => ({
         transform: `translateX(${direction>0?'-100':'100'}%)`,
         // transform: `scale(${direction>0?'1.2':'0.8'})`,
+        // transform: `translateX(${direction>0?'-100':'100'}%) scale(0.8)`,
         opacity: 0,
     }),
     center: {
         transform: "translateX(0%)",
         // transform: `scale(1)`,
+        // transform: `translateX(0%) scale(1)`,
         opacity: 1,
     },
     exit: (direction: number) => ({
         transform: `translateX(${direction>0?'100':'-100'}%)`,
         // transform: `scale(${direction>0?'0.8':'1.2'})`,
+        // transform: `translateX(${direction>0?'100':'-100'}%) scale(0.8})`,
         opacity: 0,
     })
 }
@@ -77,13 +80,13 @@ const OperatedPanel: React.FC<IProps>= ({
             variants={variants}
             initial='enter'
             animate='center'
-            // exit='exit'
+            exit='exit'
             transition={{
                 type: "spring",
                 mass: 0.5,
                 stiffness: 300,
                 damping: 15,
-                duration: 0.2
+                duration: 0.4
             }}
 
         >

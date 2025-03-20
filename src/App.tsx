@@ -1,4 +1,4 @@
-import React, { useState, useMemo } from "react";
+import React, {useState, useMemo, useEffect} from "react";
 
 import {
     DndContext,
@@ -16,7 +16,7 @@ import CommandList from "@/components/commandList";
 import {ConfigProvider, theme} from 'antd';
 import {DragStartEvent} from "@dnd-kit/core/dist/types/events";
 import './App.css'
-import {GlobalRadialMenuItem} from "@/types/type";
+import {GlobalRadialMenuItem, RadialMenuItem} from "@/types/type";
 import OperatedPanel from "@/components/operatedPanel";
 import { AnimatePresence } from 'motion/react'
 import EditableText from "@/components/EditableText.tsx";
@@ -32,8 +32,7 @@ const App:React.FC = () => {
     const [activeIndex, setActiveIndex] = useState(0);
     const [direction, setDirection] = useState<1 | -1>(1)
 
-
-    const items = globalMenuItems[activeIndex].items
+    const currentRadialItems = globalMenuItems[activeIndex].items
 
 
 
@@ -46,26 +45,57 @@ const App:React.FC = () => {
         height: 500,
     }
 
+    // const radialMenuCommands = globalMenuItems.map(item => ({name: item.name, command: item.command}))
+    const radialMenuCommands = useMemo(() => {
+        return globalMenuItems.map(item => ({name: item.name, command: item.command}))
+    },[globalMenuItems])
+    useEffect(() => {
+
+        const rads:RadialMenuItem[] = radialMenuCommands.map(item => ({id: 'radMenu_'+item.command, label: item.name, icon: 'radial-menu', command: item.command}))
+        const listItemsWithoutRads = listItems.slice(1)
+        const newListItems = [
+            {
+                commandType: 'Radial Menus',
+                items: rads.filter((_, index) => index !== activeIndex)
+            },
+            ...listItemsWithoutRads
+        ]
+        // console.log(newListItems)
+        setListItems(newListItems)
+
+    },[globalMenuItems.length, radialMenuCommands, activeIndex])
+
+
+
+
+    // console.log('radialMenuCommands', radialMenuCommands)
+
+
     const handleSwitch = (index: number) => {
         const newDirection = (index - activeIndex)>0?-1:1;
         setActiveIndex(index)
         setDirection(newDirection);
     }
 
-    const handleItemsChange = (items: GlobalRadialMenuItem[]) => {
-        if(items.length <= activeIndex) {
-            setActiveIndex(items.length-1)
-            handleSwitch(items.length-1)
+    const handleItemsChange = (newItems: GlobalRadialMenuItem[]) => {
+        if(newItems.length <= activeIndex) {
+            handleSwitch(newItems.length-1)
         } else {
             const currentCommand = globalMenuItems[activeIndex].command;
-            const newIndex = items.findIndex((item)=>item.command === currentCommand);
-            if(globalMenuItems.length<items.length) {
+            const newIndex = newItems.findIndex((item)=>item.command === currentCommand);
+            if(newIndex>-1) {
+                // console.log(newIndex)
                 handleSwitch(newIndex)
+                if(globalMenuItems.length<newItems.length){
+                    // console.log(newIndex+1)
+                    handleSwitch(newIndex+1)
+                }
             } else {
-                handleSwitch(newIndex+1)
+                if(activeIndex>0) handleSwitch(activeIndex-1)
+                else handleSwitch(0)
             }
         }
-        setGlobalMenuItems(items)
+        setGlobalMenuItems(newItems)
     }
 
     const handleDragStart = (event: DragStartEvent) => {
@@ -81,18 +111,19 @@ const App:React.FC = () => {
 
     const handleDragOver = (event: DragEndEvent) => {
         const { active, over } = event;
-        if(!items.some((item)=>item.id === `radMenu-${active.id}`)
+        if(!currentRadialItems.some((item)=>item.id === `radMenu-${active.id}`)
             &&over?.id
+            &&currentRadialItems.length<12
         ) {
             const draggedItem = flatListItems.find((item) => item.id === active.id);
-            const overIndex = items.findIndex((item) => item.id === over.id);
+            const overIndex = currentRadialItems.findIndex((item) => item.id === over.id);
 
             if (!draggedItem) return;
             const addItem = {...draggedItem, id:`radMenu-${draggedItem.id}` };
             // console.log(addItem)
 
             // 创建去重后的新数组（移除可能存在的重复项）
-            const filteredItems = items.filter(item => item.id !== draggedItem.id);
+            const filteredItems = currentRadialItems.filter(item => item.id !== draggedItem.id);
 
             // 插入到目标位置
             const newItems = [
@@ -117,23 +148,23 @@ const App:React.FC = () => {
 
         if(over?.id !== 'trashBin') {
             if (active.id !== over?.id) {
-                const oldIndex = items.findIndex((item) => item.id === active.id);
-                const newIndex = items.findIndex((item) => item.id === over?.id);
+                const oldIndex = currentRadialItems.findIndex((item) => item.id === active.id);
+                const newIndex = currentRadialItems.findIndex((item) => item.id === over?.id);
 
-                let newItems = items;
+                let newItems = currentRadialItems;
                 // 列表变动
                 if(newIndex>-1&&oldIndex>-1) {
-                    newItems = arrayMove(items, oldIndex, newIndex);
+                    newItems = arrayMove(currentRadialItems, oldIndex, newIndex);
                 }
 
 
                 handleItemsChange(globalMenuItems.map((item, index) => index === activeIndex?{...item, items: newItems}:item))
             }
         } else {
-            if(items.length>2) {
+            if(currentRadialItems.length>2) {
                 setGlobalMenuItems(prev => prev.map((item, index) => index === activeIndex?{...item, items: item.items.filter(menuItem => menuItem.id !== active.id)}:item));
             }
-            console.log(listItems);
+            // console.log(listItems);
         }
     };
 
@@ -163,7 +194,7 @@ const App:React.FC = () => {
                   onDragEnd={handleDragEnd}
 
               >
-                  <SortableContext items={items}>
+                  <SortableContext items={currentRadialItems}>
                       <div className="flex flex-1 self-stretch max-w-[1440px]">
                       <div className="flex h-full flex-1 flex-col justify-center items-center">
                           <div className="flex flex-col pt-12 pb-6">
@@ -185,19 +216,20 @@ const App:React.FC = () => {
                                   tooltipPlacement='bottom'
                               />
                           </div>
-                          <div
-                              className="w-full h-full flex flex-col justify-center items-center self-stretch overflow-hidden">
-                              <AnimatePresence
-                                  custom={direction}
-                                  mode="wait"
-                              >
-                                  <OperatedPanel
-                                      key={activeIndex}
-                                      menuItem={globalMenuItems[activeIndex]}
-                                      size={size}
-                                  />
-                              </AnimatePresence>
-                          </div>
+                          <AnimatePresence
+                              custom={direction}
+                              mode="popLayout"
+                          >
+                              <div
+                                  key={`parent-${activeIndex}`}
+                                  className="relative w-full h-full flex flex-col justify-center items-center self-stretch overflow-hidden">
+                                      <OperatedPanel
+                                          key={activeIndex}
+                                          menuItem={globalMenuItems[activeIndex]}
+                                          size={size}
+                                      />
+                              </div>
+                          </AnimatePresence>
                           <TabTitle
                               index={activeIndex}
                               globalItems={globalMenuItems}
@@ -206,9 +238,15 @@ const App:React.FC = () => {
                           />
                       </div>
                       <AnimatePresence
-                          mode="wait"
+                          mode="popLayout"
                       >
-                          <CommandList key={`commandList-${activeIndex}`} items={listItems} refItems={items}/>
+                          <div
+                              key={`parent-commandList-${activeIndex}`}
+                              className='self-stretch flex relative'
+                              style={{width: 390}}
+                          >
+                              <CommandList key={`commandList-${activeIndex}`} items={listItems} refItems={currentRadialItems}/>
+                          </div>
                       </AnimatePresence>
                       {showOverlay && <DragOverlay
                           dropAnimation={customDropAnimation}

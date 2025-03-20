@@ -92,7 +92,7 @@ const SortableSector: React.FC<{
     const startAngle = order*angle - angle/2
     const endAngle = startAngle + angle
 
-    const iconSize = 20;
+    const iconSize = 16;
 
     const {
         index,
@@ -124,20 +124,11 @@ const SortableSector: React.FC<{
     const [isTransitionEnabled, setIsTransitionEnabled] = useState(true);
 
     useEffect(()=>{
-        setCurrentIndex(prev=>{
-            const indexOffest = newIndex - prev;
-            const isReversed = Math.abs(indexOffest) > items.length/2;
-            const realIndex = isReversed?prev+((indexOffest>0?-1:1)*(items.length-Math.abs(indexOffest))):newIndex
-            setTempIndex(realIndex)
-            // if(item.id == "radMenu-1") console.table(
-            //     // convertedObj2Table({prev, newIndex}),
-            //     indexOffest,
-            //     isReversed,
-            //     realIndex
-            // )
-
-            return newIndex;
-        })
+        const indexOffest = newIndex - currentIndex;
+        const isReversed = Math.abs(indexOffest) > items.length/2;
+        const realIndex = isReversed?currentIndex+((indexOffest>0?-1:1)*(items.length-Math.abs(indexOffest))):newIndex
+        setTempIndex(realIndex)
+        setCurrentIndex(newIndex)
     }, [newIndex])
 
 
@@ -150,7 +141,7 @@ const SortableSector: React.FC<{
     const pathA = describleArc(center, center, radius - outerWidth/2, -angle/2, angle/2);
     // const pathA2 = describleArc(center, center, radius - outerWidth + 2, -angle/2, angle/2);
     const labelAngle = -(isSorting?newIndex:index)*angle;
-    const textPos = polarToCartesian(center, center, radius * 0.7, 0);
+    const textPos = polarToCartesian(center, center, radius * 0.76, 0);
 
     // const finalSectorAngle = Math.abs(angleOffest)<=180?rotateAngle:(angleOffest>0?rotateAngle-360:rotateAngle+360);
     const finalSectorAngle = rotateAngle
@@ -200,7 +191,7 @@ const SortableSector: React.FC<{
 
 
     return (
-        <g className={`sector_group text-neutral-400 hover:text-white ${isSorting?'cursor-grabbing':'cursor-grab'} ${isDragging?'cursor-grabbing':''}} ${isSorting&&isDragging?'selected':''}`} ref={(el) => {
+        <g className={`sector_group text-neutral-700 hover:text-white ${isSorting?'cursor-grabbing':'cursor-grab'} ${isDragging?'cursor-grabbing':''}} ${isSorting&&isDragging?'selected':''}`} ref={(el) => {
             setNodeRef(el as unknown as HTMLElement);
             (nodeRef as MutableRefObject<SVGGElement | null>).current = el;
         }} style={style} {...attributes} {...listeners} onTransitionEnd={handleTransitionEnd}>

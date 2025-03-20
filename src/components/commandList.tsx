@@ -17,15 +17,15 @@ type ThumbVerticalProps = {
 
 const variants = {
     enter: () => ({
-        transform: `translateY(10%)`,
+        transform: `translateY(40%) scale(1.2)`,
         opacity: 0,
     }),
     center: {
-        transform: "translateY(0%)",
+        transform: "translateY(0%) scale(1)",
         opacity: 1,
     },
     exit: () => ({
-        transform: `translateY(10%)`,
+        transform: `translateY(-40%) scale(0.8)`,
         opacity: 0,
     })
 }
@@ -107,26 +107,21 @@ const CommandList:React.FC<{
 
 
     return (
-        <div
-            className='self-stretch flex'
-            style={{width: 390}}
+        <motion.div
+            // key={Math.random()*1000}
+            className=' flex-1 flex flex-col p-2 bg-neutral-900 rounded-sm gap-2 contain-content origin-bottom'
+            variants={variants}
+            initial='enter'
+            animate='center'
+            // exit='exit'
+            transition={{
+                type: "spring",
+                mass: 0.5,
+                stiffness: 300,
+                damping: 15,
+                duration: 0.4
+            }}
         >
-            <motion.div
-                layout
-                // key={Math.random()*1000}
-                className=' flex-1 flex flex-col p-2 bg-neutral-900 rounded-sm gap-2 contain-content'
-                variants={variants}
-                initial='enter'
-                animate='center'
-                // exit='exit'
-                transition={{
-                    type: "spring",
-                    mass: 0.5,
-                    stiffness: 300,
-                    damping: 15,
-                    duration: 0.2
-                }}
-            >
 
 
             <Input
@@ -161,8 +156,7 @@ const CommandList:React.FC<{
                 </div>
                 }
             </Scrollbars>
-            </motion.div>
-        </div>
+        </motion.div>
     )
 }
 

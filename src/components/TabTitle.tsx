@@ -35,6 +35,7 @@ const TabTitle:React.FC< {
     // const [index, setIndex] = useState(0);
 
     const handleMenuDelete = (index:number) => {
+        console.log('delete:',index)
         onItemsChange(globalItems.filter((_, idx:number) => idx !== index));
     }
 
@@ -86,7 +87,7 @@ const TabTitle:React.FC< {
 
             const link = document.createElement('a');
             link.href = url;
-            link.download = `${globalItems[index].name}.json`;
+            link.download = `${globalItems[index].name}.radial.json`;
             document.body.appendChild(link);
             link.click();
             document.body.removeChild(link);
@@ -106,6 +107,7 @@ const TabTitle:React.FC< {
                 className='select-none gabarito-regular'
             />
             <Space.Compact size="large">
+                {/*<Button onClick={()=>handleMenuDelete(index)} icon={<DeleteFilled/>}/>*/}
                 <Button type="default" onClick={handleAdd} icon={<PlusOutlined/>}/>
                 <Button type='primary' onClick={handleExport} icon={<DownloadOutlined />}/>
             </Space.Compact>
