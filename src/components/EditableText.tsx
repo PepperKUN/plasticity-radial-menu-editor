@@ -26,6 +26,7 @@ export const EditableText:React.FC<{
     const divRef = useRef<HTMLDivElement>(null);
     const { globalMenuItems, setGlobalMenuItems } = useGlobalMenuItemStore();
     const [isEditing, setEditing] = useState(false);
+    const [isOpen, setOpen] = useState(false);
     const getProperty = (globalItems:GlobalRadialMenuItem[], indexes:strictTuple, keyStr:'name'|'label'|'command'):string => {
         if (indexes[1]) {
             // 处理 RadialMenuItem 的 label
@@ -104,6 +105,10 @@ export const EditableText:React.FC<{
                     ...globalItem,
                     [keyStr]: newValue,
                 };
+
+                //修改listItems
+
+
             } else {
                 throw new Error("无效的层级路径");
             }
@@ -130,6 +135,7 @@ export const EditableText:React.FC<{
 
     const handleNameDbClick = () => {
         setEditing(true);
+        setOpen(false);
         if(!divRef.current) return;
 
         divRef.current.focus({
@@ -139,6 +145,7 @@ export const EditableText:React.FC<{
 
     const handleBlur = () => {
         setEditing(false);
+        setOpen(false);
         divRef.current?.blur()
         // console.log('保存内容:', divRef.current?.textContent);
         updateGlobalItems(setGlobalMenuItems, {
@@ -156,8 +163,14 @@ export const EditableText:React.FC<{
     };
 
     return (
-        <div className={`group gap-2 items-baseline ${className}`}>
-            <Tooltip title={isEditing?null:"Double click for name editing"} placement={tooltipPlacement} color={'#4d179a'}>
+        <div className={`group gap-2 items-baseline ${className?className:''}`}>
+            <Tooltip
+                title="Double click for name editing"
+                placement={tooltipPlacement}
+                color={'#4d179a'}
+                open={isOpen&&!isEditing}
+                onOpenChange={setOpen}
+            >
                 <div
                     ref={divRef}
                     contentEditable={isEditing}

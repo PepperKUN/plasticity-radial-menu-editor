@@ -46,7 +46,7 @@
     padding: 0;
     .menu-label {
       border: 0px solid rgba(255, 255, 255, .4);
-      transform-property: width, height, top, left, transform, padding;
+      transition-property: width, height, top, left, transform, padding;
       transition-duration: 0.4s;
       transition-timing-function: cubic-bezier(0.22, 1, 0.36, 1);
       position: absolute;

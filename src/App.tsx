@@ -1,4 +1,4 @@
-import React, { useState, useMemo, useEffect } from "react";
+import React, { useState, useMemo } from "react";
 
 import {
     DndContext,
@@ -46,9 +46,30 @@ const App:React.FC = () => {
         height: 500,
     }
 
+    const handleSwitch = (index: number) => {
+        const newDirection = (index - activeIndex)>0?-1:1;
+        setActiveIndex(index)
+        setDirection(newDirection);
+    }
+
+    const handleItemsChange = (items: GlobalRadialMenuItem[]) => {
+        if(items.length <= activeIndex) {
+            setActiveIndex(items.length-1)
+            handleSwitch(items.length-1)
+        } else {
+            const currentCommand = globalMenuItems[activeIndex].command;
+            const newIndex = items.findIndex((item)=>item.command === currentCommand);
+            if(globalMenuItems.length<items.length) {
+                handleSwitch(newIndex)
+            } else {
+                handleSwitch(newIndex+1)
+            }
+        }
+        setGlobalMenuItems(items)
+    }
 
     const handleDragStart = (event: DragStartEvent) => {
-        const {active, activatorEvent} = event;
+        const {active} = event;
         // console.log("active", active, activatorEvent);
         if(active.data.current?.label) {
             setShowOverlay(true)
@@ -80,7 +101,7 @@ const App:React.FC = () => {
                 ...filteredItems.slice(overIndex)
             ];
 
-            setGlobalMenuItems(prev => prev.map((item, index) => index === activeIndex?{...item, items: newItems}:item));
+            handleItemsChange(globalMenuItems.map((item, index) => index === activeIndex?{...item, items: newItems}:item))
             setShowOverlay(false)
         } else {
             // console.log("filter");
@@ -106,7 +127,7 @@ const App:React.FC = () => {
                 }
 
 
-                setGlobalMenuItems(prev => prev.map((item, index) => index === activeIndex?{...item, items: newItems}:item));
+                handleItemsChange(globalMenuItems.map((item, index) => index === activeIndex?{...item, items: newItems}:item))
             }
         } else {
             if(items.length>2) {
@@ -115,25 +136,6 @@ const App:React.FC = () => {
             console.log(listItems);
         }
     };
-
-    const handleItemsChange = (items: GlobalRadialMenuItem[]) => {
-        if(items.length <= activeIndex) {
-            setActiveIndex(items.length-1)
-            handleSwitch(items.length-1)
-        } else {
-            const currentCommand = globalMenuItems[activeIndex].command;
-            const newIndex = items.findIndex((item)=>item.command === currentCommand);
-            setActiveIndex(newIndex)
-            handleSwitch(newIndex)
-        }
-        setGlobalMenuItems(items)
-    }
-
-    const handleSwitch = (index: number) => {
-        const newDirection = (index - activeIndex)>0?-1:1;
-        setActiveIndex(index)
-        setDirection(newDirection);
-    }
 
 
     return (
@@ -162,7 +164,7 @@ const App:React.FC = () => {
 
               >
                   <SortableContext items={items}>
-                      {/*<div className="flex flex-1 self-stretch max-w-8xl">*/}
+                      <div className="flex flex-1 self-stretch max-w-[1440px]">
                       <div className="flex h-full flex-1 flex-col justify-center items-center">
                           <div className="flex flex-col pt-12 pb-6">
                               <EditableText
@@ -217,7 +219,7 @@ const App:React.FC = () => {
                               {overlayText}
                           </div>
                       </DragOverlay>}
-                      {/*</div>*/}
+                      </div>
                   </SortableContext>
               </DndContext>
             </div>

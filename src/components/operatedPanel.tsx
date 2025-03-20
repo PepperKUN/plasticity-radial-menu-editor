@@ -92,7 +92,7 @@ const OperatedPanel: React.FC<IProps>= ({
                 labelMaxWidth={maxWidth}
                 size={size}
                 radius={180}
-                sparsityRatio={.5}
+                sparsityRatio={1}
                 spacing={20}
                 extendLength={1000}
             />

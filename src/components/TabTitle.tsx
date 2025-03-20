@@ -1,6 +1,6 @@
 import React, { useMemo } from "react";
-import {Segmented, Button, Popover} from 'antd';
-import {PlusOutlined, DeleteFilled} from "@ant-design/icons";
+import {Segmented, Button, Space, Tooltip} from 'antd';
+import {PlusOutlined, DeleteFilled, DownloadOutlined} from "@ant-design/icons";
 import {GlobalRadialMenuItem, RadialMenuItem} from "@/types/type";
 
 const itemTemplate: RadialMenuItem[] = [
@@ -13,16 +13,15 @@ const itemTemplate: RadialMenuItem[] = [
 
 
 const Tabunit:React.FC<{
-    selected: boolean,
     index: number;
     label: string;
     onDelete: (index: number) => void;
-}> = ({selected, index, label, onDelete }) => {
+}> = ({index, label, onDelete }) => {
 
     return (
-        <Popover content={(<Button type='default' onClick={()=>onDelete(index)} danger icon={<DeleteFilled />}/>)} title={null} trigger='hover'>
-            <span className={`py-2`}>{label}</span>
-        </Popover>
+        <Tooltip title={(<span className='flex gap-1 text-neutral-400 cursor-pointer hover:text-red-500' onClick={()=>onDelete(index)}><DeleteFilled />Delete</span>)} trigger='hover'>
+            <span className={`py-1`}>{label}</span>
+        </Tooltip>
     )
 }
 
@@ -45,7 +44,6 @@ const TabTitle:React.FC< {
             label: (
                 <Tabunit
                     index={idx}
-                    selected={idx === index}
                     label={item.name}
                     onDelete={handleMenuDelete}
                 />
@@ -60,12 +58,42 @@ const TabTitle:React.FC< {
     }
 
     const handleAdd = () => {
-        const newItems:GlobalRadialMenuItem[] = [...globalItems, {
+        const copyGlobalItems = globalItems.slice()
+        copyGlobalItems.splice(index+1, 0, {
             name: `New Radial Menu-${globalItems.length}`,
             command: `radial: menu-${globalItems.length}`,
             items: itemTemplate
-        }]
-        onItemsChange(newItems)
+        })
+        onItemsChange(copyGlobalItems)
+    }
+
+    const handleExport = () => {
+
+        const currentRadialMenuData = {
+            name: globalItems[index].name,
+            command: globalItems[index].command,
+            items: globalItems[index].items.map(item => ({
+                command: item.command,
+                icon: item.icon,
+                label: item.label,
+            }))
+        }
+
+        try {
+            const jsonString = JSON.stringify(currentRadialMenuData, null, 2);
+            const blob = new Blob([jsonString], { type: 'application/json' });
+            const url = URL.createObjectURL(blob);
+
+            const link = document.createElement('a');
+            link.href = url;
+            link.download = `${globalItems[index].name}.json`;
+            document.body.appendChild(link);
+            link.click();
+            document.body.removeChild(link);
+            URL.revokeObjectURL(url);
+        } catch (error) {
+            console.error('导出 JSON 失败:', error);
+        }
     }
 
     return (
@@ -77,7 +105,10 @@ const TabTitle:React.FC< {
                 onChange={handleMenuSwitch}
                 className='select-none gabarito-regular'
             />
-            <Button size="large" type="primary" onClick={handleAdd} icon={<PlusOutlined/>}/>
+            <Space.Compact size="large">
+                <Button type="default" onClick={handleAdd} icon={<PlusOutlined/>}/>
+                <Button type='primary' onClick={handleExport} icon={<DownloadOutlined />}/>
+            </Space.Compact>
         </div>
     )
 }

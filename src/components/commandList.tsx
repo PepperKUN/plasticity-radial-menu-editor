@@ -114,7 +114,7 @@ const CommandList:React.FC<{
             <motion.div
                 layout
                 // key={Math.random()*1000}
-                className=' flex-1 flex flex-col p-2 mt-8 bg-neutral-900 rounded-sm gap-2 contain-content'
+                className=' flex-1 flex flex-col p-2 bg-neutral-900 rounded-sm gap-2 contain-content'
                 variants={variants}
                 initial='enter'
                 animate='center'
