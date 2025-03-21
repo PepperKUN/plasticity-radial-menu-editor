@@ -39,6 +39,8 @@ const TabTitle:React.FC< {
         onItemsChange(globalItems.filter((_, idx:number) => idx !== index));
     }
 
+    const globalItemsOnlyName = useMemo(() => globalItems.map(item => item.name), [globalItems])
+
     const segmentOptions = useMemo(() => {
         return globalItems.map((item, idx) => ({
             value: item.name,
@@ -50,12 +52,12 @@ const TabTitle:React.FC< {
                 />
             ),
         }))
-    }, [globalItems.length, globalItems.map(item => item.name)])
+    }, [globalItems.length, globalItemsOnlyName])
 
 
     const handleMenuSwitch = (value: string) => {
-        const index = segmentOptions.findIndex(option => option.value === value);
-        onSwitch(index);
+        const tempIndex = segmentOptions.findIndex(option => option.value === value);
+        onSwitch(tempIndex);
     }
 
     const handleAdd = () => {

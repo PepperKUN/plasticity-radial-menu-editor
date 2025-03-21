@@ -27,6 +27,11 @@ interface listItem {
     items: RadialMenuItem[]
 }
 
+interface IconGroup {
+    generalIcon: string;
+    items: string[];
+}
+
 type strictTuple = [number, (number|string)?]
 
-export {RadialMenuItem, GlobalRadialMenuItem, point, listItem, strictTuple, flatListItem}
+export {RadialMenuItem, GlobalRadialMenuItem, point, listItem, strictTuple, flatListItem, IconGroup}

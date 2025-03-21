@@ -1,14 +1,15 @@
 import React, {useState, useEffect, useMemo, ChangeEvent} from "react";
 import type {CSSProperties} from "react";
 import { useDraggable } from "@dnd-kit/core";
-import { RadialMenuItem, listItem, flatListItem } from "@/types/type";
+import { RadialMenuItem, flatListItem } from "@/types/type";
 import { Input } from 'antd';
 import { SearchOutlined } from '@ant-design/icons'
 import Fuse from "fuse.js";
 import { Scrollbars } from 'react-custom-scrollbars-2';
 import {motion} from "motion/react";
-import {convertFlat2ListItems} from "@/utils/util.ts";
 import SvgIcon from "@/components/RadialMenu/SvgIcon.tsx";
+import {convertFlat2ListItems} from "@/utils/util.ts";
+import {useListItemStore} from "@/stores/store.ts";
 
 
 type ThumbVerticalProps = {
@@ -49,21 +50,24 @@ const DraggableItem = ( {id, label, children}: {id:number|string, label: string,
 }
 
 const CommandList:React.FC<{
-    items: listItem[]
+    // items: listItem[]
     refItems: RadialMenuItem[]
-}> =  ({items, refItems}) => {
+}> =  ({refItems}) => {
+    const {listItems} = useListItemStore()
 
+    console.log('CommandList', listItems[0])
     const menuCommands = new Set(refItems.map((item) => item.command))
 
-    const flatData: flatListItem[] = useMemo(() => items.flatMap((category) => category.items.map((item) => ({
+    const flatData: flatListItem[] = useMemo(() => listItems.flatMap((category) => category.items.map((item) => ({
             ...item,
             type: category.commandType,
             isAdd: menuCommands.has(item.command)
         }))
-    ),[items, refItems])
+    ),[listItems, refItems])
 
     const [searchTerm, setSearchTerm] = useState('')
-    const [listItems, setListItems] = useState(convertFlat2ListItems(flatData))
+    const [listComItems, setListComItems] = useState(listItems)
+
 
     useEffect(() => {
 
@@ -76,10 +80,10 @@ const CommandList:React.FC<{
 
         const flatResults = searchTerm ? fuse.search(searchTerm).map((result) => result.item) : flatData;
 
-        setListItems(convertFlat2ListItems(flatResults))
+        setListComItems(convertFlat2ListItems(flatResults))
 
 
-    }, [searchTerm, flatData, ])
+    }, [searchTerm, flatData])
 
     const onSearch = (event:ChangeEvent) => {
         const e = event as React.ChangeEvent<HTMLTextAreaElement>
@@ -125,12 +129,14 @@ const CommandList:React.FC<{
 
 
             <Input
+                className='bg-transparent!'
                 value={searchTerm}
                 size='large'
                 placeholder='Search Commands'
                 prefix={<SearchOutlined />}
                 onChange={onSearch}
                 variant='underlined'
+                allowClear
             />
             <Scrollbars
                 className='flex flex-col'
@@ -138,7 +144,7 @@ const CommandList:React.FC<{
                 renderView={ScrollView}
                 autoHide
             >
-                { listItems.length>0?listItems.map((category) => (
+                { listComItems.length>0?listComItems.map((category) => (
                     <React.Fragment key={category.commandType}>
                         {category.items.length>0&&<span className='p-2 pl-1 text-xs bg-neutral-900 text-neutral-500 sticky top-0 font-mono' key={category.commandType}>{category.commandType}</span>}
                         { category.items.map((item) => (

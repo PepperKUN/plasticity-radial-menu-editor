@@ -1,4 +1,4 @@
-import React, {useState, useMemo, useEffect} from "react";
+import React, {useState, useMemo, useEffect, useRef} from "react";
 
 import {
     DndContext,
@@ -24,6 +24,7 @@ import TabTitle from "@/components/TabTitle.tsx";
 
 const App:React.FC = () => {
 
+
     const { listItems, setListItems } = useListItemStore();
     const { globalMenuItems, setGlobalMenuItems } = useGlobalMenuItemStore();
 
@@ -36,7 +37,7 @@ const App:React.FC = () => {
 
 
 
-    const flatListItems= useMemo(() => listItems.flatMap((item) => item.items), [listItems])
+
 
 
     // console.log('sensors:', sensors)
@@ -60,42 +61,50 @@ const App:React.FC = () => {
             },
             ...listItemsWithoutRads
         ]
-        // console.log(newListItems)
-        setListItems(newListItems)
+        console.log('App.tsx', newListItems[0], [globalMenuItems.length, radialMenuCommands, activeIndex])
+            setListItems(newListItems)
+        // setActiveIndex(prev => prev+1)
+        // setTimeout(() => {
+        //
+        // }, 10)
 
     },[globalMenuItems.length, radialMenuCommands, activeIndex])
 
+    const flatListItems= useMemo(() => listItems.flatMap((item) => item.items), [listItems])
 
 
 
-    // console.log('radialMenuCommands', radialMenuCommands)
+    // console.log('radialMenuCommands', listItems[0])
 
 
     const handleSwitch = (index: number) => {
+        console.log('App.tsx - index', index, listItems[0])
         const newDirection = (index - activeIndex)>0?-1:1;
-        setActiveIndex(index)
         setDirection(newDirection);
+        setActiveIndex(index)
     }
 
     const handleItemsChange = (newItems: GlobalRadialMenuItem[]) => {
+        setGlobalMenuItems(newItems)
+        console.trace("调用追踪标记", listItems[0]);
         if(newItems.length <= activeIndex) {
             handleSwitch(newItems.length-1)
         } else {
             const currentCommand = globalMenuItems[activeIndex].command;
             const newIndex = newItems.findIndex((item)=>item.command === currentCommand);
             if(newIndex>-1) {
-                // console.log(newIndex)
-                handleSwitch(newIndex)
                 if(globalMenuItems.length<newItems.length){
                     // console.log(newIndex+1)
                     handleSwitch(newIndex+1)
+                } else {
+                    // console.log(newIndex)
+                    handleSwitch(newIndex)
                 }
             } else {
                 if(activeIndex>0) handleSwitch(activeIndex-1)
                 else handleSwitch(0)
             }
         }
-        setGlobalMenuItems(newItems)
     }
 
     const handleDragStart = (event: DragStartEvent) => {
@@ -224,7 +233,7 @@ const App:React.FC = () => {
                                   key={`parent-${activeIndex}`}
                                   className="relative w-full h-full flex flex-col justify-center items-center self-stretch overflow-hidden">
                                       <OperatedPanel
-                                          key={activeIndex}
+                                          // key={activeIndex}
                                           menuItem={globalMenuItems[activeIndex]}
                                           size={size}
                                       />
@@ -241,11 +250,11 @@ const App:React.FC = () => {
                           mode="popLayout"
                       >
                           <div
-                              key={`parent-commandList-${activeIndex}`}
+                              key={`parent-commandList-${activeIndex}-`}
                               className='self-stretch flex relative'
                               style={{width: 390}}
                           >
-                              <CommandList key={`commandList-${activeIndex}`} items={listItems} refItems={currentRadialItems}/>
+                              <CommandList refItems={currentRadialItems}/>
                           </div>
                       </AnimatePresence>
                       {showOverlay && <DragOverlay

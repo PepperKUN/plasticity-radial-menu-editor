@@ -1,4 +1,5 @@
 import React, { useEffect } from "react";
+import {iconNameRemap} from "@/utils/util.ts";
 
 interface SvgIconProps {
     name: string;         // 图标名称（对应 Iconfont 的 symbol id）
@@ -31,7 +32,7 @@ const SvgIcon:React.FC<SvgIconProps> = ({
 
     const core = (
         <g className="icon" style={style}>
-            <use xlinkHref={`#icon-${name}`} x={x} y={y} width={size} height={size}/>
+            <use xlinkHref={`#icon-${iconNameRemap(name)}`} x={x} y={y} width={size} height={size}/>
         </g>
     )
 

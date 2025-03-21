@@ -1,6 +1,8 @@
 import {CollisionDetection, Modifier, DropAnimationFunction} from '@dnd-kit/core';
 import {useContainerStore} from "@/stores/store.ts";
-import {flatListItem, listItem, RadialMenuItem} from "@/types/type";
+import {flatListItem, listItem, RadialMenuItem, IconGroup} from "@/types/type";
+import { ICON_MAP } from "@/stores/iconMap.ts";
+
 
 
 const convertedObj2Table = (originalData:object) => Object.entries(originalData).map(([key, value]) => ({
@@ -171,7 +173,18 @@ const convertFlat2ListItems = (arr: flatListItem[]):listItem[] => {
     }));
 }
 
+const createIconMap = (groups: IconGroup[]) => {
+    return groups.reduce((acc, group) => {
+        group.items.forEach(item => acc.set(item, group.generalIcon));
+        return acc;
+    }, new Map<string, string>());
+};
 
+const iconMap = createIconMap(ICON_MAP)
+
+const iconNameRemap = (iconName: string) => {
+    return iconMap.get(iconName) ?? iconName;
+}
 
 
 export {
@@ -182,4 +195,5 @@ export {
     customDropAnimation,
     radiusConstraint,
     convertFlat2ListItems,
+    iconNameRemap,
 };

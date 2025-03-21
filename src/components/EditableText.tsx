@@ -34,7 +34,10 @@ export const EditableText:React.FC<{
             const globalItem = globalItems[globalIndex];
 
             const radialItem = globalItem.items.find(item => item.id === itemId);
-            if(!radialItem) throw new Error(`输入item的id错误`);
+            if(!radialItem) {
+                console.trace(`输入item的id错误`)
+                throw new Error(`输入item的id错误`);
+            }
             if (keyStr === "label") {
                 return radialItem[keyStr]; // 直接返回 label
             } else {
