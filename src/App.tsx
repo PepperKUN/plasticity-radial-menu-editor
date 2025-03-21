@@ -1,4 +1,4 @@
-import React, {useState, useMemo, useEffect, useRef} from "react";
+import React, {useState, useMemo, useEffect} from "react";
 
 import {
     DndContext,
@@ -85,8 +85,9 @@ const App:React.FC = () => {
     }
 
     const handleItemsChange = (newItems: GlobalRadialMenuItem[]) => {
+
         setGlobalMenuItems(newItems)
-        console.trace("调用追踪标记", listItems[0]);
+        // console.trace("调用追踪标记", listItems[0]);
         if(newItems.length <= activeIndex) {
             handleSwitch(newItems.length-1)
         } else {
@@ -94,10 +95,10 @@ const App:React.FC = () => {
             const newIndex = newItems.findIndex((item)=>item.command === currentCommand);
             if(newIndex>-1) {
                 if(globalMenuItems.length<newItems.length){
-                    // console.log(newIndex+1)
+                    // 新增环形菜单
+
                     handleSwitch(newIndex+1)
                 } else {
-                    // console.log(newIndex)
                     handleSwitch(newIndex)
                 }
             } else {

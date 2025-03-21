@@ -33,16 +33,17 @@ const variants = {
 
 
 
-const DraggableItem = ( {id, label, children}: {id:number|string, label: string, children: React.ReactNode} ) => {
+const DraggableItem = ( {id, label, disable, children}: {id:number|string, label: string, children: React.ReactNode, disable?: boolean} ) => {
     const { attributes, listeners, setNodeRef } = useDraggable({
         id:id,
         data: {
             label: label
-        }
+        },
+        disabled: disable,
     })
     return (
         <div ref={setNodeRef} {...listeners} {...attributes}
-             className='p-2 flex justify-between gap-2 cursor-grab rounded-sm text-neutral-400 hover:bg-neutral-300/10 hover:text-white'
+             className={`p-2 flex justify-between gap-2 rounded-sm text-neutral-400 hover:bg-neutral-300/10 hover:text-white ${disable? 'cursor-not-allowed' : 'cursor-grab'}`}
         >
             {children}
         </div>
@@ -148,7 +149,7 @@ const CommandList:React.FC<{
                     <React.Fragment key={category.commandType}>
                         {category.items.length>0&&<span className='p-2 pl-1 text-xs bg-neutral-900 text-neutral-500 sticky top-0 font-mono' key={category.commandType}>{category.commandType}</span>}
                         { category.items.map((item) => (
-                        <DraggableItem key={item.id} id={item.id} label={item.label}>
+                        <DraggableItem key={item.id} id={item.id} label={item.label} disable={item.isAdd || refItems.length>11}>
                             <div className="flex gap-2">
                                 <SvgIcon name={item.icon}/>
                                 <span className='select-none text-sm gabarito-regular '>{item.label}</span>
