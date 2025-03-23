@@ -100,7 +100,6 @@ const SortableSector: React.FC<{
         attributes,
         listeners,
         setNodeRef,
-        transition,
         isDragging,
         isSorting,
         newIndex,
@@ -134,18 +133,18 @@ const SortableSector: React.FC<{
 
 
     const rotateAngle = (isSorting?tempIndex:index)*angle
-    const angleOffest = (newIndex - index)*angle
+    // const angleOffest = (newIndex - index)*angle
 
     const pathD = describeSector(center, center, radius - outerWidth, -angle/2, angle/2);
     const pathL = describeLine(center, center, radius - outerWidth, -angle/2, angle/2);
     const pathA = describleArc(center, center, radius - outerWidth/2, -angle/2, angle/2);
     // const pathA2 = describleArc(center, center, radius - outerWidth + 2, -angle/2, angle/2);
-    const labelAngle = -(isSorting?newIndex:index)*angle;
+    // const labelAngle = -(isSorting?newIndex:index)*angle;
     const textPos = polarToCartesian(center, center, radius * 0.76, 0);
 
     // const finalSectorAngle = Math.abs(angleOffest)<=180?rotateAngle:(angleOffest>0?rotateAngle-360:rotateAngle+360);
     const finalSectorAngle = rotateAngle
-    const finalLabelAngle = Math.abs(angleOffest)<=180?labelAngle:(angleOffest>0?labelAngle+360:labelAngle-360);
+    // const finalLabelAngle = Math.abs(angleOffest)<=180?labelAngle:(angleOffest>0?labelAngle+360:labelAngle-360);
 
     const style = {
         // transform: CSS.Transform.toString(transform),
@@ -165,9 +164,9 @@ const SortableSector: React.FC<{
     //
     // }
 
-    const childrenStyle = {
-        transition: isSorting?transition:'none',
-    }
+    // const childrenStyle = {
+    //     transition: isSorting?transition:'none',
+    // }
 
     const arcStyle = {
         stroke: `${isSorting?(isDragging?"#8b5cf6":"none"):""}`
@@ -288,12 +287,10 @@ const RadialMenuPie: React.FC<RadialMenuProps> = ({
         const tempArray = items.map((item, index) => ({...item, order: index}))
         const activeItem = tempArray.find((item) => item.id === active?.id)
         if(active&&activeItem) {
-            const result = [
+            return [
                 ...tempArray.filter((item) => item.id !== active.id),
                 activeItem
             ]
-            // console.log(result)
-            return result
         } else {
             return tempArray
         }
