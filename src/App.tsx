@@ -61,8 +61,7 @@ const App:React.FC = () => {
             },
             ...listItemsWithoutRads
         ]
-        console.log('App.tsx', newListItems[0], [globalMenuItems.length, radialMenuCommands, activeIndex])
-            setListItems(newListItems)
+        setListItems(newListItems)
         // setActiveIndex(prev => prev+1)
         // setTimeout(() => {
         //
@@ -78,7 +77,6 @@ const App:React.FC = () => {
 
 
     const handleSwitch = (index: number) => {
-        console.log('App.tsx - index', index, listItems[0])
         const newDirection = (index - activeIndex)>0?-1:1;
         setDirection(newDirection);
         setActiveIndex(index)
@@ -216,15 +214,18 @@ const App:React.FC = () => {
                                   editableClassNames='border-b-neutral-500 outline-0'
                                   normalClassNames='border-transparent'
                               />
-                              <EditableText
-                                  keyStr='command'
-                                  indexes={[activeIndex]}
-                                  className='text-neutral-400'
-                                  publicClassNames='gabarito-regular text-lg border-b-1'
-                                  editableClassNames='border-b-neutral-500 outline-0'
-                                  normalClassNames='border-transparent'
-                                  tooltipPlacement='bottom'
-                              />
+                              <div className="flex items-baseline gap-1">
+                                  <span className='py-1 px-1 rounded-sm text-neutral-300 bg-neutral-700 text-xs'>Command:</span>
+                                  <EditableText
+                                      keyStr='command'
+                                      indexes={[activeIndex]}
+                                      className='text-neutral-400'
+                                      publicClassNames='gabarito-regular text-lg border-b-1'
+                                      editableClassNames='border-b-neutral-500 outline-0'
+                                      normalClassNames='border-transparent'
+                                      tooltipPlacement='bottom'
+                                  />
+                              </div>
                           </div>
                           <AnimatePresence
                               custom={direction}

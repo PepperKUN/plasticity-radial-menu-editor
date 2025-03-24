@@ -56,7 +56,6 @@ const CommandList:React.FC<{
 }> =  ({refItems}) => {
     const {listItems} = useListItemStore()
 
-    console.log('CommandList', listItems[0])
     const menuCommands = new Set(refItems.map((item) => item.command))
 
     const flatData: flatListItem[] = useMemo(() => listItems.flatMap((category) => category.items.map((item) => ({

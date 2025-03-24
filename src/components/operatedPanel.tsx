@@ -73,7 +73,7 @@ const OperatedPanel: React.FC<IProps>= ({
         <motion.div
             // layout
             // key={Math.random()*1000}
-            className="radial-wrap"
+            className="radial-wrap flex justify-center items-center relative"
             ref={nodeRef}
             style={{ width: size.width , height: size.height }}
             custom={direction}

@@ -20,12 +20,11 @@ const SvgIcon:React.FC<SvgIconProps> = ({
                                             size=16,
 }) =>{
     // 动态加载 iconfont 脚本（同之前方案）
-    const basePath = process.env.NODE_ENV === 'production' ? '/plasticity-radial-menu-editor/' : '/';
     useEffect(() => {
         const scriptId = 'iconfont-symbol-script';
         if (!document.getElementById(scriptId)) {
             const script = document.createElement('script');
-            script.src = `${basePath}static/iconfont/font.js`;
+            script.src = `/plasticity-radial-menu-editor/static/iconfont/font.js`;
             script.id = scriptId;
             document.body.appendChild(script);
         }

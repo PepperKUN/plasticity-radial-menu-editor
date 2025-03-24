@@ -2,12 +2,13 @@
 import React, {CSSProperties, useRef, useEffect, useMemo, MutableRefObject, useState} from "react";
 import { useSortable } from "@dnd-kit/sortable";
 import { useContainerStore } from "@/stores/store.ts";
-import { RadialMenuItem } from "@/types/type";
+import { RadialMenuItem} from "@/types/type";
 import { throttle } from 'lodash-es';
 import './RadialMenu.scss'
 import {useDroppable} from "@dnd-kit/core";
 import SvgIcon from "@/components/RadialMenu/SvgIcon.tsx";
 import {polarToCartesian} from "@/utils/util.ts";
+import {DeleteFilled, DeleteOutlined} from "@ant-design/icons";
 
 // 类型定义
 
@@ -85,8 +86,9 @@ const SortableSector: React.FC<{
     angle: number;
     // endAngle: number;
     outerWidth: number;
-    onItemClick?: (item: RadialMenuItem) => void;
-}> = ({ item, radius, order, angle, outerWidth, onItemClick }) => {
+    onItemHover: (label: string) => void;
+    onItemsDrag: (isDragging: boolean) => void;
+}> = ({ item, radius, order, angle, outerWidth, onItemHover, onItemsDrag }) => {
     const center = radius;
 
     const startAngle = order*angle - angle/2
@@ -188,12 +190,16 @@ const SortableSector: React.FC<{
         }
     }, [isTransitionEnabled]);
 
+    useEffect(() => {
+        onItemsDrag(isSorting);
+    }, [isSorting])
+
 
     return (
         <g className={`sector_group text-neutral-700 hover:text-white ${isSorting?'cursor-grabbing':'cursor-grab'} ${isDragging?'cursor-grabbing':''}} ${isSorting&&isDragging?'selected':''}`} ref={(el) => {
             setNodeRef(el as unknown as HTMLElement);
             (nodeRef as MutableRefObject<SVGGElement | null>).current = el;
-        }} style={style} {...attributes} {...listeners} onTransitionEnd={handleTransitionEnd}>
+        }} style={style} {...attributes} {...listeners} onTransitionEnd={handleTransitionEnd} onMouseEnter={() => onItemHover(item.label)} onMouseLeave={() => onItemHover('')}>
             <path
                 d={pathA}
                 strokeWidth={outerWidth}
@@ -206,7 +212,6 @@ const SortableSector: React.FC<{
                 d={pathD}
                 fill={isSorting&&isDragging?"#202020":"#141414"}
                 className="sector"
-                onClick={() => onItemClick?.(item)}
             />
             <path
                 d={pathL}
@@ -250,6 +255,8 @@ const RadialMenuPie: React.FC<RadialMenuProps> = ({
                                                }) => {
     const containerRef = useRef<SVGSVGElement>(null);
     const setRect = useContainerStore((state) => state.setRect);
+    const [isSorting, setSorting] = useState(false);
+    const [labelHover, setLabelHover] = useState('');
 
     const { setNodeRef, isOver, active } = useDroppable({
         id: 'trashBin',
@@ -298,40 +305,47 @@ const RadialMenuPie: React.FC<RadialMenuProps> = ({
 
 
     return (
-        <svg
-            ref={containerRef}
-            className={`radial-menu ${className ? className : ''}`}
-            style={{
-                ...style,
-                width: radius * 2,
-                height: radius * 2,
-            }}
-            viewBox={`0 0 ${radius * 2} ${radius * 2}`}
-        >
-            <radialGradient id="trashBin" cx="50%" cy="50%" r="50%">
-                <stop offset="60%" stopColor="#000000"/>
-                <stop offset="100%" stopColor="#6a1c1e"/>
-            </radialGradient>
-            <circle cx={radius} cy={radius} r={radius - 5 } stroke="#141414" strokeWidth={10} fill="#000000"/>
-            {sortedMenuItems.map((item) => {
-                const angle = 360 / items.length;
+        <>
+            <svg
+                ref={containerRef}
+                className={`radial-menu flex justify-center items-center ${className ? className : ''}`}
+                style={{
+                    ...style,
+                    width: radius * 2,
+                    height: radius * 2,
+                }}
+                viewBox={`0 0 ${radius * 2} ${radius * 2}`}
+            >
+                <radialGradient id="trashBin" cx="50%" cy="50%" r="50%">
+                    <stop offset="60%" stopColor="#000000"/>
+                    <stop offset="100%" stopColor="#6a1c1e"/>
+                </radialGradient>
+                <circle cx={radius} cy={radius} r={radius - 5 } stroke="#141414" strokeWidth={10} fill="#000000"/>
+                {sortedMenuItems.map((item) => {
+                    const angle = 360 / items.length;
 
-                return (
-                    <SortableSector
-                        key={item.id}
-                        item={item}
-                        radius={radius}
-                        order={item.order}
-                        angle={angle}
-                        outerWidth={12}
-                    />
-                );
-            })}
-            <circle cx={radius} cy={radius} r={radius - 10} fill="none" stroke="#000000" strokeWidth={6}/>
-            <circle cx={radius} cy={radius} r={75} fill="#000000" stroke="#ffffff" strokeWidth={1} strokeOpacity={0.1}/>
-            <circle ref={(el) => setNodeRef(el as unknown as HTMLElement)} cx={radius} cy={radius} r={70}
-                    fill={isOver ? 'url(#trashBin)' : '#000000'} stroke="#ffffff" strokeWidth={1} strokeOpacity={0.1}/>
-        </svg>
+                    return (
+                        <SortableSector
+                            key={item.id}
+                            item={item}
+                            radius={radius}
+                            order={item.order}
+                            angle={angle}
+                            outerWidth={12}
+                            onItemsDrag={value=>setSorting(value)}
+                            onItemHover={value=>setLabelHover(value)}
+                        />
+                    );
+                })}
+                <circle cx={radius} cy={radius} r={radius - 10} fill="none" stroke="#000000" strokeWidth={6}/>
+                <circle cx={radius} cy={radius} r={75} fill="#000000" stroke="#ffffff" strokeWidth={1} strokeOpacity={0.1}/>
+                <circle ref={(el) => setNodeRef(el as unknown as HTMLElement)} cx={radius} cy={radius} r={70}
+                        fill={isOver ? 'url(#trashBin)' : '#000000'} stroke="#ffffff" strokeWidth={1} strokeOpacity={0.1}/>
+            </svg>
+            <div className={`w-[140px] h-[140px] flex flex-col justify-center items-center absolute pointer-events-none  rounded-full ${isOver?'text-red-700':'text-neutral-300'}`}>
+                {isSorting?(<>{isOver? <DeleteFilled className='text-xl'/> : <DeleteOutlined className='text-xl '/>}<div className='text-center text-xs/4'>Delete</div></>):<span className='text-neutral-300 text-center text-xs/4 p-4'>{labelHover}</span>}
+            </div>
+        </>
     );
 };
 

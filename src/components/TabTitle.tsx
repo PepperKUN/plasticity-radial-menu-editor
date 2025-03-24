@@ -1,7 +1,8 @@
 import React, { useMemo } from "react";
-import {Segmented, Button, Space, Tooltip} from 'antd';
-import {PlusOutlined, DeleteFilled, DownloadOutlined} from "@ant-design/icons";
+import {Segmented, Button, Space, Tooltip, message, Popconfirm} from 'antd';
+import {PlusOutlined, DownloadOutlined, DeleteOutlined, WarningOutlined} from "@ant-design/icons";
 import {GlobalRadialMenuItem, RadialMenuItem} from "@/types/type";
+import type {PopconfirmProps} from 'antd';
 
 const itemTemplate: RadialMenuItem[] = [
     { id: 'radMenu-151', label: 'Selection mode: set control-point', icon: 'selection-mode-set-control-point', command: 'selection:mode:set:control-point' },
@@ -16,10 +17,19 @@ const Tabunit:React.FC<{
     index: number;
     label: string;
     onDelete: (index: number) => void;
-}> = ({index, label, onDelete }) => {
+}> = ({ label }) => {
 
     return (
-        <Tooltip title={(<span className='flex gap-1 text-neutral-400 cursor-pointer hover:text-red-500' onClick={()=>onDelete(index)}><DeleteFilled />Delete</span>)} trigger='hover'>
+        <Tooltip
+            // title={
+            // (<span
+            //     className='flex gap-1 text-neutral-400 cursor-pointer hover:text-red-500'
+            //     onClick={()=>onDelete(index)}
+            // >
+            //     <DeleteFilled />Delete</span>)}
+            title={label}
+            trigger='hover'
+        >
             <span className={`py-1`}>{label}</span>
         </Tooltip>
     )
@@ -33,6 +43,7 @@ const TabTitle:React.FC< {
 }> = ({index, globalItems, onSwitch, onItemsChange}) => {
 
     // const [index, setIndex] = useState(0);
+    const [messageApi, contextHolder] = message.useMessage();
 
     const handleMenuDelete = (index:number) => {
         console.log('delete:',index)
@@ -99,6 +110,16 @@ const TabTitle:React.FC< {
         }
     }
 
+    const confirm: PopconfirmProps['onConfirm'] = (e) => {
+        handleMenuDelete(index);
+        console.log(e);
+        messageApi.success('Radial menu has been removed');
+    };
+
+    const cancel: PopconfirmProps['onCancel'] = (e) => {
+        console.log(e);
+    };
+
     return (
         <div className="p-6 flex justify-between items-center gap-4">
             <Segmented
@@ -108,8 +129,19 @@ const TabTitle:React.FC< {
                 onChange={handleMenuSwitch}
                 className='select-none gabarito-regular'
             />
+            {contextHolder}
             <Space.Compact size="large">
-                {/*<Button onClick={()=>handleMenuDelete(index)} icon={<DeleteFilled/>}/>*/}
+                <Popconfirm
+                    icon={<WarningOutlined />}
+                    title="Delete the Menu"
+                    description="Are you sure to delete this Menu?"
+                    onConfirm={confirm}
+                    onCancel={cancel}
+                    okText="Yes"
+                    cancelText="No"
+                >
+                    <Button disabled={segmentOptions.length<2} icon={<DeleteOutlined/>}/>
+                </Popconfirm>
                 <Button type="default" onClick={handleAdd} icon={<PlusOutlined/>}/>
                 <Button type='primary' onClick={handleExport} icon={<DownloadOutlined />}/>
             </Space.Compact>
