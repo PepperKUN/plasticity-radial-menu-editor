@@ -5,6 +5,7 @@ import tailwindcss from "@tailwindcss/vite";
 
 // https://vite.dev/config/
 export default defineConfig({
+    base: '/plasticity-radial-menu-editor/',
   resolve: {
     alias: {
       '@': path.resolve(__dirname, './src'), // 将 @ 映射到 src 目录
