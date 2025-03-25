@@ -1,50 +1,56 @@
-# React + TypeScript + Vite
+<p align="center">
+  <img width="100" height="100" src="doc/radmenu.png" />
+</p>
+<h1 align="center">Plasticity Radial Menu Editor</h1>
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+<div style="text-align: center;">
 
-Currently, two official plugins are available:
+English | [中文](doc/README_zh.md)<br>
+[Changelog](doc/Changelog.md)
+</div>
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react/README.md) uses [Babel](https://babeljs.io/) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+<h3 align="center">
+  An open-source tool designed for customizing Plasticity's radial menu.
+</h3>
+<p align="center">
+  <img width="900" src="doc/preview.gif" />
+</p>
+<br>
 
-## Expanding the ESLint configuration
+## 🏎️ Quick start
+Click [Demo](https://pepperkun.github.io/plasticity-radial-menu-editor/) to open the website directly for use
 
-If you are developing a production application, we recommend updating the configuration to enable type aware lint rules:
 
-- Configure the top-level `parserOptions` property like this:
+## ✨ Features
+### 🖥 Graphical Interface
+- Drag-and-drop interaction design for intuitive menu hierarchy management
+- Real-time preview of menu layout and style modifications (WYSIWYG)
 
-```js
-export default tseslint.config({
-  languageOptions: {
-    // other options...
-    parserOptions: {
-      project: ['./tsconfig.node.json', './tsconfig.app.json'],
-      tsconfigRootDir: import.meta.dirname,
-    },
-  },
-})
-```
+### 🔄 Radial Menu Management
+- ​**Create** multi-level nested menus
 
-- Replace `tseslint.configs.recommended` to `tseslint.configs.recommendedTypeChecked` or `tseslint.configs.strictTypeChecked`
-- Optionally add `...tseslint.configs.stylisticTypeChecked`
-- Install [eslint-plugin-react](https://github.com/jsx-eslint/eslint-plugin-react) and update the config:
+- ​**Modify** menu labels/ordering
+- ​**Delete** redundant menu items
 
-```js
-// eslint.config.js
-import react from 'eslint-plugin-react'
+### 🔍 Smart Command Search
+- Fuzzy search to quickly locate Plasticity commands
 
-export default tseslint.config({
-  // Set the react version
-  settings: { react: { version: '18.3' } },
-  plugins: {
-    // Add the react plugin
-    react,
-  },
-  rules: {
-    // other rules...
-    // Enable its recommended rules
-    ...react.configs.recommended.rules,
-    ...react.configs['jsx-runtime'].rules,
-  },
-})
-```
+##  🔧 Development Roadmap
+- [ ] Radial menu configuration import
+- [ ] Real-time editing data saving
+- [ ] Operation history tracking
+- [ ] MatCap customization feature
+
+## ☕ Support Me
+If this project has improved your workflow, consider buying me a coffee!
+
+|                       Alipay Donation                        |
+|:------------------------------------------------------------:|
+| ![alipay](doc/qrcode.jpg) <!-- Replace with QR code path --> |
+
+--- 
+
+
+
+## License
+[Apache-2.0 license](LICENSE)

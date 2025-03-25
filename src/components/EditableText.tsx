@@ -35,6 +35,7 @@ export const EditableText:React.FC<{
 
             const radialItem = globalItem.items.find(item => item.id === itemId);
             if(!radialItem) {
+                console.log(indexes)
                 console.trace(`输入item的id错误`)
                 throw new Error(`输入item的id错误`);
             }

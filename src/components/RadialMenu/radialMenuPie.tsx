@@ -97,6 +97,7 @@ const SortableSector: React.FC<{
     const iconSize = 16;
 
     const {
+        active,
         index,
         items,
         attributes,
@@ -191,7 +192,8 @@ const SortableSector: React.FC<{
     }, [isTransitionEnabled]);
 
     useEffect(() => {
-        onItemsDrag(isSorting);
+        if(isSorting&&active?.data.current?.sortable) onItemsDrag(true);
+        else onItemsDrag(false);
     }, [isSorting])
 
 
