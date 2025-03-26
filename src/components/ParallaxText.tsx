@@ -1,5 +1,5 @@
 import React, { useEffect, useRef } from "react";
-import { motion, useSpring, useTransform, useMotionValue, useVelocity, useAnimationFrame, wrap } from "motion/react";
+import { motion, useSpring, useTransform, useMotionValue, useAnimationFrame, wrap } from "motion/react";
 
 interface ParallaxProps {
     children: string;
