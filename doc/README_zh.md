@@ -20,6 +20,22 @@
 ## 🏎️ 快速开始
 点击 [在线演示](https://pepperkun.github.io/plasticity-radial-menu-editor/) 直接使用工具
 
+![download](./download.png)
+
+下载制作好的环形菜单json数据
+
+![drag](./drag.jpg)
+
+将json拖入Plasticity界面中
+
+![search](./search.jpg)
+
+在Plasticity中按快捷键F，搜索制作好的环形菜单
+
+![shortcuts](./shortcuts.jpg)
+
+右键给环形菜单设置快捷键
+
 
 ## ✨ 核心功能
 ### 🖥 可视化界面

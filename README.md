@@ -20,6 +20,19 @@ English | [中文](doc/README_zh.md)<br>
 ## 🏎️ Quick start
 Click [Demo](https://pepperkun.github.io/plasticity-radial-menu-editor/) to open the website directly for use
 
+![download](doc/download.png)
+Download the prepared radial menu JSON data
+
+![drag](doc/drag.jpg)
+Drag and drop the JSON file into the Plasticity interface
+
+![search](doc/search.jpg)
+In Plasticity, press shortcut key ​F to ​search for the created circular menu
+
+![shortcuts](doc/shortcuts.jpg)
+Right-click to ​assign shortcut keys to the circular menu
+
+
 
 ## ✨ Features
 ### 🖥 Graphical Interface
