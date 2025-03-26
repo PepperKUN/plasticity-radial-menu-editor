@@ -2,7 +2,7 @@
 .radial-menu {
   transition: transform 200ms cubic-bezier(0.4, 0, 1, 1);
   outline: none;
-  filter: drop-shadow( 0px 10px 15px rgba(0, 0, 0, .2));
+  filter: drop-shadow( 0px 10px 15px rgba(0, 0, 0, .4));
 
   .sector_group {
     transition: transform 200ms cubic-bezier(0.4, 0, 1, 1);

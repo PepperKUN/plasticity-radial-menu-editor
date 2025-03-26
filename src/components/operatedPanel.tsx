@@ -40,7 +40,7 @@ const OperatedPanel: React.FC<IProps>= ({
     size,
 }) => {
 
-    const direction = usePresenceData()
+    const {direction, menuItems} = usePresenceData()
 
     // const wrapRef = useRef<HTMLDivElement>(null);
     const nodeRef = useRef<HTMLDivElement>(null);
@@ -71,16 +71,12 @@ const OperatedPanel: React.FC<IProps>= ({
 
     return (
         <motion.div
-            // layout
-            // key={Math.random()*1000}
             className="radial-wrap flex justify-center items-center relative"
             ref={nodeRef}
             style={{ width: size.width , height: size.height }}
-            custom={direction}
-            variants={variants}
-            initial='enter'
-            animate='center'
-            exit='exit'
+            initial={variants.enter(direction)}
+            animate={variants.center}
+            exit={variants.exit(direction)}
             transition={{
                 type: "spring",
                 mass: 0.5,
@@ -91,7 +87,7 @@ const OperatedPanel: React.FC<IProps>= ({
 
         >
             <MenuLabel
-                menuItem={menuItem}
+                menuItem={menuItems}
                 labelMaxWidth={maxWidth}
                 size={size}
                 radius={180}
@@ -99,7 +95,7 @@ const OperatedPanel: React.FC<IProps>= ({
                 spacing={20}
                 extendLength={1000}
             />
-            <RadialMenuPie items={menuItem.items}/>
+            <RadialMenuPie items={menuItems.items}/>
             <h2></h2>
         </motion.div>
     );

@@ -21,6 +21,7 @@ import OperatedPanel from "@/components/operatedPanel";
 import { AnimatePresence } from 'motion/react'
 import EditableText from "@/components/EditableText.tsx";
 import TabTitle from "@/components/TabTitle.tsx";
+import ParallaxText from "./components/ParallaxText";
 
 const App:React.FC = () => {
 
@@ -31,7 +32,8 @@ const App:React.FC = () => {
     const [showOverlay, setShowOverlay] = useState<boolean>(false);
     const [overlayText, setOverlayText] = useState("Curve");
     const [activeIndex, setActiveIndex] = useState(0);
-    const [direction, setDirection] = useState<1 | -1>(1)
+    const [direction, setDirection] = useState<1 | -1>(1);
+    const [speed, setSpeed] = useState(1);
 
     const currentRadialItems = globalMenuItems[activeIndex].items
 
@@ -79,15 +81,23 @@ const App:React.FC = () => {
     const handleSwitch = (index: number) => {
         const newDirection = (index - activeIndex)>0?-1:1;
         setDirection(newDirection);
-        setActiveIndex(index)
+        setActiveIndex(prev => {
+            if(prev!==index) setSpeed(40)
+            return index
+        })
     }
 
     const handleItemsChange = (newItems: GlobalRadialMenuItem[]) => {
 
-        setGlobalMenuItems(newItems)
         // console.trace("调用追踪标记", listItems[0]);
-        if(newItems.length <= activeIndex) {
-            handleSwitch(newItems.length-1)
+        setGlobalMenuItems(newItems)
+        if(newItems.length< globalMenuItems.length) {
+            //删除
+            if(activeIndex>0) {
+                handleSwitch(newItems.length-1)
+                
+            }
+            
         } else {
             const currentCommand = globalMenuItems[activeIndex].command;
             const newIndex = newItems.findIndex((item)=>item.command === currentCommand);
@@ -175,6 +185,7 @@ const App:React.FC = () => {
             // console.log(listItems);
         }
     };
+    
 
 
     return (
@@ -192,7 +203,14 @@ const App:React.FC = () => {
             algorithm: theme.darkAlgorithm,
         }}
         >
-            <div className="app-container bg-neutral-800 flex w-screen h-screen box-border p-6 justify-center items-center selection:bg-violet-900 selection:text-neutral-200 overflow-hidden">
+            <div className="app-container relative bg-neutral-800 flex w-screen h-screen box-border p-6 justify-center items-center selection:bg-violet-900 selection:text-neutral-200 overflow-hidden">
+                <div className="w-screen h-screen flex flex-col justify-center items-center absolute left-0 top-0 z-1 overflow-hidden text-neutral-900/50">
+                    <ParallaxText className="gabarito-regular text-6xl" baseVelocity={0-speed}>Plasticity Radial Menu Editor</ParallaxText>
+                    <ParallaxText className="gabarito-black text-9xl" baseVelocity={speed}>{globalMenuItems[activeIndex].name}</ParallaxText>
+                    <ParallaxText className="gabarito-regular text-6xl" baseVelocity={0-speed}>Plasticity Radial Menu Editor</ParallaxText>
+                    <ParallaxText className="gabarito-black text-9xl" baseVelocity={speed}>{globalMenuItems[activeIndex].name}</ParallaxText>
+                    <ParallaxText className="gabarito-regular text-6xl" baseVelocity={0-speed}>Plasticity Radial Menu Editor</ParallaxText>
+                </div>
               {/* 环形菜单 */}
               <DndContext
                   collisionDetection={sectorCollisionDetection}
@@ -203,71 +221,72 @@ const App:React.FC = () => {
 
               >
                   <SortableContext items={currentRadialItems}>
-                      <div className="flex flex-1 self-stretch max-w-[1440px]">
-                      <div className="flex h-full flex-1 flex-col justify-center items-center">
-                          <div className="flex flex-col pt-12 pb-6">
-                              <EditableText
-                                  keyStr='name'
-                                  indexes={[activeIndex]}
-                                  className='text-white'
-                                  publicClassNames='text-4xl gabarito-bold border-b-1'
-                                  editableClassNames='border-b-neutral-500 outline-0'
-                                  normalClassNames='border-transparent'
-                              />
-                              <div className="flex items-baseline gap-1">
-                                  <span className='py-1 px-1 rounded-sm text-neutral-300 bg-neutral-700 text-xs'>Command:</span>
-                                  <EditableText
-                                      keyStr='command'
-                                      indexes={[activeIndex]}
-                                      className='text-neutral-400'
-                                      publicClassNames='gabarito-regular text-lg border-b-1'
-                                      editableClassNames='border-b-neutral-500 outline-0'
-                                      normalClassNames='border-transparent'
-                                      tooltipPlacement='bottom'
-                                  />
-                              </div>
-                          </div>
-                          <AnimatePresence
-                              custom={direction}
-                              mode="popLayout"
-                          >
-                              <div
-                                  key={`parent-${activeIndex}`}
-                                  className="relative w-full h-full flex flex-col justify-center items-center self-stretch overflow-hidden">
-                                      <OperatedPanel
-                                          // key={activeIndex}
-                                          menuItem={globalMenuItems[activeIndex]}
-                                          size={size}
-                                      />
-                              </div>
-                          </AnimatePresence>
-                          <TabTitle
-                              index={activeIndex}
-                              globalItems={globalMenuItems}
-                              onItemsChange={handleItemsChange}
-                              onSwitch={handleSwitch}
-                          />
-                      </div>
-                      <AnimatePresence
-                          mode="popLayout"
-                      >
-                          <div
-                              key={`parent-commandList-${activeIndex}-`}
-                              className='self-stretch flex relative'
-                              style={{width: 390}}
-                          >
-                              <CommandList refItems={currentRadialItems}/>
-                          </div>
-                      </AnimatePresence>
-                      {showOverlay && <DragOverlay
-                          dropAnimation={customDropAnimation}
-                          // modifiers={[rotateAround]}
-                      >
-                          <div
-                              className='p-2 text-sm bg-violet-700 cursor-grabbing gabarito-bold text-white rounded-sm'>
-                              {overlayText}
-                          </div>
-                      </DragOverlay>}
+                      <div className="flex flex-1 self-stretch max-w-[1440px] z-10">
+                        <div className="flex h-full flex-1 flex-col justify-center items-center">
+                            <div className="flex flex-col pt-12 pb-6">
+                                <EditableText
+                                    keyStr='name'
+                                    indexes={[activeIndex]}
+                                    className='text-white'
+                                    publicClassNames='text-4xl gabarito-bold border-b-1'
+                                    editableClassNames='border-b-neutral-500 outline-0'
+                                    normalClassNames='border-transparent'
+                                />
+                                <div className="flex items-baseline gap-1">
+                                    <span className='py-1 px-1 rounded-sm text-neutral-300 bg-neutral-700 text-xs'>Command:</span>
+                                    <EditableText
+                                        keyStr='command'
+                                        indexes={[activeIndex]}
+                                        className='text-neutral-400'
+                                        publicClassNames='gabarito-regular text-lg border-b-1'
+                                        editableClassNames='border-b-neutral-500 outline-0'
+                                        normalClassNames='border-transparent'
+                                        tooltipPlacement='bottom'
+                                    />
+                                </div>
+                            </div>
+                            <AnimatePresence
+                                custom={{direction, menuItems: globalMenuItems[activeIndex]}}
+                                mode="popLayout"
+                                onExitComplete={()=>setSpeed(1)}
+                            >
+                                <div
+                                    key={`parent-${activeIndex}`}
+                                    className="relative w-full h-full flex flex-col justify-center items-center self-stretch overflow-hidden">
+                                        <OperatedPanel
+                                            // key={activeIndex}
+                                            menuItem={globalMenuItems[activeIndex]}
+                                            size={size}
+                                        />
+                                </div>
+                            </AnimatePresence>
+                            <TabTitle
+                                index={activeIndex}
+                                globalItems={globalMenuItems}
+                                onItemsChange={handleItemsChange}
+                                onSwitch={handleSwitch}
+                            />
+                        </div>
+                        <AnimatePresence
+                            mode="popLayout"
+                        >
+                            <div
+                                key={`parent-commandList-${activeIndex}-`}
+                                className='self-stretch flex relative'
+                                style={{width: 390}}
+                            >
+                                <CommandList refItems={currentRadialItems}/>
+                            </div>
+                        </AnimatePresence>
+                        {showOverlay && <DragOverlay
+                            dropAnimation={customDropAnimation}
+                            // modifiers={[rotateAround]}
+                        >
+                            <div
+                                className='p-2 text-sm bg-violet-700 cursor-grabbing gabarito-bold text-white rounded-sm'>
+                                {overlayText}
+                            </div>
+                        </DragOverlay>}
                       </div>
                   </SortableContext>
               </DndContext>
