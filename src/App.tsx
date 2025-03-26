@@ -82,7 +82,7 @@ const App:React.FC = () => {
         const newDirection = (index - activeIndex)>0?-1:1;
         setDirection(newDirection);
         setActiveIndex(prev => {
-            if(prev!==index) setSpeed(40)
+            if(prev!==index) setSpeed(36)
             return index
         })
     }

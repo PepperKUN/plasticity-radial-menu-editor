@@ -6,11 +6,11 @@ import {motion, usePresenceData} from "motion/react";
 
 
 interface IProps {
-    menuItem: GlobalRadialMenuItem,
     size: {
         width: number,
         height: number,
     },
+    menuItem?: GlobalRadialMenuItem,
 }
 
 
@@ -36,7 +36,6 @@ const variants = {
 }
 
 const OperatedPanel: React.FC<IProps>= ({
-    menuItem,
     size,
 }) => {
 
