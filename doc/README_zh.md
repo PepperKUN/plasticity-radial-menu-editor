@@ -1,7 +1,7 @@
 <p align="center">
   <img width="100" height="100" src="./radmenu.png" />
 </p>
-<h1 align="center">Plasticity 环形菜单定制器</h1>
+<h1 align="center">塑料城环形菜单定制器</h1>
 
 <div style="text-align: center;">
 
