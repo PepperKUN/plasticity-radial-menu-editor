@@ -52,9 +52,9 @@ const App:React.FC = () => {
     const radialMenuCommands = useMemo(() => {
         return globalMenuItems.map(item => ({name: item.name, command: item.command}))
     },[globalMenuItems])
-    useEffect(() => {
 
-        const rads:RadialMenuItem[] = radialMenuCommands.map(item => ({id: 'radMenu_'+item.command, label: item.name, icon: 'radial-menu', command: item.command}))
+    useEffect(() => {
+        const rads:RadialMenuItem[] = radialMenuCommands.map(item => ({id: 'radMenu_'+item.command, label: item.name, icon: 'radial', command: 'view:radial:'+item.command}))
         const listItemsWithoutRads = listItems.slice(1)
         const newListItems = [
             {

@@ -75,7 +75,7 @@ const TabTitle:React.FC< {
         const copyGlobalItems = globalItems.slice()
         copyGlobalItems.splice(index+1, 0, {
             name: `New Radial Menu-${globalItems.length}`,
-            command: `radial: menu-${globalItems.length}`,
+            command: `user:menu-${globalItems.length}`,
             items: itemTemplate
         })
         onItemsChange(copyGlobalItems)

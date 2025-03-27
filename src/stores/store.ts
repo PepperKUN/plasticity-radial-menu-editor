@@ -43,7 +43,7 @@ const useGlobalMenuItemStore = create<GlobalRadialMenuState>((set) => ({
     globalMenuItems: [
         {
             name: 'Default Menu',
-            command: 'radial:default-menu',
+            command: 'user:default-menu',
             items: [
                 { id: 'radMenu-151', label: 'Selection mode: set control-point', icon: 'selection-mode-set-control-point', command: 'selection:mode:set:control-point' },
                 { id: 'radMenu-152', label: 'Selection mode: set edge', icon: 'selection-mode-set-edge', command: 'selection:mode:set:edge' },
