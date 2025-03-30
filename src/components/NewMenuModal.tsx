@@ -75,15 +75,15 @@ const NewMenuModal:React.FC<ModalFormProps> = ({visible, onCancel, onSubmit }) =
                     reader.readAsText(file);
                 });
                 const parsedData = JSON.parse(content as string);
-                console.log('解析成功:', parsedData);
+                // console.log('解析成功:', parsedData);
                 handleDataLoaded(parsedData)
-                messageApi.success('数据加载成功')
+                messageApi.success('Menu Data loaded')
                 setFileList([file])
                 // 将数据存入状态（如 React 的 useState）
                 // setLocalData(jsonData);
             } catch (error) {
                 console.error(error)
-                messageApi.error('JSON 解析失败');
+                messageApi.error('JSON parsing failed');
             }
             return false;
         },
