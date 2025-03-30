@@ -1,16 +1,9 @@
-import React, { useMemo } from "react";
+import React, { useMemo, useState } from "react";
 import {Segmented, Button, Space, Tooltip, message, Popconfirm} from 'antd';
 import {PlusOutlined, DownloadOutlined, DeleteOutlined, WarningOutlined} from "@ant-design/icons";
-import {GlobalRadialMenuItem, RadialMenuItem} from "@/types/type";
+import {GlobalRadialMenuItem} from "@/types/type";
 import type {PopconfirmProps} from 'antd';
-
-const itemTemplate: RadialMenuItem[] = [
-    { id: 'radMenu-151', label: 'Selection mode: set control-point', icon: 'selection-mode-set-control-point', command: 'selection:mode:set:control-point' },
-    { id: 'radMenu-152', label: 'Selection mode: set edge', icon: 'selection-mode-set-edge', command: 'selection:mode:set:edge' },
-    { id: 'radMenu-153', label: 'Selection mode: set face', icon: 'selection-mode-set-face', command: 'selection:mode:set:face' },
-    { id: 'radMenu-154', label: 'Selection mode: set solid', icon: 'selection-mode-set-solid', command: 'selection:mode:set:solid' },
-]
-
+import NewMenuModal from "@/components/NewMenuModal.tsx";
 
 
 const Tabunit:React.FC<{
@@ -42,7 +35,7 @@ const TabTitle:React.FC< {
     onItemsChange: (newItems: GlobalRadialMenuItem[]) => void;
 }> = ({index, globalItems, onSwitch, onItemsChange}) => {
 
-    // const [index, setIndex] = useState(0);
+    const [isModalOpen, setModalOpen] = useState(false);
     const [messageApi, contextHolder] = message.useMessage();
 
     const handleMenuDelete = (index:number) => {
@@ -72,13 +65,9 @@ const TabTitle:React.FC< {
     }
 
     const handleAdd = () => {
-        const copyGlobalItems = globalItems.slice()
-        copyGlobalItems.splice(index+1, 0, {
-            name: `New Radial Menu-${globalItems.length}`,
-            command: `user:menu-${globalItems.length}`,
-            items: itemTemplate
-        })
-        onItemsChange(copyGlobalItems)
+
+
+        setModalOpen(true);
     }
 
     const handleExport = () => {
@@ -120,8 +109,17 @@ const TabTitle:React.FC< {
         console.log(e);
     };
 
+    const handleSubmit = async (item:GlobalRadialMenuItem) => {
+        console.log(item);
+        setModalOpen(false);
+        const copyGlobalItems = globalItems.slice()
+        copyGlobalItems.splice(index+1, 0, item)
+        onItemsChange(copyGlobalItems)
+    }
+
     return (
         <div className="p-6 flex justify-between items-center gap-4">
+            <NewMenuModal visible={isModalOpen} onSubmit={handleSubmit} onCancel={() => setModalOpen(false)}/>
             <Segmented
                 value={segmentOptions[index].value}
                 size="large"

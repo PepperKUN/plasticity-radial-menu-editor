@@ -164,7 +164,7 @@ const MenuLabel:React.FC<menuLabelProps> = ({
                 return 0
             }
         });
-    }, [items])
+    }, [items, globalMenuItems.length])
 
     const getLabelStyle = (item:menuLabelItem) => {
         const position = {
@@ -238,6 +238,7 @@ const MenuLabel:React.FC<menuLabelProps> = ({
             </svg>
             <ul className="radial-menu-labels">
                 {menuLabels.map((label) => {
+                    // console.log([parentIndex, label.id])
                     return (
                         <li key={label.id} className="menu-label inline-flex w-max flex-col items-start gap-1.5 text-neutral-400" style={getLabelStyle(label)}>
                             <EditableText
