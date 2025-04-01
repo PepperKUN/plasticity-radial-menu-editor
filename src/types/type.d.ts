@@ -3,6 +3,7 @@ interface RadialMenuItem {
     label: string;
     icon: string;
     command: string;
+    label_zh?: string;
     color?: string;
     isAdd?: boolean;
 }
@@ -24,6 +25,7 @@ interface point {
 
 interface listItem {
     commandType: string,
+    commandType_zh: string,
     items: RadialMenuItem[]
 }
 

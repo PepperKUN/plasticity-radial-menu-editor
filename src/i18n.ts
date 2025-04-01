@@ -10,6 +10,10 @@ i18n
     .init({
         fallbackLng: 'en',
         debug: process.env.NODE_ENV === 'development',
+        detection: {
+            order: ["querystring", "navigator"], // 优先从 URL 参数检测
+            lookupQuerystring: "lang", // 指定 URL 参数名
+        },
         interpolation: {
             escapeValue: false, // React 已经做了 XSS 防护
         },
@@ -20,7 +24,7 @@ i18n
         saveMissing: false, // 禁用缺失键保存
         missingKeyHandler: false, // 禁用缺失键处理器
         parseMissingKeyHandler: (key) => {
-            console.warn(`Missing translation key: ${key}`);
+            // console.warn(`Missing translation key: ${key}`);
             return key; // 直接返回键名而不是显示missing
         }
     });

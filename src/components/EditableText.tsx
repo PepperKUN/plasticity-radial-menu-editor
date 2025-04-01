@@ -4,6 +4,7 @@ import {Tooltip} from 'antd';
 import {EditOutlined} from "@ant-design/icons";
 import {GlobalRadialMenuItem, strictTuple} from "@/types/type";
 import {TooltipPlacement} from "antd/es/tooltip";
+import {useTranslation} from "react-i18next";
 
 
 type keyNames = "name" | "label" | "command";
@@ -23,6 +24,7 @@ export const EditableText:React.FC<{
     tooltipPlacement?: TooltipPlacement
 }> = ({indexes, publicClassNames, editableClassNames, normalClassNames, keyStr, className, tooltipPlacement}) => {
 
+    const { t } = useTranslation();
     const divRef = useRef<HTMLDivElement>(null);
     const { globalMenuItems, setGlobalMenuItems } = useGlobalMenuItemStore();
     const [isEditing, setEditing] = useState(false);
@@ -184,7 +186,7 @@ export const EditableText:React.FC<{
                     onBlur={handleBlur}
                     onKeyDown={handleKeyDown}
                 >
-                    {showText}
+                    {t(showText)}
                 </div>
             </Tooltip>
             <EditOutlined className={`pl-1 opacity-0 cursor-pointer ${isEditing?'':'group-hover:opacity-100'}`}

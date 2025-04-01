@@ -22,8 +22,9 @@ import { AnimatePresence } from 'motion/react'
 import EditableText from "@/components/EditableText.tsx";
 import TabTitle from "@/components/TabTitle.tsx";
 import ParallaxText from "./components/ParallaxText";
-import {GithubOutlined, TranslationOutlined} from "@ant-design/icons"
 import TransBtn from "@/components/TransBtn.tsx";
+import { useTranslation } from 'react-i18next';
+import { useSearchParams } from "react-router-dom";
 
 const App:React.FC = () => {
 
@@ -39,7 +40,8 @@ const App:React.FC = () => {
 
     const currentRadialItems = globalMenuItems[activeIndex].items
 
-
+    const [searchParams] = useSearchParams();
+    const { t, i18n } = useTranslation();
 
 
 
@@ -61,17 +63,22 @@ const App:React.FC = () => {
         const newListItems = [
             {
                 commandType: 'Radial Menus',
+                commandType_zh: '环形菜单类',
                 items: rads.filter((_, index) => index !== activeIndex)
             },
             ...listItemsWithoutRads
         ]
         setListItems(newListItems)
-        // setActiveIndex(prev => prev+1)
-        // setTimeout(() => {
-        //
-        // }, 10)
 
     },[globalMenuItems.length, radialMenuCommands, activeIndex])
+
+    useEffect(() => {
+        // 初始化时从 URL 参数设置语言
+        const lang = searchParams.get("lang");
+        if (lang && ["en", "zh"].includes(lang)) {
+            i18n.changeLanguage(lang);
+        }
+    }, [searchParams]);
 
     const flatListItems= useMemo(() => listItems.flatMap((item) => item.items), [listItems])
 
@@ -226,8 +233,6 @@ const App:React.FC = () => {
                       <div className="flex flex-1 self-stretch max-w-[1440px] z-10">
                         <div className="flex h-full flex-1 flex-col justify-center items-center">
                             <div className="flex self-stretch text-neutral-500 gap-4 text-xl">
-                                <GithubOutlined />
-                                <TranslationOutlined />
                                 <TransBtn/>
                             </div>
                             <div className="flex flex-col pt-6 pb-6">
@@ -240,7 +245,7 @@ const App:React.FC = () => {
                                     normalClassNames='border-transparent'
                                 />
                                 <div className="flex items-baseline gap-1">
-                                    <span className='py-1 px-1 rounded-sm text-neutral-300 bg-neutral-700 text-xs'>Command:</span>
+                                    <span className='py-1 px-1 rounded-sm text-neutral-300 bg-neutral-700 text-xs'>{t('Command')}</span>
                                     <EditableText
                                         keyStr='command'
                                         indexes={[activeIndex]}

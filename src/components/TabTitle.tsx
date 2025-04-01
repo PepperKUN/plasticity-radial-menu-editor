@@ -4,6 +4,7 @@ import {PlusOutlined, DownloadOutlined, DeleteOutlined, WarningOutlined} from "@
 import {GlobalRadialMenuItem} from "@/types/type";
 import type {PopconfirmProps} from 'antd';
 import NewMenuModal from "@/components/NewMenuModal.tsx";
+import {useTranslation} from "react-i18next";
 
 
 const Tabunit:React.FC<{
@@ -35,6 +36,7 @@ const TabTitle:React.FC< {
     onItemsChange: (newItems: GlobalRadialMenuItem[]) => void;
 }> = ({index, globalItems, onSwitch, onItemsChange}) => {
 
+    const {t} = useTranslation();
     const [isModalOpen, setModalOpen] = useState(false);
     const [messageApi, contextHolder] = message.useMessage();
 
@@ -78,7 +80,7 @@ const TabTitle:React.FC< {
             items: globalItems[index].items.map(item => ({
                 command: item.command,
                 icon: item.icon,
-                label: item.label,
+                label: t(item.label),
             }))
         }
 

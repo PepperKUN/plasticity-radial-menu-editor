@@ -95,7 +95,6 @@ const OperatedPanel: React.FC<IProps>= ({
                 extendLength={1000}
             />
             <RadialMenuPie items={menuItems.items}/>
-            <h2></h2>
         </motion.div>
     );
 };

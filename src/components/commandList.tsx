@@ -10,6 +10,7 @@ import {motion} from "motion/react";
 import SvgIcon from "@/components/RadialMenu/SvgIcon.tsx";
 import {convertFlat2ListItems} from "@/utils/util.ts";
 import {useListItemStore} from "@/stores/store.ts";
+import { useTranslation } from "react-i18next";
 
 
 type ThumbVerticalProps = {
@@ -54,6 +55,7 @@ const CommandList:React.FC<{
     // items: listItem[]
     refItems: RadialMenuItem[]
 }> =  ({refItems}) => {
+    const { t } = useTranslation();
     const {listItems} = useListItemStore()
 
     const menuCommands = new Set(refItems.map((item) => item.command))
@@ -61,6 +63,7 @@ const CommandList:React.FC<{
     const flatData: flatListItem[] = useMemo(() => listItems.flatMap((category) => category.items.map((item) => ({
             ...item,
             type: category.commandType,
+            type_zh: category.commandType_zh,
             isAdd: menuCommands.has(item.command)
         }))
     ),[listItems, refItems])
@@ -72,7 +75,7 @@ const CommandList:React.FC<{
     useEffect(() => {
 
         const fuse = new Fuse(flatData, {
-            keys: ['label', 'type'],
+            keys: ['label', 'label_zh', 'type', 'type_zh'],
             threshold: 0.3,
             // includeScore: true,
             // includeMatches: true,
@@ -132,7 +135,7 @@ const CommandList:React.FC<{
                 className='bg-transparent!'
                 value={searchTerm}
                 size='large'
-                placeholder='Search Commands'
+                placeholder={t('Search Commands')}
                 prefix={<SearchOutlined />}
                 onChange={onSearch}
                 variant='underlined'
@@ -146,12 +149,12 @@ const CommandList:React.FC<{
             >
                 { listComItems.length>0?listComItems.map((category) => (
                     <React.Fragment key={category.commandType}>
-                        {category.items.length>0&&<span className='p-2 pl-1 text-xs bg-neutral-900 text-neutral-500 sticky top-0 font-mono' key={category.commandType}>{category.commandType}</span>}
+                        {category.items.length>0&&<span className='p-2 pl-1 text-xs bg-neutral-900 text-neutral-500 sticky top-0 font-mono' key={category.commandType}>{t(category.commandType)}</span>}
                         { category.items.map((item) => (
-                        <DraggableItem key={item.id} id={item.id} label={item.label} disable={item.isAdd || refItems.length>11}>
+                        <DraggableItem key={item.id} id={item.id} label={t(item.label)} disable={item.isAdd || refItems.length>11}>
                             <div className="flex gap-2">
                                 <SvgIcon name={item.icon}/>
-                                <span className='select-none text-sm gabarito-regular '>{item.label}</span>
+                                <span className='select-none text-sm gabarito-regular '>{t(item.label)}</span>
                             </div>
                             {item.isAdd&&<span className='px-1 py-0.5 flex self-baseline font-mono text-xs bg-violet-700 rounded-sm text-white'>Added</span>}
                         </DraggableItem>

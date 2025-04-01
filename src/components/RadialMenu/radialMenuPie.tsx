@@ -9,6 +9,7 @@ import {useDroppable} from "@dnd-kit/core";
 import SvgIcon from "@/components/RadialMenu/SvgIcon.tsx";
 import {polarToCartesian} from "@/utils/util.ts";
 import {DeleteFilled, DeleteOutlined} from "@ant-design/icons";
+import {useTranslation} from "react-i18next";
 
 // 类型定义
 
@@ -255,6 +256,7 @@ const RadialMenuPie: React.FC<RadialMenuProps> = ({
                                                 className,
                                                 style,
                                                }) => {
+    const { t } = useTranslation();
     const containerRef = useRef<SVGSVGElement>(null);
     const setRect = useContainerStore((state) => state.setRect);
     const [isSorting, setSorting] = useState(false);
@@ -345,7 +347,7 @@ const RadialMenuPie: React.FC<RadialMenuProps> = ({
                         fill={isOver ? 'url(#trashBin)' : '#000000'} stroke="#ffffff" strokeWidth={1} strokeOpacity={0.1}/>
             </svg>
             <div className={`w-[140px] h-[140px] flex flex-col justify-center items-center absolute pointer-events-none  rounded-full ${isOver?'text-red-700':'text-neutral-300'}`}>
-                {isSorting?(<>{isOver? <DeleteFilled className='text-xl'/> : <DeleteOutlined className='text-xl '/>}<div className='text-center text-xs/4'>Delete</div></>):<span className='text-neutral-300 text-center text-xs/4 p-4'>{labelHover}</span>}
+                {isSorting?(<>{isOver? <DeleteFilled className='text-xl'/> : <DeleteOutlined className='text-xl '/>}<div className='text-center text-xs/4'>Delete</div></>):<span className='text-neutral-300 text-center text-xs/4 p-4'>{t(labelHover)}</span>}
             </div>
         </>
     );
