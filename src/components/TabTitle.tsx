@@ -85,13 +85,20 @@ const TabTitle:React.FC< {
         }
 
         try {
+            const baseName = globalItems[index].name;
+            const extension = '.radial.json';
+            const timestamp = new Date().toISOString().replace(/[:.]/g, '-');
+
+            // 构造文件名，将序号放在主文件名后、扩展名前
+            const fileName = `${baseName}_${timestamp}${extension}`;
+
             const jsonString = JSON.stringify(currentRadialMenuData, null, 2);
             const blob = new Blob([jsonString], { type: 'application/json' });
             const url = URL.createObjectURL(blob);
 
             const link = document.createElement('a');
             link.href = url;
-            link.download = `${globalItems[index].name}.radial.json`;
+            link.download = fileName;
             document.body.appendChild(link);
             link.click();
             document.body.removeChild(link);
