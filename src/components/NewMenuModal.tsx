@@ -3,6 +3,7 @@ import {Form, Input, Modal, message, Upload, UploadProps, UploadFile, FormRule} 
 import {useGlobalMenuItemStore, useListItemStore} from "@/stores/store";
 import {flatListItem, GlobalRadialMenuItem, RadialMenuItem} from "@/types/type";
 import {InboxOutlined} from "@ant-design/icons";
+import {useTranslation} from "react-i18next";
 
 const itemTemplate: RadialMenuItem[] = [
     { id: 'radMenu-151', label: 'Selection mode: set control-point', icon: 'selection-mode-set-control-point', command: 'selection:mode:set:control-point' },
@@ -31,6 +32,7 @@ interface ModalFormProps {
 }
 
 const NewMenuModal:React.FC<ModalFormProps> = ({visible, onCancel, onSubmit }) => {
+    const {t} = useTranslation();
     const { globalMenuItems } = useGlobalMenuItemStore();
     const { listItems } = useListItemStore()
     const [form] = Form.useForm();
@@ -77,13 +79,13 @@ const NewMenuModal:React.FC<ModalFormProps> = ({visible, onCancel, onSubmit }) =
                 const parsedData = JSON.parse(content as string);
                 // console.log('解析成功:', parsedData);
                 handleDataLoaded(parsedData)
-                messageApi.success('Menu Data loaded')
+                messageApi.success(t('parsedSuccess'))
                 setFileList([file])
                 // 将数据存入状态（如 React 的 useState）
                 // setLocalData(jsonData);
             } catch (error) {
                 console.error(error)
-                messageApi.error('JSON parsing failed');
+                messageApi.error(t('parsedError'));
             }
             return false;
         },
@@ -98,14 +100,14 @@ const NewMenuModal:React.FC<ModalFormProps> = ({visible, onCancel, onSubmit }) =
 
     const validateMenuName = (_:FormRule, value: string) => {
         if (globalMenuList.some(item => item.name === value)) {
-            return Promise.reject('radial menu name is repeated！');
+            return Promise.reject(t('menuNameError'));
         }
         return Promise.resolve();
     };
 
     const validateCommand = (_:FormRule, value: string) => {
         if (globalMenuList.some(item => item.command === value)) {
-            return Promise.reject('radial menu command is repeated！');
+            return Promise.reject(t('menuCommandError'));
         }
         return Promise.resolve();
     };
@@ -135,25 +137,25 @@ const NewMenuModal:React.FC<ModalFormProps> = ({visible, onCancel, onSubmit }) =
             onOk={handleOk}
             onCancel={onCancel}
             styles={modalStyles}
-            title='Create New Menu'
+            title={t('modalTitle')}
         >
             {contextHolder}
             <Form form={form} layout="vertical" onFinish={onSubmit}>
                 <Form.Item<FieldType>
-                    label="New menu name"
+                    label={t('menuName')}
                     name="name"
                     rules={[
-                        {required:true,message:'name is required!'},
+                        {required:true,message:t('menuNameMesg')},
                         {validator: validateMenuName},
                     ]}
                 >
                     <Input/>
                 </Form.Item>
                 <Form.Item<FieldType>
-                    label="Menu command"
+                    label={t('menuCommand')}
                     name="command"
                     rules={[
-                        {required:true,message:'command is required!'},
+                        {required:true,message:t('menuCommandMesg')},
                         {validator: validateCommand},
                     ]}
                 >
@@ -170,11 +172,8 @@ const NewMenuModal:React.FC<ModalFormProps> = ({visible, onCancel, onSubmit }) =
                     <p className="ant-upload-drag-icon">
                         <InboxOutlined />
                     </p>
-                    <p className="ant-upload-text">Click or drag '.radial.json' file to this area to upload</p>
-                    <p className="ant-upload-hint">
-                        Only support for a single upload. Strictly prohibited from uploading other
-                        types files.
-                    </p>
+                    <p className="ant-upload-text">{t('uploadHeader')}</p>
+                    <p className="ant-upload-hint">{t('uploadParagraph')}</p>
                 </Dragger>
             </Form>
 

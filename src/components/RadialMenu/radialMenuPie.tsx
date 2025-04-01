@@ -347,7 +347,7 @@ const RadialMenuPie: React.FC<RadialMenuProps> = ({
                         fill={isOver ? 'url(#trashBin)' : '#000000'} stroke="#ffffff" strokeWidth={1} strokeOpacity={0.1}/>
             </svg>
             <div className={`w-[140px] h-[140px] flex flex-col justify-center items-center absolute pointer-events-none  rounded-full ${isOver?'text-red-700':'text-neutral-300'}`}>
-                {isSorting?(<>{isOver? <DeleteFilled className='text-xl'/> : <DeleteOutlined className='text-xl '/>}<div className='text-center text-xs/4'>Delete</div></>):<span className='text-neutral-300 text-center text-xs/4 p-4'>{t(labelHover)}</span>}
+                {isSorting?(<>{isOver? <DeleteFilled className='text-xl'/> : <DeleteOutlined className='text-xl '/>}<div className='text-center text-xs/4'>{t("Delete")}</div></>):<span className='text-neutral-300 text-center text-xs/4 p-4'>{t(labelHover)}</span>}
             </div>
         </>
     );
