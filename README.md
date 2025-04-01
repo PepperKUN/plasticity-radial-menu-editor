@@ -49,7 +49,7 @@ Right-click to ​assign shortcut keys to the circular menu
 - Fuzzy search to quickly locate Plasticity commands
 
 ##  🔧 Development Roadmap
-- [ ] Radial menu configuration import
+- [X] Radial menu configuration import
 - [ ] Real-time editing data saving
 - [ ] Operation history tracking
 - [ ] MatCap customization feature

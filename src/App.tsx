@@ -22,6 +22,8 @@ import { AnimatePresence } from 'motion/react'
 import EditableText from "@/components/EditableText.tsx";
 import TabTitle from "@/components/TabTitle.tsx";
 import ParallaxText from "./components/ParallaxText";
+import {GithubOutlined, TranslationOutlined} from "@ant-design/icons"
+import TransBtn from "@/components/TransBtn.tsx";
 
 const App:React.FC = () => {
 
@@ -223,7 +225,12 @@ const App:React.FC = () => {
                   <SortableContext items={currentRadialItems}>
                       <div className="flex flex-1 self-stretch max-w-[1440px] z-10">
                         <div className="flex h-full flex-1 flex-col justify-center items-center">
-                            <div className="flex flex-col pt-12 pb-6">
+                            <div className="flex self-stretch text-neutral-500 gap-4 text-xl">
+                                <GithubOutlined />
+                                <TranslationOutlined />
+                                <TransBtn/>
+                            </div>
+                            <div className="flex flex-col pt-6 pb-6">
                                 <EditableText
                                     keyStr='name'
                                     indexes={[activeIndex]}
