@@ -171,7 +171,7 @@ export const EditableText:React.FC<{
     return (
         <div className={`group gap-2 items-baseline ${className?className:''}`}>
             <Tooltip
-                title="Double click for name editing"
+                title={t('editTextTooltips')}
                 placement={tooltipPlacement}
                 color={'#4d179a'}
                 open={isOpen&&!isEditing}

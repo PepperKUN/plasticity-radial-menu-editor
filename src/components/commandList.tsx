@@ -135,7 +135,7 @@ const CommandList:React.FC<{
                 className='bg-transparent!'
                 value={searchTerm}
                 size='large'
-                placeholder={t('Search Commands')}
+                placeholder={t('SearchPlaceHolder')}
                 prefix={<SearchOutlined />}
                 onChange={onSearch}
                 variant='underlined'

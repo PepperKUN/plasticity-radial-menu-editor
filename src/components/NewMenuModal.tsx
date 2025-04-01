@@ -133,6 +133,8 @@ const NewMenuModal:React.FC<ModalFormProps> = ({visible, onCancel, onSubmit }) =
     return (
         <Modal
             centered
+            okText={t('ok')}
+            cancelText={t('cancel')}
             open={visible}
             onOk={handleOk}
             onCancel={onCancel}

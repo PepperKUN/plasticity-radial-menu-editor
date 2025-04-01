@@ -140,12 +140,12 @@ const TabTitle:React.FC< {
             <Space.Compact size="large">
                 <Popconfirm
                     icon={<WarningOutlined />}
-                    title="Delete the Menu"
-                    description="Are you sure to delete this Menu?"
+                    title={t('deleteTitle')}
+                    description={t('deleteDesc')}
                     onConfirm={confirm}
                     onCancel={cancel}
-                    okText="Yes"
-                    cancelText="No"
+                    okText={t('ok')}
+                    cancelText={t('cancel')}
                 >
                     <Button disabled={segmentOptions.length<2} icon={<DeleteOutlined/>}/>
                 </Popconfirm>
