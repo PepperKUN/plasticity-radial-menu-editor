@@ -50,6 +50,7 @@ Right-click to ​assign shortcut keys to the circular menu
 
 ##  🔧 Development Roadmap
 - [X] Radial menu configuration import
+- [X] Chinese language support
 - [ ] Real-time editing data saving
 - [ ] Operation history tracking
 - [ ] MatCap customization feature
