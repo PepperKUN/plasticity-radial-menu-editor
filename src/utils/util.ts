@@ -1,6 +1,6 @@
 import {CollisionDetection, Modifier, DropAnimationFunction} from '@dnd-kit/core';
 import {useContainerStore} from "@/stores/store.ts";
-import {flatListItem, listItem, RadialMenuItem, IconGroup} from "@/types/type";
+import {flatListItem, listItem, IconGroup} from "@/types/type";
 import { ICON_MAP } from "@/stores/iconMap.ts";
 
 
@@ -157,20 +157,19 @@ const customDropAnimation: DropAnimationFunction = (args) => {
 }
 
 const convertFlat2ListItems = (arr: flatListItem[]):listItem[] => {
-    const groupedMap = arr.reduce((acc, item) => {
-        const { type, ...rest } = item;
-        if (!acc.has(type)) {
-            acc.set(type, []);
+    const map = new Map<string, listItem>();
+    arr.forEach(item => {
+        const { type, type_zh, ...rest } = item;
+        if (!map.has(type)) {
+            map.set(type, {
+                commandType:type,
+                commandType_zh:type_zh,
+                items: [],
+            });
         }
-        acc.get(type)?.push(rest);
-        return acc;
-    }, new Map<string, RadialMenuItem[]>());
-
-    // 转换为目标格式数组
-    return Array.from(groupedMap, ([type, items]) => ({
-        commandType: type,
-        items
-    }));
+        map.get(type)!.items.push(rest);
+    })
+    return Array.from(map.values());
 }
 
 const createIconMap = (groups: IconGroup[]) => {

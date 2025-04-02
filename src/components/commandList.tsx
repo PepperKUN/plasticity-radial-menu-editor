@@ -12,6 +12,7 @@ import {convertFlat2ListItems} from "@/utils/util.ts";
 import {useListItemStore} from "@/stores/store.ts";
 import { useTranslation } from "react-i18next";
 import { pinyin } from 'pinyin-pro';
+import {useSearchParams} from "react-router-dom";
 
 
 type ThumbVerticalProps = {
@@ -57,6 +58,7 @@ const CommandList:React.FC<{
     refItems: RadialMenuItem[]
 }> =  ({refItems}) => {
     const { t } = useTranslation();
+    const [searchParams] = useSearchParams()
     const {listItems} = useListItemStore()
 
     const menuCommands = new Set(refItems.map((item) => item.command))
@@ -78,7 +80,7 @@ const CommandList:React.FC<{
     useEffect(() => {
 
         const fuse = new Fuse(flatData, {
-            keys: ['label', 'label_zh', 'type', 'type_zh', 'label_pinyin', 'type_pinyin'],
+            keys: searchParams.get('lang')==='zh'?['label_zh', 'type_zh', 'label_pinyin', 'type_pinyin']:['label', 'type'],
             threshold: 0.3,
             // includeScore: true,
             // includeMatches: true,

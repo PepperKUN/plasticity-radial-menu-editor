@@ -60,6 +60,7 @@ const NewMenuModal:React.FC<ModalFormProps> = ({visible, onCancel, onSubmit }) =
     const flatData: flatListItem[] = useMemo(() => listItems.flatMap((category) => category.items.map((item) => ({
             ...item,
             type: category.commandType,
+            type_zh: category.commandType_zh,
         }))
     ),[listItems])
 

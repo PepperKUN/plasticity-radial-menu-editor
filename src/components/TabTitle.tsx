@@ -147,14 +147,14 @@ const TabTitle:React.FC< {
                     okText={t('ok')}
                     cancelText={t('cancel')}
                 >
-                    <Tooltip title={t('delete')}>
+                    <Tooltip title={t('deleteMenu')}>
                         <Button disabled={segmentOptions.length<2} icon={<DeleteOutlined/>}/>
                     </Tooltip>
                 </Popconfirm>
-                <Tooltip title={t('delete')}>
+                <Tooltip title={t('addMenu')}>
                     <Button type="default" onClick={handleAdd} icon={<PlusOutlined/>}/>
                 </Tooltip>
-                <Tooltip title={t('delete')}>
+                <Tooltip title={t('download')}>
                     <Button type='primary' onClick={handleExport} icon={<DownloadOutlined />}/>
                 </Tooltip>
             </Space.Compact>

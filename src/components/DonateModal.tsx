@@ -1,6 +1,7 @@
 import React from "react";
 import {Modal, QRCode} from 'antd';
 import {useTranslation} from "react-i18next";
+import alipaySvg from '/public/static/alipay.svg?url';
 
 const modalStyles = {
     mask: {
@@ -31,7 +32,7 @@ const DonateModal:React.FC<{
                     <QRCode
                         size={200}
                         value="https://qr.alipay.com/tsx15278hfeqs7n0whguacc"
-                        icon="./public/static/alipay.svg"
+                        icon={alipaySvg}
                     />
                 </div>
             </div>
