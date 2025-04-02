@@ -10,6 +10,8 @@ interface RadialMenuItem {
 
 interface flatListItem extends RadialMenuItem {
     type: string;
+    label_pinyin: string;
+    type_pinyin: string;
 }
 
 interface GlobalRadialMenuItem {

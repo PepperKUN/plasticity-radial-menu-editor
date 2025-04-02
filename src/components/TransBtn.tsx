@@ -1,12 +1,15 @@
-import React, {useEffect} from 'react';
-import { Button } from 'antd';
-import {GithubOutlined, TranslationOutlined} from "@ant-design/icons"
+import React, {useEffect, useState} from 'react';
+import { Button, Space, Tooltip } from 'antd';
+import {GithubOutlined, TranslationOutlined, CoffeeOutlined} from "@ant-design/icons"
 import { useTranslation } from 'react-i18next';
 import { useSearchParams } from "react-router-dom";
+import DonateModal from "@/components/DonateModal.tsx";
 
 const TransBtn:React.FC = () => {
     const { t, i18n } = useTranslation();
     const [searchParams, setSearchParams] = useSearchParams();
+
+    const [donateOpen, setDonateOpen] = useState(false)
 
     const changeLanguage = (lng: 'en'|'zh') => {
         searchParams.set('lang', lng);
@@ -26,7 +29,13 @@ const TransBtn:React.FC = () => {
 
     return (
         <>
-            <Button icon={<GithubOutlined />} href='https://github.com/PepperKUN/plasticity-radial-menu-editor' target='_blank'>Github</Button>
+            <DonateModal visible={donateOpen} onCancel={()=>setDonateOpen(false)}/>
+            <Space.Compact>
+                <Tooltip title="Github">
+                    <Button icon={<GithubOutlined />} href='https://github.com/PepperKUN/plasticity-radial-menu-editor' target='_blank'/>
+                </Tooltip>
+                <Button icon={<CoffeeOutlined />} onClick={()=>setDonateOpen(true)}>{t('donate')}</Button>
+            </Space.Compact>
             <Button icon={<TranslationOutlined />} onClick={handleLangTrans}>{t('lng')}</Button>
         </>
     );

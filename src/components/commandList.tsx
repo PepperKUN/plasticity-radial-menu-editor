@@ -11,6 +11,7 @@ import SvgIcon from "@/components/RadialMenu/SvgIcon.tsx";
 import {convertFlat2ListItems} from "@/utils/util.ts";
 import {useListItemStore} from "@/stores/store.ts";
 import { useTranslation } from "react-i18next";
+import { pinyin } from 'pinyin-pro';
 
 
 type ThumbVerticalProps = {
@@ -64,7 +65,9 @@ const CommandList:React.FC<{
             ...item,
             type: category.commandType,
             type_zh: category.commandType_zh,
-            isAdd: menuCommands.has(item.command)
+            isAdd: menuCommands.has(item.command),
+            label_pinyin: item.label_zh?pinyin(item.label_zh, {toneType: 'none'}):'',
+            type_pinyin: pinyin(category.commandType_zh, {toneType: 'none'})
         }))
     ),[listItems, refItems])
 
@@ -75,7 +78,7 @@ const CommandList:React.FC<{
     useEffect(() => {
 
         const fuse = new Fuse(flatData, {
-            keys: ['label', 'label_zh', 'type', 'type_zh'],
+            keys: ['label', 'label_zh', 'type', 'type_zh', 'label_pinyin', 'type_pinyin'],
             threshold: 0.3,
             // includeScore: true,
             // includeMatches: true,
