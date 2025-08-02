@@ -13,7 +13,7 @@ import {
 import { useListItemStore, useGlobalMenuItemStore } from "@/stores/store";
 import {customDropAnimation, sectorCollisionDetection} from "@/utils/util"
 import CommandList from "@/components/commandList";
-import {ConfigProvider, theme} from 'antd';
+import {Button, ConfigProvider, theme} from 'antd';
 import {DragStartEvent} from "@dnd-kit/core/dist/types/events";
 import './App.css'
 import {GlobalRadialMenuItem, RadialMenuItem} from "@/types/type";
@@ -25,6 +25,7 @@ import ParallaxText from "./components/ParallaxText";
 import TransBtn from "@/components/TransBtn.tsx";
 import { useTranslation } from 'react-i18next';
 import { useSearchParams } from "react-router-dom";
+import {LeftOutlined} from "@ant-design/icons";
 
 const App:React.FC = () => {
 
@@ -233,6 +234,9 @@ const App:React.FC = () => {
                       <div className="flex flex-1 self-stretch max-w-[1440px] z-10">
                         <div className="flex h-full flex-1 flex-col justify-center items-center">
                             <div className="flex self-stretch text-neutral-500 gap-4 text-xl">
+                                <Button icon={<LeftOutlined />} onClick={() => {
+                                    history.back();
+                                }}></Button>
                                 <TransBtn/>
                             </div>
                             <div className="flex flex-col pt-6 pb-6">
