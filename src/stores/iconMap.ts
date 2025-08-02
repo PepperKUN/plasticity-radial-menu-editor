@@ -54,5 +54,11 @@ export const ICON_MAP = Object.freeze([
     },{
         generalIcon: 'selection-mode-set-all',
         items: ['selection-convert-group-children']
+    },{
+        generalIcon: 'set-material',
+        items: ['set-material', 'fork-material']
+    },{
+        generalIcon: 'others',
+        items: ['select-all-measurements', 'select-all-sheets', 'select-all-solids', 'unlock-all']
     }
 ]) as IconGroup[]

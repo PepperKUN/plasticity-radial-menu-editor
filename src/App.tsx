@@ -214,11 +214,11 @@ const App:React.FC = () => {
         >
             <div className="app-container relative bg-neutral-800 flex w-screen h-screen box-border p-6 justify-center items-center selection:bg-violet-900 selection:text-neutral-200 overflow-hidden">
                 <div className="w-screen h-screen flex flex-col justify-center items-center absolute left-0 top-0 z-1 overflow-hidden text-neutral-900/50">
-                    <ParallaxText className="gabarito-regular text-6xl" baseVelocity={0-speed}>Plasticity Radial Menu Editor</ParallaxText>
+                    <ParallaxText className="gabarito-regular text-6xl" baseVelocity={-speed}>Plasticity Radial Menu Editor</ParallaxText>
                     <ParallaxText className="gabarito-black text-9xl" baseVelocity={speed}>{globalMenuItems[activeIndex].name}</ParallaxText>
-                    <ParallaxText className="gabarito-regular text-6xl" baseVelocity={0-speed}>Plasticity Radial Menu Editor</ParallaxText>
+                    <ParallaxText className="gabarito-regular text-6xl" baseVelocity={-speed}>Plasticity Radial Menu Editor</ParallaxText>
                     <ParallaxText className="gabarito-black text-9xl" baseVelocity={speed}>{globalMenuItems[activeIndex].name}</ParallaxText>
-                    <ParallaxText className="gabarito-regular text-6xl" baseVelocity={0-speed}>Plasticity Radial Menu Editor</ParallaxText>
+                    <ParallaxText className="gabarito-regular text-6xl" baseVelocity={-speed}>Plasticity Radial Menu Editor</ParallaxText>
                 </div>
               {/* 环形菜单 */}
               <DndContext
